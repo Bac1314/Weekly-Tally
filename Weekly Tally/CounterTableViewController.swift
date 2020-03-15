@@ -1,0 +1,887 @@
+//
+//  MainTableViewController.swift
+//  Weekly Tally
+//
+//  Created by Bac Cheng Huang on 1/22/20.
+//  Copyright © 2020 THEBAC. All rights reserved.
+//
+
+import UIKit
+import os.log
+import AVFoundation
+
+//struct TallyView {
+//    var title: String
+//    var addValue: String
+//    var sum: String
+//    var unit: String
+//}
+
+// MARK: Properties
+var counters: [Counter] = []
+var filteredCounters: [Counter] = []
+var countersArchived : [Counter] = []
+var countersFuture : [Counter] = []
+
+var newCountersEnded : String = ""
+
+var ArchivedState: Bool = false
+var FutureState: Bool = false
+let searchController = UISearchController(searchResultsController: nil)
+let defaults = UserDefaults.standard
+var AddBtn = UIButton(type: .custom)
+var EditBtn = UIBarButtonItem()
+
+protocol customCellDelegate{
+    func didTapButton(_ cellCounter: Counter)
+}
+
+class customCell: UITableViewCell{
+    @IBOutlet weak var cellTitle: UILabel!
+    @IBOutlet weak var cellDailySum: UILabel!
+    @IBOutlet weak var cellWeeklySum: UILabel!
+    @IBOutlet weak var cellWeekLabel: UILabel!
+    @IBOutlet weak var cellDailyAdd: UILabel!
+    @IBOutlet weak var cellUnit: UILabel!
+    @IBOutlet weak var cellBtn: UIButton!
+    @IBOutlet weak var cellProgress: UIProgressView!
+    
+    var cellDelegate: customCellDelegate?
+    var cellCounter: Counter?
+    
+    @IBOutlet weak var ContainerView: UIView!{
+    didSet {
+        // Make it card-like
+        ContainerView.layer.cornerRadius = 20
+        ContainerView.layer.borderWidth = 0.3
+        ContainerView.layer.borderColor = UIColor.white.cgColor
+        }
+    }
+    
+    @IBAction func buttonPress(_ sender: UIButton) {
+        if let cellCounter = cellCounter{
+             cellDelegate?.didTapButton(cellCounter)
+        }
+    }
+    
+}
+
+class CounterTableViewController: UITableViewController, UISearchResultsUpdating, customCellDelegate{
+    
+    var audioPlayer: AVAudioPlayer?
+    
+    @IBOutlet weak var RecordsBtn: UIBarButtonItem!
+    @IBOutlet weak var ArchivedListBtn: UIButton!
+    @IBOutlet weak var FutureListBtn: UIButton!
+    @IBOutlet weak var GlobeBtn: UIBarButtonItem!
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    
+        // Set up the search bar
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search Tally"
+//        searchController.searchBar.scopeButtonTitles = ["All", "Chocolate"]
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
+//        navigationItem.rightBarButtonItem = editButtonIte
+        
+        
+//        /* ~~~~~~~~~~ TESTING ~~~~~~~~~~ */
+//        var components = DateComponents()
+//
+//        components.day = 14
+//        components.month = 3
+//        components.year = 2020
+//
+//        let date2 = Calendar.current.date(from: components)!
+//        defaults.set(date2, forKey: "LastRun")
+//        defaults.set(date2, forKey: "LastUpdate")
+//
+//        print("date2 \(date2)")
+//        /* ~~~~~~~~~~ TESTING ~~~~~~~~~~ */
+        
+        
+        
+        // Load any saved meals, otherwise load sample data
+        if let savedCounters = loadCounters(){
+            newCountersEnded = ""
+            
+            
+            for counter in savedCounters {
+                
+                if(counter.paused != nil && counter.paused == true){
+                    countersArchived += [counter]
+                }else if let endDate = counter.dateEnds, endDate < Date(){
+                    counter.paused = true
+                    countersArchived += [counter]
+                    newCountersEnded += "\(counter.title)\n"
+                }else if counter.dateCreated > Date(){
+                    countersFuture += [counter]
+                }else {
+                    counters += [counter]
+                }
+            }
+            
+            saveCounters()
+        }else{
+            loadSampleCounters()
+        }
+        
+        //Update counters dailySum and weeklySum
+        updateCounters()
+        
+        //Set title date
+        updateTitle()
+        
+        //Setup add and edit buttons
+        setupToolBarButtons()
+        
+        //Observe when app willEnterForeground
+        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification
+        , object: nil)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        if(!newCountersEnded.isEmpty){
+//            newCountersEnded = "These following tallies have ended and sent to the archived list\n\n" + newCountersEnded
+            
+            let alert = UIAlertController(title: "Tallies have ended", message: newCountersEnded, preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Got it!", style: .cancel, handler: nil))
+
+            if self.presentedViewController == nil {
+                self.present(alert, animated: true, completion: nil)
+            }
+            else {
+                self.dismiss(animated: false, completion: nil)
+                self.present(alert, animated: true, completion: nil)
+            }
+            
+            saveCounters()
+        }
+    
+         
+     }
+    
+
+
+    // MARK: - Table view data source
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
+        return 1
+    }
+    
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        // Four different states: Archive, Future, Search, Normal
+        if ArchivedState {
+            return countersArchived.count
+        }else if FutureState {
+            return countersFuture.count
+        }
+        else if searchController.isActive && !(searchController.searchBar.text?.isEmpty ?? true) {
+            return filteredCounters.count
+        }else{
+            return counters.count
+        }
+    }
+
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+         let cellIdentifier = "cell"
+            
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? customCell  else {
+             fatalError("The dequeued cell is not an instance of customCell.")
+         }
+        
+        let counter: Counter
+
+        if ArchivedState {
+            counter = countersArchived[indexPath.row]
+        }else if FutureState {
+            counter = countersFuture[indexPath.row]
+        }else if searchController.isActive && !(searchController.searchBar.text?.isEmpty ?? true) {
+            counter = filteredCounters[indexPath.row]
+        }else{
+            counter = counters[indexPath.row]
+        }
+
+        //TESTING
+//        if(counter.title == "Learning iOS Development"){
+//            counter.history = "7,7,17,10,11,0,0,7,35,"
+//        }else if(counter.title == "7 hours of learning per week"){
+//            counter.history = "35,"
+//        }else if(counter.title == "5 apps per week"){
+//            counter.history = "9,"
+//        }
+//        print("counter title \(counter.title) - History \(counter.history) - Date \(counter.dateCreated)")
+//
+        
+        cell.cellCounter = counter
+        cell.cellDelegate = self
+  
+         //Configure the cell...
+        cell.cellTitle.text = counter.title
+        cell.cellDailyAdd.text = String(counter.dailyGoal)
+        cell.cellDailySum.text = String(counter.dailySum)
+        cell.cellUnit.text = counter.unit
+        cell.cellWeeklySum?.text = "\(counter.weeklySum)|\(counter.weeklyGoal)"
+        cell.cellProgress.progress = Float(counter.weeklySum)/Float(counter.weeklyGoal)
+                        
+        if ArchivedState {
+            
+            let pausedDays = Int(Date().timeIntervalSince1970 - counter.dateUpdated.timeIntervalSince1970)/(86400)
+            
+            cell.cellDailySum.text = "ARCHIVED"
+            cell.cellUnit.text = "for \(pausedDays) day(s)"
+            cell.cellDailySum.font = UIFont.systemFont(ofSize: 20.0)
+            cell.ContainerView.alpha = 0.6
+            cell.cellBtn.isHidden = true
+            cell.cellDailyAdd.isHidden = true
+            cell.cellWeeklySum.isHidden = true
+            cell.cellWeekLabel.isHidden = true
+            cell.cellProgress.isHidden = true
+//            cell.cellUnit.isHidden = true
+        }else if FutureState {
+            
+            let startDate = Calendar.current.dateComponents([.day], from: counter.dateCreated)
+            let today = Calendar.current.dateComponents([.day], from: Date())
+            let difference = (startDate.day ?? 0) - (today.day ?? 0)
+            
+            cell.cellDailySum.text = "\(difference) more days"
+            cell.cellUnit.text = "start of tally"
+            cell.cellDailySum.font = UIFont.systemFont(ofSize: 30.0)
+            cell.ContainerView.alpha = 0.6
+            cell.cellBtn.isHidden = true
+            cell.cellDailyAdd.isHidden = true
+            cell.cellWeeklySum.isHidden = true
+            cell.cellWeekLabel.isHidden = true
+            cell.cellProgress.isHidden = true
+            
+        }else{
+            cell.cellDailySum.font = UIFont.systemFont(ofSize: 50.0)
+            cell.ContainerView.alpha = 1
+            cell.cellBtn.isHidden = false
+            cell.cellDailyAdd.isHidden = false
+            cell.cellWeeklySum.isHidden = false
+            cell.cellWeekLabel.isHidden = false
+            cell.cellProgress.isHidden = false
+        }
+   
+        return cell
+    }
+    
+
+    
+    // Override to support conditional editing of the table view.
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        // Return false if you do not want the specified item to be editable.
+//        let counter: Counter
+//
+//        if searchController.isActive && !(searchController.searchBar.text?.isEmpty ?? true) {
+//           counter = filteredCounters[indexPath.row]
+//        }else{
+//           counter = counters[indexPath.row]
+//        }
+//
+//        if let isPaused = counter.paused, isPaused == true{
+//            return false
+//        }
+        return true
+    }
+    
+
+    
+    // Override to support editing the table view.
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            // Delete the row from the data source
+            if ArchivedState {
+                countersArchived.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                saveCounters()
+            }else if FutureState {
+                countersFuture.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                saveCounters()
+            }
+            else if searchController.isActive && !(searchController.searchBar.text?.isEmpty ?? true) {
+        
+                for n in 0...counters.count {
+                    if(counters[n].title == filteredCounters[indexPath.row].title){
+                        counters.remove(at: n)
+                        break
+                    }
+                }
+                
+                filteredCounters.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+    
+//                searchController.searchResultsUpdater?.updateSearchResults(for: searchController)
+
+                saveCounters()
+            }
+            else{
+                counters.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                saveCounters()
+            }
+        } else if editingStyle == .insert {
+            
+            
+
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        }
+    }
+    
+
+    
+    // Override to support rearranging the table view.
+    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+        
+        if ArchivedState {
+            let itemToMove = countersArchived[fromIndexPath.row]
+            countersArchived.remove(at: fromIndexPath.row)
+            countersArchived.insert(itemToMove, at: to.row)
+        }else if FutureState {
+            let itemToMove = countersFuture[fromIndexPath.row]
+            countersFuture.remove(at: fromIndexPath.row)
+            countersFuture.insert(itemToMove, at: to.row)
+        }else if searchController.isActive && !(searchController.searchBar.text?.isEmpty ?? true) {
+            let itemToMove = filteredCounters[fromIndexPath.row]
+            filteredCounters.remove(at: fromIndexPath.row)
+            filteredCounters.insert(itemToMove, at: to.row)
+        }else{
+            let itemToMove = counters[fromIndexPath.row]
+            counters.remove(at: fromIndexPath.row)
+            counters.insert(itemToMove, at: to.row)
+        }
+    }
+    
+
+    
+    // Override to support conditional rearranging of the table view.
+    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        // Return false if you do not want the item to be re-orderable.
+        return true
+    }
+    
+
+    
+
+    
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+    
+        
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+        
+        switch(segue.identifier ?? ""){
+        case "AddItem":
+            os_log("Adding a new counter.", log: OSLog.default, type: .debug)
+        case "ShowDetail":
+            
+            var selectedArray: [Counter]
+            if ArchivedState {
+                selectedArray = countersArchived
+            }else if FutureState {
+                selectedArray = countersFuture
+            }else if searchController.isActive && !(searchController.searchBar.text?.isEmpty ?? true) {
+                 selectedArray = filteredCounters
+             }else{
+                 selectedArray = counters
+             }
+            
+            guard let counterDetailViewController = segue.destination as? DetailViewController else{
+                fatalError("Unexpected destination on: \(segue.destination)")
+            }
+           
+            guard let selectedCounterCell = sender as? customCell else{
+                fatalError("Unexpected sender: \(sender ?? "error")")
+            }
+            
+            guard let indexPath = tableView.indexPath(for: selectedCounterCell) else {
+                 fatalError("The selected cell is not being displayed by the table")
+            }
+            
+            let selectedCounter = selectedArray[indexPath.row]
+            
+            counterDetailViewController.counter = selectedCounter
+//            counterDetailViewController.hidesBottomBarWhenPushed = true
+        case "Records":
+            guard let counterTotalTableViewController = segue.destination as? RecordViewController else{
+                      fatalError("Unexpected destination on: \(segue.destination)")
+            }
+
+            counterTotalTableViewController.counters = counters
+//            counterTotalTableViewController.hidesBottomBarWhenPushed = true
+            
+        default:
+            fatalError("Unexpected Segue Identifier: \(segue.identifier ?? "error")")
+        }
+    }
+    
+    
+    // MARK: Private Methods
+    private func loadSampleCounters(){
+        guard let counter1 = Counter(title: "Learn Java development", unit: "hours", weeklyGoal: 8, weekendsIncluded: true) else {
+            fatalError("Unable to instantiate counter 1")
+        }
+        
+        guard let counter2 = Counter(title: "200 pushups per week", unit: "pushups", weeklyGoal: 200, weekendsIncluded: false) else {
+            fatalError("Unable to instantiate counter 2")
+        }
+        
+        guard let counter3 = Counter(title: "Run 5 miles", unit: "miles", weeklyGoal: 5, weekendsIncluded: false) else {
+            fatalError("Unable to instantiate counter 3")
+        }
+        
+        counters += [counter1, counter2, counter3]
+        defaults.set(Date(), forKey: "LastUpdate")
+    }
+    
+    
+    private func loadCounters() -> [Counter]?{
+        
+        if let savedCounters = defaults.object(forKey: "savedCounters") as? Data {
+            let decoder = JSONDecoder()
+            if let loadedCounters = try? decoder.decode([Counter].self, from: savedCounters) {
+            
+//                loadedCounters += [fixfixdatadata()]
+//                loadedCounters += [fixfixdatadata2()]
+               return loadedCounters
+            }
+        }
+
+        return nil
+    }
+    
+    private func saveCounters(){
+        //Save user defaults
+        defaults.set(Date(), forKey: "LastRun")
+
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(counters + countersArchived + countersFuture) {
+            defaults.set(encoded, forKey: "savedCounters")
+        }
+    }
+    
+//    private func fixfixdatadata() -> Counter{
+//
+//        let DateCreated = Date()
+//        let calendar = Calendar.current
+//
+//        var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: DateCreated)
+////        component.weekday = 1
+//        component.month = 1
+//        component.day = 13
+//        let firstDayOfDateCreated = Calendar.current.date(from: component) ?? DateCreated
+//        print(firstDayOfDateCreated)
+//
+//        let history = "7,7,17,10,11,0,7,"
+//
+//        guard let counterA = Counter (title: "Learning iOS Development", dailyGoal:1, unit: "hours", dailySum: 2, weeklySum: 6, totalSum: 58,  weeklyGoal: 10, weekendsIncluded: true, dateCreated: firstDayOfDateCreated, dateUpdated: Date(), paused: false, pausedPeriod: 0, history: history) else {
+//                fatalError("Unable to instantiate counter 3")
+//        }
+//
+//
+//        return counterA
+//    }
+
+
+    private func updateTitle() {
+        let date = Date()
+        let formatter = DateFormatter()
+////        formatter.dateStyle = .long
+////        formatter.timeStyle = .none
+        formatter.setLocalizedDateFormatFromTemplate("EEEE")
+        let weekDayString =  formatter.string(from: date)
+        
+    
+        let calendar = Calendar.current
+        let dayOfWeek = calendar.component(.weekday, from: date)
+        navigationItem.title =  "DAY \(dayOfWeek) - \(weekDayString)"
+    }
+    
+    private func filterCounters(for searchText: String) {
+        filteredCounters = counters.filter { counter in
+            return counter.title.lowercased().contains(searchText.lowercased())
+        }
+        tableView.reloadData()
+    }
+    
+    private func updateCounters(){
+        // Compare updated this week
+        // If not the same, then update counters
+        
+        let today = Date()
+        let lastRunDate = defaults.object(forKey: "LastRun") as? Date ?? Date(timeIntervalSinceReferenceDate: 0)
+        let lastUpdated = defaults.object(forKey: "LastUpdate") as? Date ?? Date()
+        
+        //Check if NOT in the same week
+        if(!(Calendar.current.isDate(lastUpdated, equalTo: today, toGranularity: .weekOfYear))){
+            
+            print("not in the same week")
+            
+            let compToday = Calendar.current.dateComponents([.year, .weekOfYear], from: today)
+            let compLastUpdate = Calendar.current.dateComponents([.year, .weekOfYear], from: lastUpdated)
+            
+            var weeksPassed = 0
+            
+            if((compToday.year! == compLastUpdate.year!) || ((compToday.year! > compLastUpdate.year!) && (compToday.weekOfYear! >= compLastUpdate.weekOfYear!))){
+                weeksPassed = compToday.weekOfYear! - compLastUpdate.weekOfYear!
+            }else{
+                weeksPassed = (((compToday.year! - compLastUpdate.year!)*52) + compToday.weekOfYear!) - compLastUpdate.weekOfYear!
+            }
+            
+            print("weeks passed \(weeksPassed)")
+            
+            
+            //Update counter one-by-one
+            for counter in counters {
+               if counter.history == nil{
+                   counter.history = ""
+               }
+                
+                //Add to history for each weeks passed
+                for _ in 1...weeksPassed {
+                   counter.history?.append("\(counter.weeklySum),")
+                   counter.weeklySum = 0
+                }
+            }
+            
+            defaults.set(Date(), forKey: "LastUpdate")
+            saveCounters()
+        }
+        
+        //Update the daily sum if new day
+        let dayOfYear = Calendar.current.component(.day, from: today)
+        let lastRunDay = Calendar.current.component(.day, from: lastRunDate)
+        if dayOfYear > lastRunDay {
+            for counter in counters {
+                counter.dailySum = 0
+            }
+            saveCounters()
+        }
+    
+    }
+    
+    private func setupToolBarButtons(){
+        
+        if ArchivedState || FutureState {
+            
+            var goBackBarBtn : UIBarButtonItem!
+            goBackBarBtn = UIBarButtonItem(title: "Done", style: .plain,target: self, action: #selector(goBackToMain))
+            
+            let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            toolbarItems = [spacer, goBackBarBtn, spacer]
+        }
+        else {
+            AddBtn.setTitle("  New Tally", for: .normal)
+            AddBtn.setTitleColor(view.tintColor, for: .normal)
+            AddBtn.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+            AddBtn.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
+            AddBtn.addTarget(self, action: #selector(addNewTally), for: .touchUpInside)
+            AddBtn.sizeToFit()
+
+            var leftBarButton: UIBarButtonItem!
+            leftBarButton = UIBarButtonItem(customView: AddBtn)
+            
+            
+            if (leftBarButton == nil) {
+                leftBarButton = UIBarButtonItem(title: "Add New Tally", style: .plain,target: self, action: #selector(addNewTally))
+            }
+        
+
+            EditBtn = UIBarButtonItem(title: "Edit", style: .plain,target: self, action: #selector(editTallyList))
+           
+            let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+
+            toolbarItems = [leftBarButton, spacer, EditBtn]
+        }
+    }
+    
+    func didTapButton(_ cellCounter: Counter) {
+        //Tapped the add button
+        
+        //Play sound effect
+        let path = Bundle.main.path(forResource: "clickSound.m4a", ofType:nil)!
+        let url = URL(fileURLWithPath: path)
+
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.play()
+        } catch {
+            os_log("Couldn't play sound", log: OSLog.default, type: .debug)
+
+        }
+        
+        //TableView Cell Button Tapped
+        if let selectedIndex = counters.firstIndex(of: cellCounter){
+
+            let selectedIndexPath = IndexPath(row: selectedIndex, section: 0)
+            cellCounter.weeklySum += cellCounter.dailyGoal
+            cellCounter.totalSum += cellCounter.dailyGoal
+            cellCounter.dailySum += cellCounter.dailyGoal
+            cellCounter.dateUpdated = Date()
+            counters[selectedIndexPath.row] = cellCounter
+            tableView.reloadRows(at: [selectedIndexPath], with: .none)
+
+            //Save counters
+            saveCounters()
+        }
+    }
+
+    
+    // MARK - Searh methods
+    func updateSearchResults(for searchController: UISearchController) {
+        filterCounters(for: searchController.searchBar.text ?? "")
+     }
+     
+
+    // MARK: Actions
+    @IBAction func unwindToCounterList(sender: UIStoryboardSegue){
+
+        
+        if let sourceViewController = sender.source as? DetailViewController, let counter = sourceViewController.counter {
+            
+            if let selectedIndexPath = tableView.indexPathForSelectedRow{
+                 //Update an existing counter
+
+                if ArchivedState {
+                    if counter.unit == "delete" {
+                        countersArchived.remove(at: selectedIndexPath.row)
+                        tableView.reloadData()
+                    }else if let isPaused = counter.paused, isPaused == false{
+                        countersArchived.remove(at: selectedIndexPath.row)
+                        counters += [counter]
+                        tableView.reloadData()
+                    }else{
+                        countersArchived[selectedIndexPath.row] = counter
+                        tableView.reloadRows(at: [selectedIndexPath], with: .none)
+                    }
+                    
+                }else if FutureState {
+                    if counter.unit == "delete" {
+                        countersFuture.remove(at: selectedIndexPath.row)
+                        tableView.reloadData()
+                    }else if let isPaused = counter.paused, isPaused == false{
+                        countersFuture.remove(at: selectedIndexPath.row)
+                        counters += [counter]
+                        tableView.reloadData()
+                    }else{
+                        countersFuture[selectedIndexPath.row] = counter
+                        tableView.reloadRows(at: [selectedIndexPath], with: .none)
+                    }
+                    
+                }else if searchController.isActive && !(searchController.searchBar.text?.isEmpty ?? true) {
+                    if counter.unit == "delete" {
+
+                        for n in 0...counters.count {
+                            if(counters[n].title == filteredCounters[selectedIndexPath.row].title){
+                                counters.remove(at: n)
+                                break
+                            }
+                        }
+
+                        filteredCounters.remove(at: selectedIndexPath.row)
+
+                        tableView.reloadData()
+                    }else if let isPaused = counter.paused, isPaused == true{
+                        countersArchived += [counter]
+                        
+                        for n in 0...counters.count {
+                                     if(counters[n].title == filteredCounters[selectedIndexPath.row].title){
+                                         counters.remove(at: n)
+                                         break
+                            }
+                        }
+                        filteredCounters.remove(at: selectedIndexPath.row)
+                        tableView.reloadData()
+                    }else{
+                        filteredCounters[selectedIndexPath.row] = counter
+                        tableView.reloadRows(at: [selectedIndexPath], with: .none)
+                    }
+                }
+                else{
+                    
+                    if counter.unit == "delete" {
+                        counters.remove(at: selectedIndexPath.row)
+                        tableView.reloadData()
+                    }else if let isPaused = counter.paused, isPaused == true{
+                        countersArchived += [counter]
+                        counters.remove(at: selectedIndexPath.row)
+                        tableView.reloadData()
+                    }else{
+                        counters[selectedIndexPath.row] = counter
+                        tableView.reloadRows(at: [selectedIndexPath], with: .none)
+                    }
+                }
+  
+            }else{
+                //Add a new counter to beginning
+                
+                if counter.dateCreated > Date(){
+                    // Future counter
+                    countersFuture += [counter]
+             
+                    let startDate = Calendar.current.dateComponents([.day], from: counter.dateCreated)
+                    let today = Calendar.current.dateComponents([.day], from: Date())
+                    let difference = (startDate.day ?? 0) - (today.day ?? 0)
+                
+
+                    let alert = UIAlertController(title: "\(counter.title)", message: "This tally will show up in \(difference) day(s)", preferredStyle: .alert)
+                     alert.addAction(UIAlertAction(title: "Got it!", style: .cancel, handler: nil))
+                    
+                    if self.presentedViewController == nil {
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                    else {
+                        self.dismiss(animated: false, completion: nil)
+                        self.present(alert, animated: true, completion: nil)
+                    }
+ 
+                    
+                    
+                    
+                }else {
+                    
+                    let newIndexPath = IndexPath(row: 0, section: 0)
+                    counters.insert(counter, at: 0)
+                    tableView.insertRows(at: [newIndexPath], with: .automatic)
+                }
+            }
+            
+            //Save counters
+            saveCounters()
+            
+        }
+        
+    }
+    
+    
+    @IBAction func archivedListAction(_ sender: UIButton) {
+        if(!ArchivedState){
+            // Set the lists states
+            ArchivedState = true
+            FutureState = false
+            
+            RecordsBtn.isEnabled = false
+            GlobeBtn.isEnabled = false
+            
+            ArchivedListBtn.isHidden = true
+            FutureListBtn.isHidden = true
+            
+            // Disable search bar
+            searchController.searchBar.isUserInteractionEnabled = false
+            searchController.searchBar.alpha = 0.5
+            
+            navigationItem.title =  "Archived Tallies"
+            setupToolBarButtons()
+        }
+        
+        tableView.reloadData()
+        tableView.setContentOffset(.zero, animated: true)
+    }
+    
+    @IBAction func futureListAction(_ sender: UIButton) {
+        if(!FutureState){
+            // Set the lists states
+            FutureState = true
+            ArchivedState = false
+            
+            RecordsBtn.isEnabled = false
+            GlobeBtn.isEnabled = false
+            
+            ArchivedListBtn.isHidden = true
+            FutureListBtn.isHidden = true
+            
+            // Disable search bar
+            searchController.searchBar.isUserInteractionEnabled = false
+            searchController.searchBar.alpha = 0.5
+            
+            navigationItem.title =  "Upcoming Tallies"
+            setupToolBarButtons()
+        }
+        
+        tableView.reloadData()
+        tableView.setContentOffset(.zero, animated: true)
+    }
+    
+    // MARK: Protocol functions/ Overwritten functions
+    @objc func willEnterForeground() {
+        //when app comes to foreground, get updated data
+        updateTitle()
+        updateCounters()
+        tableView.reloadData()
+    }
+    
+    @objc func addNewTally() {
+        self.performSegue(withIdentifier: "AddItem", sender: self)
+    }
+    
+    @objc func goBackToMain(){
+        ArchivedState = false
+        FutureState = false
+
+        // Change button states
+        RecordsBtn.isEnabled = true
+        GlobeBtn.isEnabled = true
+        ArchivedListBtn.isHidden = false
+        FutureListBtn.isHidden = false
+        
+        // Enable search bar again
+        searchController.searchBar.isUserInteractionEnabled = true
+        searchController.searchBar.alpha = 1
+        
+        // Change navigation and tool bars
+        updateTitle()
+        setupToolBarButtons()
+        
+        tableView.reloadData()
+        tableView.setContentOffset(.zero, animated: true)
+        
+    }
+    
+    @objc func editTallyList() {
+        if(tableView.isEditing == true)
+        {
+            searchController.searchBar.isUserInteractionEnabled = true
+            searchController.searchBar.alpha = 1
+            tableView.setEditing(false, animated: true)
+//            EditBtn.image = UIImage(systemName: "pencil.circle")
+            EditBtn.title = "Edit"
+            AddBtn.isEnabled = true
+            AddBtn.alpha = 1
+            RecordsBtn.isEnabled = true
+            GlobeBtn.isEnabled = true
+
+            saveCounters()
+        }
+        else
+        {
+            searchController.searchBar.isUserInteractionEnabled = false
+            searchController.searchBar.alpha = 0.5
+            tableView.setEditing(true, animated: true)
+//            EditBtn.image = nil
+            EditBtn.title = "Done"
+            AddBtn.isEnabled = false
+            AddBtn.alpha = 0.5
+            RecordsBtn.isEnabled = false
+            GlobeBtn.isEnabled = false
+        
+        }
+            
+    }
+}
+
