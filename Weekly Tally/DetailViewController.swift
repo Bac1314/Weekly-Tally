@@ -38,7 +38,9 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var startsBtn: UIButton!
     @IBOutlet weak var endsBtn: UIButton!
     @IBOutlet weak var StartDatePicker: UIDatePicker!
+    @IBOutlet weak var StartDateOptions: UISegmentedControl!
     @IBOutlet weak var EndDatePicker: UIDatePicker!
+    @IBOutlet weak var EndDateOptions: UISegmentedControl!
     @IBOutlet weak var divider: UIView!
     
     // Toolbar Properties
@@ -130,15 +132,23 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 //        }
         
         if let button = sender as? UIBarButtonItem, button === saveButton {
-            if let _ = counter, let tempCounter = tempCounter {
-
+            if let counter = counter, let tempCounter = tempCounter {
+                    
                 tempCounter.title = counterTitle.text ?? "No title"
                 tempCounter.unit = counterUnit.text ?? "Count"
                 tempCounter.weeklyGoal = Int(counterWeeklyGoal.text ?? "0") ?? 0
                 tempCounter.weekendsIncluded = includeWeekends
                 tempCounter.dailyGoal = tempCounter.getDailyGoal()
-                
                 tempCounter.dateUpdated = Date()
+                
+                //If user changed the start date, reset the records
+                if(!(Calendar.current.isDate(tempCounter.dateCreated, equalTo: counter.dateCreated , toGranularity: .day))){
+                    
+                    tempCounter.dailySum = 0
+                    tempCounter.weeklySum = 0
+                    tempCounter.totalSum = 0
+                    tempCounter.history = ""
+                }
                 
                 self.counter = tempCounter
             }else{
@@ -147,10 +157,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 
                 counter?.dateCreated = tempCounter?.dateCreated ?? Date()
                 counter?.dateEnds = tempCounter?.dateEnds
-                
-//                if(endsBtn.currentTitle != "(optional)"){
-//                    counter?.dateEnds = EndDatePicker.date
-//                }
+
             }
         }else if let identifier = segue.identifier, identifier == "unwindIdentifier", let _ = segue.destination as? CounterTableViewController, let counter = counter, counter.unit == "delete" {
             //Delete the counter, no other steps necessary
@@ -338,38 +345,56 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     @IBAction func startBtnAction(_ sender: Any) {
         if(StartDatePicker.isHidden == true){
             EndDatePicker.isHidden = true
+            EndDateOptions.isHidden = true
             
             if let tempCounter = tempCounter {
-                //If user edit this date, they will lose all previous data
                 
-                if let _ = counter {
+                //If user edit this date, they will lose all previous data
+                if let counter = counter, counter.totalSum > 0{
                     let alert = UIAlertController(title: "Continue?", message: "Changing the start date will clear your current records", preferredStyle: .alert)
 
 
                        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
                        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (UIAlertAction) in
+                           self.StartDateOptions.isHidden = false
                            self.StartDatePicker.isHidden = false
                            self.StartDatePicker.date = tempCounter.dateCreated
                            self.StartDatePicker.minimumDate = Date()
+                        
+                            if(Calendar.current.isDate(tempCounter.dateCreated, equalTo: Date() , toGranularity: .weekOfYear)){
+                                self.StartDateOptions.selectedSegmentIndex = 0
+                            }else {
+                                self.StartDateOptions.selectedSegmentIndex = 2
+                            }
                            
                        }))
                             
                        present(alert, animated: true)
                 }else{
-                    self.StartDatePicker.isHidden = false
-                    self.StartDatePicker.date = tempCounter.dateCreated
-                    self.StartDatePicker.minimumDate = Date()
+                    StartDateOptions.isHidden = false
+                    StartDatePicker.isHidden = false
+                    StartDatePicker.date = tempCounter.dateCreated
+                    StartDatePicker.minimumDate = Date()
+                    
+                    if(Calendar.current.isDate(tempCounter.dateCreated, equalTo: Date() , toGranularity: .weekOfYear)){
+                        StartDateOptions.selectedSegmentIndex = 0
+                    }else {
+                        StartDateOptions.selectedSegmentIndex = 2
+                    }
+                    
                 }
    
                 
 
                 
             }else {
+                StartDateOptions.isHidden = false
                 StartDatePicker.isHidden = false
                 StartDatePicker.minimumDate = Date()
             }
         }else{
             StartDatePicker.isHidden = true
+            StartDateOptions.isHidden = true
         }
         
         
@@ -380,7 +405,10 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         
         if(EndDatePicker.isHidden == true){
             StartDatePicker.isHidden = true
+            StartDateOptions.isHidden = true
+            
             EndDatePicker.isHidden = false
+            EndDateOptions.isHidden = false
             
             let startDate = tempCounter?.dateCreated ?? Date()
             
@@ -402,18 +430,117 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 
         }else{
             EndDatePicker.isHidden = true
+            EndDateOptions.isHidden = true
 
         }
 
     }
 
+    @IBAction func StartOptionsAction(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0:
+            StartDatePicker.setDate(Date(), animated: true)
+            tempCounter?.dateCreated = Date()
+//            startsBtn.setTitle(formatter.string(from: StartDatePicker.date), for: .normal)
+            startsBtn.setTitle("today", for: .normal)
+
+        case 1:
+           if let tempCounter = tempCounter {
+                tempCounter.dateCreated = StartDatePicker.date
+                
+                let calendar = Calendar.current
+                let addWeekDate = calendar.date(byAdding: .weekOfYear, value: 1, to: tempCounter.dateCreated) ?? Date()
+                
+                var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: addWeekDate)
+                component.weekday = 1
+          
+                let nextWeek = Calendar.current.date(from: component)!
+            
+                StartDatePicker.setDate(nextWeek, animated: true)
+                tempCounter.dateCreated = nextWeek
+                startsBtn.setTitle(formatter.string(from: StartDatePicker.date), for: .normal)
+            }
+        case 2:
+            StartDatePicker.setDate(Date(), animated: true)
+            tempCounter?.dateCreated = Date()
+            startsBtn.setTitle(formatter.string(from: StartDatePicker.date), for: .normal)
+        
+        default:
+            print("something")
+          
+        }
+    }
+    
+    @IBAction func EndOptionsAction(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0:
+//            let startDate = tempCounter?.dateCreated ?? Date()
+//
+//            let calendar = Calendar.current
+//            let dayOfWeek = calendar.component(.weekday, from: startDate)
+//            let lastDayNextWK = calendar.date(byAdding: .day, value: 7 + (7-dayOfWeek), to: startDate)
+//
+//            var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: lastDayNextWK ?? Date())
+//            component.hour = 23
+//            component.minute = 59
+//            component.second = 59
+            
+            EndDatePicker.setDate(EndDatePicker.minimumDate ?? Date().advanced(by: 604800), animated: true)
+            endsBtn.setTitle(formatter.string(from: EndDatePicker.date), for: .normal)
+
+        case 1:
+
+            let startDate = tempCounter?.dateCreated ?? Date()
+            
+            let calendar = Calendar.current
+            let nextMonth = calendar.date(byAdding: .month, value: 1, to: startDate) ?? startDate.advanced(by: 2.628e+6)
+            let dayOfWeek = calendar.component(.weekday, from: nextMonth)
+            let lastDayNextMonthWK = calendar.date(byAdding: .day, value: 7 + (7-dayOfWeek), to: nextMonth)
+            
+            var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: lastDayNextMonthWK ?? nextMonth)
+            component.hour = 23
+            component.minute = 59
+            component.second = 59
+                        
+            EndDatePicker.setDate(lastDayNextMonthWK ?? startDate.advanced(by: 2.628e+6), animated: true)
+            endsBtn.setTitle(formatter.string(from: EndDatePicker.date), for: .normal)
+            
+        case 2:
+            EndDatePicker.setDate(EndDatePicker.minimumDate ?? Date().advanced(by: 604800), animated: true)
+            endsBtn.setTitle(formatter.string(from: EndDatePicker.date), for: .normal)
+        
+        default:
+            print("something")
+          
+        }
+    }
+    
     @IBAction func StartDatePickerAction(_ sender: Any) {
         //Set Start Date
 
         startsBtn.setTitle(formatter.string(from: StartDatePicker.date), for: .normal)
         
         if let tempCounter = tempCounter {
+            
+            let tempPreviousDate = tempCounter.dateCreated
             tempCounter.dateCreated = StartDatePicker.date
+
+            let calendar = Calendar.current
+            let addWeekDate = calendar.date(byAdding: .weekOfYear, value: 1, to: tempPreviousDate) ?? Date()
+            var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: addWeekDate)
+            component.weekday = 1
+            let nextWeek = Calendar.current.date(from: component)!
+            
+            
+            //Update the segment
+            if(Calendar.current.isDate(tempCounter.dateCreated, equalTo: Date() , toGranularity: .day)){
+                startsBtn.setTitle("today", for: .normal)
+                StartDateOptions.selectedSegmentIndex = 0
+            }else if(Calendar.current.isDate(tempCounter.dateCreated, equalTo: nextWeek , toGranularity: .day)){
+                StartDateOptions.selectedSegmentIndex = 1
+            }else{
+                StartDateOptions.selectedSegmentIndex = 2
+            }
             
             //If dateEnds is in the same week as started, update it
             if(tempCounter.dateEnds != nil && Calendar.current.isDate(tempCounter.dateCreated, equalTo: tempCounter.dateEnds! , toGranularity: .weekOfYear)){
@@ -447,11 +574,36 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         
         if let tempCounter = tempCounter {
             tempCounter.dateEnds = EndDatePicker.date
+            
+            //Update the segment
+            guard let endDate = tempCounter.dateEnds else {
+                os_log("no end date", log: OSLog.default, type: .debug)
+                 return
+            }
+            
+            let startDate = tempCounter.dateCreated
+            
+            let calendar = Calendar.current
+            let nextMonth = calendar.date(byAdding: .month, value: 1, to: startDate) ?? startDate.advanced(by: 2.628e+6)
+            let dayOfWeek = calendar.component(.weekday, from: nextMonth)
+            let lastDayNextMonthWK = calendar.date(byAdding: .day, value: 7 + (7-dayOfWeek), to: nextMonth) ?? nextMonth
+            
+            
+            if(Calendar.current.isDate(endDate, equalTo: EndDatePicker.minimumDate ?? Date() , toGranularity: .day)){
+                EndDateOptions.selectedSegmentIndex = 0
+            }else if(Calendar.current.isDate(endDate, equalTo: lastDayNextMonthWK , toGranularity: .day)) {
+                EndDateOptions.selectedSegmentIndex = 1
+            }else {
+                EndDateOptions.selectedSegmentIndex = 2
+            }
         }
     }
     
     
     @IBAction func StartClearAction(_ sender: Any) {
+        StartDatePicker.isHidden = true
+        StartDateOptions.isHidden = true
+        
         if let tempCounter = tempCounter {
             tempCounter.dateCreated = counter?.dateCreated ?? Date()
  
@@ -464,6 +616,9 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func EndClearAction(_ sender: Any) {
+        EndDatePicker.isHidden = true
+        EndDateOptions.isHidden = true
+        
         if(tempCounter != nil && counter != nil) {
             tempCounter?.dateEnds = nil
         }

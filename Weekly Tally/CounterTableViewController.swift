@@ -118,7 +118,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
                     counter.paused = true
                     countersArchived += [counter]
                     newCountersEnded += "\(counter.title)\n"
-                }else if counter.dateCreated > Date(){
+                }else if (!(Calendar.current.isDate(counter.dateCreated , equalTo: Date(), toGranularity: .day)) && counter.dateCreated > Date()){
                     countersFuture += [counter]
                 }else {
                     counters += [counter]
@@ -149,18 +149,8 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         if(!newCountersEnded.isEmpty){
 //            newCountersEnded = "These following tallies have ended and sent to the archived list\n\n" + newCountersEnded
             
-            let alert = UIAlertController(title: "Tallies have ended", message: newCountersEnded, preferredStyle: .alert)
-            
-            alert.addAction(UIAlertAction(title: "Got it!", style: .cancel, handler: nil))
+            popUpAlert(title: "Tallies have ended", message: newCountersEnded, buttonTitle: "Got it!")
 
-            if self.presentedViewController == nil {
-                self.present(alert, animated: true, completion: nil)
-            }
-            else {
-                self.dismiss(animated: false, completion: nil)
-                self.present(alert, animated: true, completion: nil)
-            }
-            
             saveCounters()
         }
     
@@ -254,10 +244,10 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
             let today = Calendar.current.dateComponents([.day], from: Date())
             let difference = (startDate.day ?? 0) - (today.day ?? 0)
             
-            cell.cellDailySum.text = "\(difference) more days"
-            cell.cellUnit.text = "start of tally"
+            cell.cellDailySum.text = "In \(difference) day(s)"
+            cell.cellUnit.text = "until the start"
             cell.cellDailySum.font = UIFont.systemFont(ofSize: 30.0)
-            cell.ContainerView.alpha = 0.6
+//            cell.ContainerView.alpha = 0.6
             cell.cellBtn.isHidden = true
             cell.cellDailyAdd.isHidden = true
             cell.cellWeeklySum.isHidden = true
@@ -642,11 +632,33 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         }
     }
 
+    func scrollToTop(){
+        
+        if(tableView.numberOfRows(inSection: 0) > 0){
+            let topRow = IndexPath(row: 0, section: 0)
+            tableView.scrollToRow(at: topRow, at: .top, animated: true)
+        }
+    }
+    
+    func popUpAlert(title: String, message: String, buttonTitle: String){
+
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+         alert.addAction(UIAlertAction(title: buttonTitle, style: .cancel, handler: nil))
+        
+        if self.presentedViewController == nil {
+            self.present(alert, animated: true, completion: nil)
+        }
+        else {
+            self.dismiss(animated: false, completion: nil)
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
     
     // MARK - Searh methods
     func updateSearchResults(for searchController: UISearchController) {
         filterCounters(for: searchController.searchBar.text ?? "")
      }
+    
      
 
     // MARK: Actions
@@ -656,8 +668,8 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         if let sourceViewController = sender.source as? DetailViewController, let counter = sourceViewController.counter {
             
             if let selectedIndexPath = tableView.indexPathForSelectedRow{
+                
                  //Update an existing counter
-
                 if ArchivedState {
                     if counter.unit == "delete" {
                         countersArchived.remove(at: selectedIndexPath.row)
@@ -685,6 +697,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
                     }
                     
                 }else if searchController.isActive && !(searchController.searchBar.text?.isEmpty ?? true) {
+                    
                     if counter.unit == "delete" {
 
                         for n in 0...counters.count {
@@ -708,7 +721,30 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
                         }
                         filteredCounters.remove(at: selectedIndexPath.row)
                         tableView.reloadData()
-                    }else{
+                    }else if counter.dateCreated > Date(){
+                         countersFuture += [counter]
+                        
+                        for n in 0...counters.count {
+                             if(counters[n].title == filteredCounters[selectedIndexPath.row].title){
+                                 counters.remove(at: n)
+                                 break
+                             }
+                         }
+                        
+                         filteredCounters.remove(at: selectedIndexPath.row)
+                         tableView.reloadData()
+
+                         
+//                        let startDate = Calendar.current.dateComponents([.day], from: counter.dateCreated)
+//                        let today = Calendar.current.dateComponents([.day], from: Date())
+//                        let difference = (startDate.day ?? 0) - (today.day ?? 0)
+//
+//                         let popMessage = "This tally will show up in \(difference) day(s)"
+//
+//                         popUpAlert(title: counter.title, message: popMessage, buttonTitle: "Got it!")
+
+                         
+                     }else{
                         filteredCounters[selectedIndexPath.row] = counter
                         tableView.reloadRows(at: [selectedIndexPath], with: .none)
                     }
@@ -722,6 +758,21 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
                         countersArchived += [counter]
                         counters.remove(at: selectedIndexPath.row)
                         tableView.reloadData()
+                    }else if counter.dateCreated > Date(){
+                        countersFuture += [counter]
+                        counters.remove(at: selectedIndexPath.row)
+                        tableView.reloadData()
+
+//
+//                       let startDate = Calendar.current.dateComponents([.day], from: counter.dateCreated)
+//                       let today = Calendar.current.dateComponents([.day], from: Date())
+//                       let difference = (startDate.day ?? 0) - (today.day ?? 0)
+//
+//                        let popMessage = "This tally will show up in \(difference) day(s)"
+//
+//                        popUpAlert(title: counter.title, message: popMessage, buttonTitle: "Got it!")
+
+                        
                     }else{
                         counters[selectedIndexPath.row] = counter
                         tableView.reloadRows(at: [selectedIndexPath], with: .none)
@@ -739,21 +790,10 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
                     let today = Calendar.current.dateComponents([.day], from: Date())
                     let difference = (startDate.day ?? 0) - (today.day ?? 0)
                 
-
-                    let alert = UIAlertController(title: "\(counter.title)", message: "This tally will show up in \(difference) day(s)", preferredStyle: .alert)
-                     alert.addAction(UIAlertAction(title: "Got it!", style: .cancel, handler: nil))
-                    
-                    if self.presentedViewController == nil {
-                        self.present(alert, animated: true, completion: nil)
-                    }
-                    else {
-                        self.dismiss(animated: false, completion: nil)
-                        self.present(alert, animated: true, completion: nil)
-                    }
+                     let popMessage = "This tally will show up in \(difference) day(s)"
+                     
+                     popUpAlert(title: counter.title, message: popMessage, buttonTitle: "Got it!")
  
-                    
-                    
-                    
                 }else {
                     
                     let newIndexPath = IndexPath(row: 0, section: 0)
@@ -791,7 +831,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         }
         
         tableView.reloadData()
-        tableView.setContentOffset(.zero, animated: true)
+        scrollToTop()
     }
     
     @IBAction func futureListAction(_ sender: UIButton) {
@@ -815,7 +855,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         }
         
         tableView.reloadData()
-        tableView.setContentOffset(.zero, animated: true)
+        scrollToTop()
     }
     
     // MARK: Protocol functions/ Overwritten functions
@@ -849,8 +889,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         setupToolBarButtons()
         
         tableView.reloadData()
-        tableView.setContentOffset(.zero, animated: true)
-        
+        scrollToTop()
     }
     
     @objc func editTallyList() {
