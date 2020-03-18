@@ -57,6 +57,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     var pickerChoices: [String] = []
     var pickerView =  UIPickerView()
     var pickerTypeValue =  String()
+    var customDate = CustomDate()
     
     
     override func viewDidLoad() {
@@ -65,7 +66,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         counterWeeklyGoal.delegate = self
         counterUnit.delegate = self
         self.setupToHideKeyboardOnTapOnView()
-
+    
         //Formatter for date
         formatter.dateStyle = .long
         formatter.timeStyle = .none
@@ -410,24 +411,33 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             EndDatePicker.isHidden = false
             EndDateOptions.isHidden = false
             
-            let startDate = tempCounter?.dateCreated ?? Date()
             
-            let calendar = Calendar.current
-            let dayOfWeek = calendar.component(.weekday, from: startDate)
-            let lastDayNextWK = calendar.date(byAdding: .day, value: 7 + (7-dayOfWeek), to: startDate)
-            
-            var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: lastDayNextWK ?? Date())
-            component.hour = 23
-            component.minute = 59
-            component.second = 59
-                        
-            EndDatePicker.minimumDate = Calendar.current.date(from: component) ?? lastDayNextWK
-            endsBtn.setTitle(formatter.string(from: EndDatePicker.date), for: .normal)
-            endsBtn.setTitleColor(.label, for: .normal)
-            
-            tempCounter?.dateEnds = EndDatePicker.date
-            
+            //Update minimum end date
+             if let tempCounter = tempCounter {
+                EndDatePicker.minimumDate = customDate.getLastDayOfNextWeek(customDate: tempCounter.dateCreated)
+                endsBtn.setTitle(formatter.string(from: EndDatePicker.date), for: .normal)
+                endsBtn.setTitleColor(.label, for: .normal)
+                
+                tempCounter.dateEnds = EndDatePicker.date
+            }
 
+            //Update the options segments
+             if let tempCounter = tempCounter, tempCounter.dateEnds != nil {
+                
+                //Using Date() instead of advance because we will never need to see the end date on today, so it will go to custom option
+                let nextWeek = EndDatePicker.minimumDate ?? Date()
+                let nextMonthPre = Calendar.current.date(byAdding: .month, value: 1, to: tempCounter.dateCreated) ?? Date()
+                let nextMonth = customDate.getLastDayOfWeek(customDate: nextMonthPre) ?? Date()
+                
+                if (Calendar.current.isDate(EndDatePicker.date, equalTo: nextWeek, toGranularity: .day)){
+                    EndDateOptions.selectedSegmentIndex = 0
+                }else if (Calendar.current.isDate(EndDatePicker.date, equalTo: nextMonth, toGranularity: .day)){
+                    EndDateOptions.selectedSegmentIndex = 1
+                }else {
+                    EndDateOptions.selectedSegmentIndex = 2
+                }
+             }
+            
         }else{
             EndDatePicker.isHidden = true
             EndDateOptions.isHidden = true
@@ -447,14 +457,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         case 1:
            if let tempCounter = tempCounter {
                 tempCounter.dateCreated = StartDatePicker.date
-                
-                let calendar = Calendar.current
-                let addWeekDate = calendar.date(byAdding: .weekOfYear, value: 1, to: tempCounter.dateCreated) ?? Date()
-                
-                var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: addWeekDate)
-                component.weekday = 1
-          
-                let nextWeek = Calendar.current.date(from: component)!
+                let nextWeek = customDate.getFirstDayOfNextWeek(customDate: tempCounter.dateCreated)
             
                 StartDatePicker.setDate(nextWeek, animated: true)
                 tempCounter.dateCreated = nextWeek
@@ -474,17 +477,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     @IBAction func EndOptionsAction(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 0:
-//            let startDate = tempCounter?.dateCreated ?? Date()
-//
-//            let calendar = Calendar.current
-//            let dayOfWeek = calendar.component(.weekday, from: startDate)
-//            let lastDayNextWK = calendar.date(byAdding: .day, value: 7 + (7-dayOfWeek), to: startDate)
-//
-//            var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: lastDayNextWK ?? Date())
-//            component.hour = 23
-//            component.minute = 59
-//            component.second = 59
-            
+
             EndDatePicker.setDate(EndDatePicker.minimumDate ?? Date().advanced(by: 604800), animated: true)
             endsBtn.setTitle(formatter.string(from: EndDatePicker.date), for: .normal)
 
@@ -492,15 +485,8 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 
             let startDate = tempCounter?.dateCreated ?? Date()
             
-            let calendar = Calendar.current
-            let nextMonth = calendar.date(byAdding: .month, value: 1, to: startDate) ?? startDate.advanced(by: 2.628e+6)
-            let dayOfWeek = calendar.component(.weekday, from: nextMonth)
-            let lastDayNextMonthWK = calendar.date(byAdding: .day, value: 7 + (7-dayOfWeek), to: nextMonth)
-            
-            var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: lastDayNextMonthWK ?? nextMonth)
-            component.hour = 23
-            component.minute = 59
-            component.second = 59
+            let nextMonth = Calendar.current.date(byAdding: .month, value: 1, to: startDate) ?? startDate.advanced(by: 2.628e+6)
+            let lastDayNextMonthWK = customDate.getLastDayOfWeek(customDate: nextMonth)
                         
             EndDatePicker.setDate(lastDayNextMonthWK ?? startDate.advanced(by: 2.628e+6), animated: true)
             endsBtn.setTitle(formatter.string(from: EndDatePicker.date), for: .normal)
@@ -522,15 +508,8 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         
         if let tempCounter = tempCounter {
             
-            let tempPreviousDate = tempCounter.dateCreated
+            let nextWeek = customDate.getFirstDayOfNextWeek(customDate: tempCounter.dateCreated)
             tempCounter.dateCreated = StartDatePicker.date
-
-            let calendar = Calendar.current
-            let addWeekDate = calendar.date(byAdding: .weekOfYear, value: 1, to: tempPreviousDate) ?? Date()
-            var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: addWeekDate)
-            component.weekday = 1
-            let nextWeek = Calendar.current.date(from: component)!
-            
             
             //Update the segment
             if(Calendar.current.isDate(tempCounter.dateCreated, equalTo: Date() , toGranularity: .day)){
@@ -543,20 +522,11 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             }
             
             //If dateEnds is in the same week as started, update it
-            if(tempCounter.dateEnds != nil && Calendar.current.isDate(tempCounter.dateCreated, equalTo: tempCounter.dateEnds! , toGranularity: .weekOfYear)){
+            if(tempCounter.dateEnds != nil && (Calendar.current.isDate(tempCounter.dateCreated, equalTo: tempCounter.dateEnds! , toGranularity: .weekOfYear)) || tempCounter.dateCreated >= tempCounter.dateEnds!){
                 
-                let startDate = tempCounter.dateCreated
-                
-                let calendar = Calendar.current
-                let dayOfWeek = calendar.component(.weekday, from: startDate)
-                let lastDayNextWK = calendar.date(byAdding: .day, value: 7 + (7-dayOfWeek), to: startDate)
-                
-                var component = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: lastDayNextWK ?? Date())
-                component.hour = 23
-                component.minute = 59
-                component.second = 59
+                let lastDayNextWK = customDate.getLastDayOfNextWeek(customDate: tempCounter.dateCreated)
                             
-                EndDatePicker.minimumDate = Calendar.current.date(from: component) ?? lastDayNextWK
+                EndDatePicker.minimumDate = lastDayNextWK
                 endsBtn.setTitle(formatter.string(from: EndDatePicker.date), for: .normal)
                 endsBtn.setTitleColor(.label, for: .normal)
                 
@@ -581,17 +551,12 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                  return
             }
             
-            let startDate = tempCounter.dateCreated
-            
-            let calendar = Calendar.current
-            let nextMonth = calendar.date(byAdding: .month, value: 1, to: startDate) ?? startDate.advanced(by: 2.628e+6)
-            let dayOfWeek = calendar.component(.weekday, from: nextMonth)
-            let lastDayNextMonthWK = calendar.date(byAdding: .day, value: 7 + (7-dayOfWeek), to: nextMonth) ?? nextMonth
-            
+            let nextMonth = Calendar.current.date(byAdding: .month, value: 1, to: tempCounter.dateCreated) ?? tempCounter.dateCreated.advanced(by: 2.628e+6)
+            let lastDayNextMonthWK = customDate.getLastDayOfWeek(customDate: nextMonth)
             
             if(Calendar.current.isDate(endDate, equalTo: EndDatePicker.minimumDate ?? Date() , toGranularity: .day)){
                 EndDateOptions.selectedSegmentIndex = 0
-            }else if(Calendar.current.isDate(endDate, equalTo: lastDayNextMonthWK , toGranularity: .day)) {
+            }else if(Calendar.current.isDate(endDate, equalTo: lastDayNextMonthWK ?? tempCounter.dateCreated.advanced(by: 2.628e+6) , toGranularity: .day)) {
                 EndDateOptions.selectedSegmentIndex = 1
             }else {
                 EndDateOptions.selectedSegmentIndex = 2

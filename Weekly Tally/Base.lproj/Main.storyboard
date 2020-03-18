@@ -25,7 +25,7 @@
                                     <rect key="frame" x="65" y="0.0" width="284" height="60"/>
                                     <subviews>
                                         <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="E3T-om-faC" userLabel="Future List Btn">
-                                            <rect key="frame" x="0.0" y="0.0" width="149.66666666666666" height="60"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="142" height="60"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                             <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -40,7 +40,7 @@
                                             </connections>
                                         </button>
                                         <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="fdm-W4-7oa">
-                                            <rect key="frame" x="149.66666666666663" y="0.0" width="149.33333333333337" height="60"/>
+                                            <rect key="frame" x="142" y="0.0" width="142" height="60"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                             <color key="tintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -72,7 +72,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="250"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lqz-sS-D8P">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lqz-sS-D8P" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
                                             <rect key="frame" x="60" y="26" width="294" height="198"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sYr-5v-QIc">
@@ -166,6 +166,17 @@
                                                 <constraint firstAttribute="trailing" secondItem="sYr-5v-QIc" secondAttribute="trailing" constant="20" symbolic="YES" id="uNj-BL-Wg0"/>
                                                 <constraint firstAttribute="trailing" secondItem="DUB-fw-Q0Y" secondAttribute="trailing" constant="72" id="wKP-r2-g6M"/>
                                             </constraints>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                    <real key="value" value="20"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                    <real key="value" value="0.29999999999999999"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                    <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
                                         </view>
                                     </subviews>
                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -235,11 +246,11 @@
             <objects>
                 <viewController id="MWQ-m2-8Dt" customClass="DetailViewController" customModule="Weekly_Tally" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleAspectFit" id="U8n-bo-ueD">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="610"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="556"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IcR-Nr-Ekl">
-                                <rect key="frame" x="0.0" y="88" width="320" height="473"/>
+                                <rect key="frame" x="0.0" y="56" width="320" height="451"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xpw-Fk-dZC" userLabel="ContentView">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="781"/>
@@ -409,7 +420,7 @@
                                                                 </subviews>
                                                             </stackView>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="TVk-n7-dyi">
-                                                                <rect key="frame" x="0.0" y="24.333333333333314" width="272" height="45"/>
+                                                                <rect key="frame" x="0.0" y="24.333333333333343" width="272" height="45"/>
                                                                 <subviews>
                                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="e.g. 500 (push-ups), 10 (hours)" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ZsR-w5-Nt3" customClass="CustomTextField" customModule="Weekly_Tally" customModuleProvider="target">
                                                                         <rect key="frame" x="0.0" y="0.0" width="128" height="45"/>
@@ -718,7 +729,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="ePK-WX-hAI" userLabel="Divider View">
-                                                <rect key="frame" x="40" y="447.33333333333337" width="240" height="1"/>
+                                                <rect key="frame" x="40" y="447.33333333333331" width="240" height="1"/>
                                                 <color key="backgroundColor" systemColor="separatorColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="1" id="uRB-wZ-UPR"/>
@@ -817,7 +828,7 @@
                             </connections>
                         </barButtonItem>
                         <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="jdM-5m-7Ec">
-                            <rect key="frame" x="83.666666666666686" y="5.6666666666666679" width="153" height="33"/>
+                            <rect key="frame" x="83.666666666666686" y="11.666666666666664" width="153" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <segments>
                                 <segment title="Overview"/>
@@ -897,6 +908,22 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dlf-3o-iTn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-715.94202898550725" y="127.90178571428571"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Oft-yP-uz4">
+            <objects>
+                <viewController id="RL4-km-6Ua" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="pgU-4x-oCL">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="v9d-Cz-UgN"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="X5M-ov-pdV"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="O1O-fQ-AXC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2448" y="-344"/>
         </scene>
         <!--Records-->
         <scene sceneID="ieE-ND-dEy">
@@ -1066,6 +1093,7 @@
                                             <outlet property="recordTitle" destination="stY-VV-bh9" id="rLq-YE-ubF"/>
                                             <outlet property="recordTotal" destination="0Wj-Hk-dvP" id="x6d-Wv-LWZ"/>
                                             <outlet property="recordTotalUnit" destination="9Gs-Sf-Ner" id="Vnd-zJ-Yqy"/>
+                                            <segue destination="RL4-km-6Ua" kind="show" id="6Ds-3s-vz6"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -1150,6 +1178,6 @@
         <image name="xmark.circle.fill" catalog="system" width="64" height="60"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="rVw-vX-TAc"/>
+        <segue reference="NSc-x9-k25"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -19,6 +19,7 @@
 		0999BF6423D7EF3700A0B2A0 /* Weekly_TallyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0999BF6323D7EF3700A0B2A0 /* Weekly_TallyTests.swift */; };
 		0999BF6F23D7EF3700A0B2A0 /* Weekly_TallyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0999BF6E23D7EF3700A0B2A0 /* Weekly_TallyUITests.swift */; };
 		0999BF7D23D7F06400A0B2A0 /* CounterTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0999BF7C23D7F06400A0B2A0 /* CounterTableViewController.swift */; };
+		09ADE0A5241F9CFF00AEFAB5 /* CustomDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09ADE0A4241F9CFF00AEFAB5 /* CustomDate.swift */; };
 		09E6B81E23ED3BBB0090E898 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E6B81D23ED3BBB0090E898 /* DetailViewController.swift */; };
 		09E6B82223EDC4E20090E898 /* Counter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E6B82123EDC4E20090E898 /* Counter.swift */; };
 		09E7DBA9241B8CE600F29E0B /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E7DBA8241B8CE600F29E0B /* CustomView.swift */; };
@@ -64,6 +65,7 @@
 		0999BF6E23D7EF3700A0B2A0 /* Weekly_TallyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weekly_TallyUITests.swift; sourceTree = "<group>"; };
 		0999BF7023D7EF3700A0B2A0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0999BF7C23D7F06400A0B2A0 /* CounterTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterTableViewController.swift; sourceTree = "<group>"; };
+		09ADE0A4241F9CFF00AEFAB5 /* CustomDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDate.swift; sourceTree = "<group>"; };
 		09E6B81D23ED3BBB0090E898 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		09E6B82123EDC4E20090E898 /* Counter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Counter.swift; sourceTree = "<group>"; };
 		09E7DBA8241B8CE600F29E0B /* CustomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				09E6B81D23ED3BBB0090E898 /* DetailViewController.swift */,
 				092EA328241544F90080DC8F /* RecordViewController.swift */,
 				0999BF5223D7EF3400A0B2A0 /* Main.storyboard */,
+				09ADE0A6241FAC9C00AEFAB5 /* CustomFunctions */,
 				09977A87241925D400E9FB98 /* CustomClasses */,
 				09EA5C6723F16351003141A3 /* CustomViews */,
 				0999BF5523D7EF3700A0B2A0 /* Assets.xcassets */,
@@ -172,6 +175,14 @@
 				0999BF7023D7EF3700A0B2A0 /* Info.plist */,
 			);
 			path = "Weekly TallyUITests";
+			sourceTree = "<group>";
+		};
+		09ADE0A6241FAC9C00AEFAB5 /* CustomFunctions */ = {
+			isa = PBXGroup;
+			children = (
+				09ADE0A4241F9CFF00AEFAB5 /* CustomDate.swift */,
+			);
+			path = CustomFunctions;
 			sourceTree = "<group>";
 		};
 		09EA5C6723F16351003141A3 /* CustomViews */ = {
@@ -323,6 +334,7 @@
 				09EA5C6023F10BD2003141A3 /* CustomButton.swift in Sources */,
 				0999BF4D23D7EF3400A0B2A0 /* AppDelegate.swift in Sources */,
 				090AAF8A241C521500F587FB /* CustomOverviewView.swift in Sources */,
+				09ADE0A5241F9CFF00AEFAB5 /* CustomDate.swift in Sources */,
 				09EA5C6623F111A1003141A3 /* CustomLabel.swift in Sources */,
 				097AB40023F84CB3001F546E /* records.swift in Sources */,
 				09E7DBA9241B8CE600F29E0B /* CustomView.swift in Sources */,

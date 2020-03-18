@@ -49,14 +49,15 @@ class customCell: UITableViewCell{
     var cellDelegate: customCellDelegate?
     var cellCounter: Counter?
     
-    @IBOutlet weak var ContainerView: UIView!{
-    didSet {
-        // Make it card-like
-        ContainerView.layer.cornerRadius = 20
-        ContainerView.layer.borderWidth = 0.3
-        ContainerView.layer.borderColor = UIColor.white.cgColor
-        }
-    }
+    @IBOutlet weak var ContainerView: CustomView!
+//        {
+//    didSet {
+//        // Make it card-like
+//        ContainerView.layer.cornerRadius = 20
+//        ContainerView.layer.borderWidth = 0.0
+//        ContainerView.layer.borderColor = UIColor.white.cgColor
+//        }
+//    }
     
     @IBAction func buttonPress(_ sender: UIButton) {
         if let cellCounter = cellCounter{
@@ -124,8 +125,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
                     counters += [counter]
                 }
             }
-            
-            saveCounters()
+
         }else{
             loadSampleCounters()
         }
@@ -515,13 +515,12 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         // If not the same, then update counters
         
         let today = Date()
-        let lastRunDate = defaults.object(forKey: "LastRun") as? Date ?? Date(timeIntervalSinceReferenceDate: 0)
         let lastUpdated = defaults.object(forKey: "LastUpdate") as? Date ?? Date()
         
         //Check if NOT in the same week
         if(!(Calendar.current.isDate(lastUpdated, equalTo: today, toGranularity: .weekOfYear))){
             
-            print("not in the same week")
+        
             
             let compToday = Calendar.current.dateComponents([.year, .weekOfYear], from: today)
             let compLastUpdate = Calendar.current.dateComponents([.year, .weekOfYear], from: lastUpdated)
@@ -533,9 +532,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
             }else{
                 weeksPassed = (((compToday.year! - compLastUpdate.year!)*52) + compToday.weekOfYear!) - compLastUpdate.weekOfYear!
             }
-            
-            print("weeks passed \(weeksPassed)")
-            
+
             
             //Update counter one-by-one
             for counter in counters {
@@ -555,6 +552,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         }
         
         //Update the daily sum if new day
+        let lastRunDate = defaults.object(forKey: "LastRun") as? Date ?? Date(timeIntervalSinceReferenceDate: 0)
         let dayOfYear = Calendar.current.component(.day, from: today)
         let lastRunDay = Calendar.current.component(.day, from: lastRunDate)
         if dayOfYear > lastRunDay {
