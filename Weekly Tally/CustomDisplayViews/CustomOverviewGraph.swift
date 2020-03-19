@@ -1,15 +1,19 @@
 //
-//  CustomOverviewView.swift
+//  CustomOverviewGraph.swift
 //  Weekly Tally
 //
-//  Created by Bac Cheng Huang on 3/14/20.
+//  Created by Bac Cheng Huang on 3/18/20.
 //  Copyright © 2020 THEBAC. All rights reserved.
 //
 
 import UIKit
 
-@IBDesignable class CustomOverviewView: CustomView {
-
+@IBDesignable class CustomOverviewGraph: CustomView {
+    
+    var overview_data: overview?
+    var history_data: [Int]? = []
+    var weeklyGoalHeight: NSLayoutConstraint!
+    
     lazy var labelTitle : UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
@@ -33,6 +37,14 @@ import UIKit
         view.backgroundColor = UIColor.separator
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }()
+    
+    lazy var stackBars : UIStackView = {
+        let stackview = UIStackView()
+        stackview.axis = .horizontal
+        stackview.distribution = .fillEqually
+        stackview.translatesAutoresizingMaskIntoConstraints = false
+        return stackview
     }()
     
     lazy var labelLeftTitle : UILabel = {
@@ -119,32 +131,36 @@ import UIKit
         return stackview
     }()
     
-    lazy var viewDivider2 : UIView = {
+//    lazy var viewDivider2 : UIView = {
+//        let view = UIView()
+//        view.backgroundColor = UIColor.separator
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        return view
+//    }()
+    
+    lazy var viewWeeklyGoalLine : UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.separator
+        view.backgroundColor = UIColor.green
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    lazy var progressView : CustomProgressView = {
-        let progressview = CustomProgressView()
-        progressview.cornerRadius = 8
-        progressview.translatesAutoresizingMaskIntoConstraints = false
-        return progressview
-    }()
     
-    lazy var labelPercentage : UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 28, weight: .semibold)
-        label.text = "89%"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
     
-    lazy var labelPercentDescription : UILabel = {
+//    lazy var progressView : CustomProgressView = {
+//        let progressview = CustomProgressView()
+//        progressview.cornerRadius = 8
+//        progressview.translatesAutoresizingMaskIntoConstraints = false
+//        return progressview
+//    }()
+    
+    
+    lazy var labelGraphFoot : UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
-        label.text = "You have completed 80% over your weekly goal"
+        label.text = "Note: Average does not include this week's tally"
+        label.textColor = UIColor.lightGray
+        label.font = UIFont.preferredFont(forTextStyle: .footnote)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -173,16 +189,73 @@ import UIKit
         addSubview(labelTitle)
         addSubview(labelSubtitle)
         addSubview(viewDivider)
+        addSubview(stackBars)
+//        addSubview(viewDivider2)
         addSubview(stackParent)
-        addSubview(viewDivider2)
-        addSubview(progressView)
-        addSubview(labelPercentage)
-        addSubview(labelPercentDescription)
+        addSubview(labelGraphFoot)
         setupLayout()
+        
     }
     
-    private func setupLayout(){
+    func setupData(tempCounter: Counter){
+    
+        var max_score: Int = 1
         
+        if let overview_data = overview_data {
+
+            labelTitle.text = overview_data.title
+            labelSubtitle.text = overview_data.subtitle
+
+            labelLeftTitle.text = overview_data.leftTitle
+            labelLeftScore.text = overview_data.leftSub
+            labelLeftScoreUnit.text = overview_data.leftUnit
+            
+            labelRightTitle.text = overview_data.rightTitle
+            labelRightScore.text = overview_data.rightSub
+            labelRightScoreUnit.text = overview_data.rightUnit
+        }
+        
+        // SETUP BARS
+        // Remove bars if exist
+        stackBars.subviews.forEach({ $0.removeFromSuperview() })
+    
+        if let history_data = history_data{
+        
+            if history_data.count >= 3 {
+                stackBars.heightAnchor.constraint(equalToConstant: 100).isActive = true
+     
+                let count = history_data.count < 5 ? history_data.count : 5
+                
+                // Get the max score
+                 for n in history_data.count-count...history_data.count-1 {
+                     if history_data[n] > max_score {
+                         max_score = history_data[n]
+                     }
+                 }
+                 // Setup the bars
+                 
+                 for n in history_data.count-count...history_data.count-1  {
+                        let progressView : CustomBarView = {
+                            let progressview = CustomBarView()
+                            progressview.progress = CGFloat((Float(history_data[n])/Float(max_score))*100)
+                          
+                            progressview.translatesAutoresizingMaskIntoConstraints = false
+                            return progressview
+                        }()
+
+                     stackBars.addArrangedSubview(progressView)
+                 }
+                
+            }else{
+                stackBars.heightAnchor.constraint(equalToConstant: 0).isActive = true
+            }
+
+        }
+
+    }
+
+    
+    private func setupLayout(){
         
         
         labelTitle.topAnchor.constraint(equalTo: self.topAnchor, constant: 16).isActive = true
@@ -198,8 +271,20 @@ import UIKit
         viewDivider.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
         viewDivider.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
         
+//        stackBars.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        stackBars.topAnchor.constraint(equalTo: viewDivider.bottomAnchor, constant: 8).isActive = true
+        stackBars.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
+        stackBars.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
+        
+
+//        viewDivider2.heightAnchor.constraint(equalToConstant: 1.0).isActive = true
+//        viewDivider2.topAnchor.constraint(equalTo: stackBars.bottomAnchor, constant: 8).isActive = true
+//        viewDivider2.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
+//        viewDivider2.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
+        
+    
         stackParent.heightAnchor.constraint(equalToConstant: 90).isActive = true
-        stackParent.topAnchor.constraint(equalTo: viewDivider.bottomAnchor, constant: 8).isActive = true
+        stackParent.topAnchor.constraint(equalTo: stackBars.bottomAnchor, constant: 8).isActive = true
         stackParent.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
         stackParent.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
         
@@ -228,27 +313,14 @@ import UIKit
         labelRightScoreUnit.leadingAnchor.constraint(equalTo: viewRight.leadingAnchor, constant: 8).isActive = true
         labelRightScoreUnit.trailingAnchor.constraint(equalTo: viewRight.trailingAnchor, constant: -8).isActive = true
         
-        viewDivider2.heightAnchor.constraint(equalToConstant: 1.0).isActive = true
-        viewDivider2.topAnchor.constraint(equalTo: stackParent.bottomAnchor, constant: 8).isActive = true
-        viewDivider2.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
-        viewDivider2.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
         
-        progressView.topAnchor.constraint(equalTo: viewDivider2.bottomAnchor, constant: 24).isActive = true
-        progressView.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        progressView.centerXAnchor.constraint(equalToSystemSpacingAfter: self.centerXAnchor, multiplier: 0).isActive = true
-        progressView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
-        progressView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
+        labelGraphFoot.topAnchor.constraint(equalTo: stackParent.bottomAnchor, constant: 8).isActive = true
+        labelGraphFoot.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
+        labelGraphFoot.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
+        labelGraphFoot.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -24).isActive = true
         
-        labelPercentage.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: 24).isActive = true
-        labelPercentage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
-        labelPercentage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
-        
-        labelPercentDescription.topAnchor.constraint(equalTo: labelPercentage.bottomAnchor, constant: 8).isActive = true
-        labelPercentDescription.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
-        labelPercentDescription.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
-        labelPercentDescription.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -24).isActive = true
-        
-        
+        // SET WEEKLY GOAL LINE HEIGHT
+        weeklyGoalHeight = viewWeeklyGoalLine.heightAnchor.constraint(equalToConstant: 5)
+        weeklyGoalHeight.isActive = true
     }
 }
-

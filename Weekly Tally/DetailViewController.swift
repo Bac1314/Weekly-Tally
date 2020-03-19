@@ -16,13 +16,15 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     // Navigationbar Properties
     @IBOutlet weak var overviewSegmentStack: UIStackView!
     @IBOutlet weak var editSegmentStack: UIStackView!
+    @IBOutlet weak var extraDataStack: UIStackView!
     @IBOutlet weak var over_edit_segmentControl: UISegmentedControl!
     @IBOutlet weak var contentView: UIView!
     
     // Overview Segment Properties
     @IBOutlet weak var counterStepperStack: UIView!
     @IBOutlet weak var counterDaySum: CustomLabel!
-    @IBOutlet weak var recordView: CustomOverviewView!
+    @IBOutlet weak var customOverview: CustomOverviewView!
+    @IBOutlet weak var customOverviewTotal: CustomOverviewGraph!
     
     // Edit Segment Properties
     @IBOutlet weak var LargeTitle: UILabel!
@@ -522,7 +524,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             }
             
             //If dateEnds is in the same week as started, update it
-            if(tempCounter.dateEnds != nil && (Calendar.current.isDate(tempCounter.dateCreated, equalTo: tempCounter.dateEnds! , toGranularity: .weekOfYear)) || tempCounter.dateCreated >= tempCounter.dateEnds!){
+            if(tempCounter.dateEnds != nil && (Calendar.current.isDate(tempCounter.dateCreated, equalTo: tempCounter.dateEnds! , toGranularity: .weekOfYear)) && EndDateOptions.selectedSegmentIndex == 1){
                 
                 let lastDayNextWK = customDate.getLastDayOfNextWeek(customDate: tempCounter.dateCreated)
                             
@@ -531,7 +533,12 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 endsBtn.setTitleColor(.label, for: .normal)
                 
                 tempCounter.dateEnds = EndDatePicker.date
-                
+
+            }else if(tempCounter.dateEnds != nil && tempCounter.dateCreated >= tempCounter.dateEnds!){
+
+                tempCounter.dateEnds = nil
+                endsBtn.setTitle("(optional)", for: .normal)
+                endsBtn.setTitleColor(.placeholderText, for: .normal)
             }
           
         }
@@ -606,87 +613,84 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         if(segmentIndex == 0){
             overviewSegmentStack.isHidden = false
             editSegmentStack.isHidden = true
+            extraDataStack.isHidden = true
             
             if let tempCounter = tempCounter {
                 //Set the values of the counter
                 counterDaySum.text = String(tempCounter.dailySum)
             }
-            
-//            contentView.backgroundColor = UIColor.systemGroupedBackground
+            updateOverviewValues()
+            updateOverviewValuesTotal()
         
         }else{
             overviewSegmentStack.isHidden = true
             editSegmentStack.isHidden = false
-//            contentView.backgroundColor = UIColor.systemBackground
+            extraDataStack.isHidden = false
+            counterPause.isHidden = counter == nil ? true : false
              
         }
         
-        showOrHideOutsideViews()
+        updateDailyGoal()
     }
     
-    private func showOrHideOutsideViews(){
-        //Show or hide the views outside the two main segment stacks
-        if(over_edit_segmentControl.selectedSegmentIndex == 0){
-            
-            counterStepperStack.isHidden = false
-            recordView.isHidden = false
-            
-            divider.isHidden = true
-            counterDailyGoal.isHidden = true
-            perDayLabel.isHidden = true
-            counterPause.isHidden = true
-            saveButton.isEnabled = true
-            
-            updateOverviewValues()
-
-        }else{
-            counterStepperStack.isHidden = true
-            recordView.isHidden = true
-            
-            divider.isHidden = false
-            counterDailyGoal.isHidden = false
-            perDayLabel.isHidden = false
-            counterPause.isHidden = counter == nil ? true : false
-            saveButton.isEnabled = true
-            
-            updateDailyGoal()
-        }
-    }
     
     private func updateOverviewValues(){
         
         if let _ = counter, let tempCounter = tempCounter{
-//            let allWeeks = RecordViewController().getTotalWeeks(counter: tempCounter, DateCreated: tempCounter.dateCreated, pausedPeriod: tempCounter.pausedPeriod ?? 0)
-//
-//            //Total Tally
-//            let TotalAverage = (allWeeks > 0) ? String((tempCounter.totalSum-tempCounter.weeklySum)/allWeeks) :  "-"
-  
-            recordView.labelTitle.text = "Your weekly goal for this activity"
-            recordView.labelSubtitle.text = "\(tempCounter.weeklyGoal) \(tempCounter.unit ?? "unit") per week"
-
-            recordView.labelLeftTitle.text = "THIS WEEK"
-            recordView.labelLeftScore.text = String(tempCounter.weeklySum)
-            recordView.labelLeftScoreUnit.text = tempCounter.unit ?? ""
             
-            recordView.labelRightTitle.text = "TOTAL"
-            recordView.labelRightScore.text = String(tempCounter.totalSum)
-            recordView.labelRightScoreUnit.text = tempCounter.unit ?? ""
-            
+            // SETUP WEEKLY PROGRESS
             let fractionDone = Float(tempCounter.weeklySum)/Float(tempCounter.weeklyGoal)
-            recordView.progressView.setProgress(fractionDone >= 1 ? 1 : fractionDone, animated: true)
-            recordView.labelPercentage.text = String(Int(fractionDone * 100)) + "%"
+            let percentage = String(Int(fractionDone * 100)) + "%"
             
-            if(fractionDone <= 1){
-                recordView.labelPercentDescription.text = "You are \(recordView.labelPercentage.text ?? "0%") done towards your weekly goal"
-            }else if(fractionDone > 1 && fractionDone <= 2){
-                recordView.labelPercentDescription.text = "You have completed your weekly goal with \(recordView.labelPercentage.text ?? "a total of \(tempCounter.weeklySum)")"
-            }else if(fractionDone > 2 && fractionDone < 3){
-                recordView.labelPercentDescription.text = "You have more than doubled your weekly goal!"
-            }else{
-                let exceedPercentage = "\(Int((fractionDone - 1)*100))%"
-                recordView.labelPercentDescription.text = "You exceeded your weekly goal by \(exceedPercentage)"
-            }
+            let labelTitle = "CURRENT WEEK"
+            let labelSubtitle = "\(tempCounter.weeklyGoal) \(tempCounter.unit ?? "unit") per week"
 
+            let labelLeftTitle = "Amount"
+            let labelLeftScore = String(tempCounter.weeklySum)
+            let labelLeftScoreUnit = tempCounter.unit ?? ""
+            
+            let labelRightTitle = "Progress"
+            let labelRightScore = percentage
+            let labelRightScoreUnit = "completed"
+
+            let aOverview = overview(title: labelTitle, subtitle: labelSubtitle, leftTitle: labelLeftTitle, leftSub: labelLeftScore, leftUnit: labelLeftScoreUnit, rightTitle: labelRightTitle, rightSub: labelRightScore, rightUnit: labelRightScoreUnit)
+            
+            customOverview.overview_data = aOverview
+            customOverview.setupData(tempCounter: tempCounter)
+            
+            // SETUP TOTAL PROGRESS
+            
+        }
+    }
+    
+    private func updateOverviewValuesTotal(){
+        
+        if let _ = counter, let tempCounter = tempCounter{
+            
+            // SETUP TOTAL PROGRESS
+            let allWeeks = CustomTallyCounter().getTotalWeeks(counter: tempCounter, DateCreated: tempCounter.dateCreated, pausedPeriod: 0, activeWeeksSelected: false)
+
+
+            let labelTitle = "TOTAL TALLIES"
+            let labelSubtitle = "\(allWeeks) week(s) passed"
+
+            let labelLeftTitle = "Total"
+            let labelLeftScore = String(tempCounter.totalSum)
+            let labelLeftScoreUnit = tempCounter.unit ?? ""
+
+            let labelRightTitle = "Average"
+            let labelRightScore = (allWeeks > 0) ? String((tempCounter.totalSum-tempCounter.weeklySum)/allWeeks) :  "-"
+            let labelRightScoreUnit = "\(tempCounter.unit ?? "")/per week"
+
+
+            let aOverview = overview(title: labelTitle, subtitle: labelSubtitle, leftTitle: labelLeftTitle, leftSub: labelLeftScore, leftUnit: labelLeftScoreUnit, rightTitle: labelRightTitle, rightSub: labelRightScore, rightUnit: labelRightScoreUnit)
+
+            customOverviewTotal.overview_data = aOverview
+            customOverviewTotal.history_data = CustomTallyCounter().getListOfWeekTallies(counter: tempCounter)
+            customOverviewTotal.setupData(tempCounter: tempCounter)
+            
+ 
+            
         }
     }
     
