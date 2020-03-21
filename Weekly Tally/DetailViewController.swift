@@ -64,52 +64,34 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Set Delegates
         counterTitle.delegate = self
         counterWeeklyGoal.delegate = self
         counterUnit.delegate = self
         self.setupToHideKeyboardOnTapOnView()
     
-        //Formatter for date
+        // Formatter for date
         formatter.dateStyle = .long
         formatter.timeStyle = .none
         
-        //Update the textfields if counter exist
+        // Update the textfields if counter exist
         if let counter = counter {
-            
-            LargeTitle.text = counter.title
-            counterTitle.text = counter.title
-            counterWeeklyGoal.text = String(counter.weeklyGoal)
-            counterUnit.text = counter.unit
-            includeWeekends = counter.weekendsIncluded
-            
-            if (!includeWeekends){
-                counterSegmentedControl.selectedSegmentIndex = 1
-                includeWeekends = false
-            }
-            
-            //Set Start Date and/or End Date
-            startsBtn.setTitle(formatter.string(from: counter.dateCreated), for: .normal)
-            
-            if(counter.dateEnds != nil){
-                endsBtn.setTitle(formatter.string(from: counter.dateEnds!), for: .normal)
-                endsBtn.setTitleColor(.label, for: .normal)
-            }
-            
-            if(counter.paused == true){
-                counterPause.setTitle("UNARCHIVE", for: .normal)
-                counterPause.backgroundColor = self.view.tintColor
-            }
             
             tempCounter = Counter(title: counter.title, dailyGoal:counter.dailyGoal, unit: counter.unit, dailySum: counter.dailySum, weeklySum: counter.weeklySum, totalSum: counter.totalSum,  weeklyGoal: counter.weeklyGoal, weekendsIncluded: counter.weekendsIncluded, dateCreated: counter.dateCreated, dateEnds: counter.dateEnds, dateUpdated: counter.dateUpdated, paused: counter.paused, pausedPeriod: counter.pausedPeriod, history: counter.history)
             
             
+            // Setup Overview Segment Values
+            setupOverviewSegmentValues()
             
-            //Setup Label Tap for picker values
-            setPickerValues()
-            setupLabelTap()
+            // Setup Edit Segment Values
+            setUpEditSegmentValues()
             
-            //Set segment to Overview
+            // Set Overview Segment Values
             setSegmentValues(segmentIndex: 0)
+            
+            // Setup daily values and method
+            setupDailyPickerValues()
             
         }else{
 
@@ -209,7 +191,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 counterDaySum.text = String(tempCounter.dailySum)
                 tempCounter.dateUpdated = Date()
                 
-                updateOverviewValues()
+                updateOverviewSegmentValues()
           }
             
         }
@@ -227,7 +209,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 counterDaySum.text = String(tempCounter.dailySum)
                 tempCounter.dateUpdated = Date()
                 
-                updateOverviewValues()
+                updateOverviewSegmentValues()
             }
 
         }
@@ -275,7 +257,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    @objc func labelTapped(_ sender: UITapGestureRecognizer) {
+    @objc func dailyPickerTapped(_ sender: UITapGestureRecognizer) {
         if let tempCounter = tempCounter {
             guard let tempDaySum = Int(counterDaySum.text ?? "-1"), tempDaySum != -1 else {
                 fatalError("counterDaySum.text is nil")
@@ -283,13 +265,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             alertUIPickerBox(title: tempCounter.title)
         }
     }
-    
-    func setupLabelTap() {
-        
-        let labelTap = UITapGestureRecognizer(target: self, action: #selector(self.labelTapped(_:)))
-        counterDaySum.isUserInteractionEnabled = true
-        counterDaySum.addGestureRecognizer(labelTap)
-    }
+
     
     // MARK: UITextFieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -614,13 +590,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             overviewSegmentStack.isHidden = false
             editSegmentStack.isHidden = true
             extraDataStack.isHidden = true
-            
-            if let tempCounter = tempCounter {
-                //Set the values of the counter
-                counterDaySum.text = String(tempCounter.dailySum)
-            }
-            updateOverviewValues()
-            updateOverviewValuesTotal()
+
         
         }else{
             overviewSegmentStack.isHidden = true
@@ -630,13 +600,17 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
              
         }
         
-        updateDailyGoal()
+//        updateDailyGoal()
     }
     
     
-    private func updateOverviewValues(){
+    private func setupOverviewSegmentValues(){
         
         if let _ = counter, let tempCounter = tempCounter{
+            
+            // SETUP STEPPER PROGRESS
+            counterDaySum.text = String(tempCounter.dailySum)
+            
             
             // SETUP WEEKLY PROGRESS
             let fractionDone = Float(tempCounter.weeklySum)/Float(tempCounter.weeklyGoal)
@@ -645,7 +619,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             let labelTitle = "CURRENT WEEK"
             let labelSubtitle = "\(tempCounter.weeklyGoal) \(tempCounter.unit ?? "unit") per week"
 
-            let labelLeftTitle = "Amount"
+            let labelLeftTitle = "Tally"
             let labelLeftScore = String(tempCounter.weeklySum)
             let labelLeftScoreUnit = tempCounter.unit ?? ""
             
@@ -656,41 +630,76 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             let aOverview = overview(title: labelTitle, subtitle: labelSubtitle, leftTitle: labelLeftTitle, leftSub: labelLeftScore, leftUnit: labelLeftScoreUnit, rightTitle: labelRightTitle, rightSub: labelRightScore, rightUnit: labelRightScoreUnit)
             
             customOverview.overview_data = aOverview
-            customOverview.setupData(tempCounter: tempCounter)
+//            customOverview.setupData()
             
             // SETUP TOTAL PROGRESS
+             let allWeeks = CustomTallyCounter().getTotalWeeks(counter: tempCounter, DateCreated: tempCounter.dateCreated, pausedPeriod: 0, activeWeeksSelected: false)
+
+
+             let labelTitleTOT = "TOTAL WEEKS"
+             let labelSubtitleTOT = "Tally of \(allWeeks) week(s)"
+
+             let labelLeftTitleTOT = "Tally"
+             let labelLeftScoreTOT = String(tempCounter.totalSum)
+             let labelLeftScoreUnitTOT = tempCounter.unit ?? ""
+
+             let labelRightTitleTOT = "Average"
+             let labelRightScoreTOT = (allWeeks > 0) ? String((tempCounter.totalSum-tempCounter.weeklySum)/allWeeks) :  "-"
+             let labelRightScoreUnitTOT = "\(tempCounter.unit ?? "")/week"
+
+
+             let aOverviewTOT = overview(title: labelTitleTOT, subtitle: labelSubtitleTOT, leftTitle: labelLeftTitleTOT, leftSub: labelLeftScoreTOT, leftUnit: labelLeftScoreUnitTOT, rightTitle: labelRightTitleTOT, rightSub: labelRightScoreTOT, rightUnit: labelRightScoreUnitTOT)
+
+             customOverviewTotal.overview_data = aOverviewTOT
+             customOverviewTotal.history_data = CustomTallyCounter().getListOfWeekTallies(counter: tempCounter)
+//             customOverviewTotal.setupData()
             
         }
     }
     
-    private func updateOverviewValuesTotal(){
-        
+    private func updateOverviewSegmentValues(){
         if let _ = counter, let tempCounter = tempCounter{
             
-            // SETUP TOTAL PROGRESS
-            let allWeeks = CustomTallyCounter().getTotalWeeks(counter: tempCounter, DateCreated: tempCounter.dateCreated, pausedPeriod: 0, activeWeeksSelected: false)
-
-
-            let labelTitle = "TOTAL TALLIES"
-            let labelSubtitle = "\(allWeeks) week(s) passed"
-
-            let labelLeftTitle = "Total"
-            let labelLeftScore = String(tempCounter.totalSum)
-            let labelLeftScoreUnit = tempCounter.unit ?? ""
-
-            let labelRightTitle = "Average"
-            let labelRightScore = (allWeeks > 0) ? String((tempCounter.totalSum-tempCounter.weeklySum)/allWeeks) :  "-"
-            let labelRightScoreUnit = "\(tempCounter.unit ?? "")/per week"
-
-
-            let aOverview = overview(title: labelTitle, subtitle: labelSubtitle, leftTitle: labelLeftTitle, leftSub: labelLeftScore, leftUnit: labelLeftScoreUnit, rightTitle: labelRightTitle, rightSub: labelRightScore, rightUnit: labelRightScoreUnit)
-
-            customOverviewTotal.overview_data = aOverview
-            customOverviewTotal.history_data = CustomTallyCounter().getListOfWeekTallies(counter: tempCounter)
-            customOverviewTotal.setupData(tempCounter: tempCounter)
+            // Update This Week values
+            let fractionDone = Float(tempCounter.weeklySum)/Float(tempCounter.weeklyGoal)
+            let percentage = String(Int(fractionDone * 100)) + "%"
             
- 
+            customOverview.overview_data?.leftSub = String(tempCounter.weeklySum)
+            customOverview.overview_data?.rightSub = percentage
+            customOverview.setupData()
             
+            // Update Total Tally Values
+            customOverviewTotal.overview_data?.leftSub = String(tempCounter.totalSum)
+        }
+    }
+
+
+    private func setUpEditSegmentValues(){
+        if let counter = counter {
+            
+            // Set the Edit Segment values
+            LargeTitle.text = counter.title
+            counterTitle.text = counter.title
+            counterWeeklyGoal.text = String(counter.weeklyGoal)
+            counterUnit.text = counter.unit
+            includeWeekends = counter.weekendsIncluded
+            
+            if (!includeWeekends){
+                counterSegmentedControl.selectedSegmentIndex = 1
+                includeWeekends = false
+            }
+            
+            startsBtn.setTitle(formatter.string(from: counter.dateCreated), for: .normal)
+            
+            if(counter.dateEnds != nil){
+                endsBtn.setTitle(formatter.string(from: counter.dateEnds!), for: .normal)
+                endsBtn.setTitleColor(.label, for: .normal)
+            }
+            
+            if(counter.paused == true){
+                counterPause.setTitle("UNARCHIVE", for: .normal)
+                counterPause.backgroundColor = self.view.tintColor
+            }
         }
     }
     
@@ -722,7 +731,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    private func setPickerValues(){
+    private func setupDailyPickerValues(){
         if let tempCounter = tempCounter {
             let weeklyGoal = tempCounter.weeklyGoal
             if weeklyGoal < 10 {
@@ -741,6 +750,11 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             }
 
         }
+        
+        //Setup Method for tapp
+        let labelTap = UITapGestureRecognizer(target: self, action: #selector(self.dailyPickerTapped(_:)))
+        counterDaySum.isUserInteractionEnabled = true
+        counterDaySum.addGestureRecognizer(labelTap)
     }
     
     private func alertUIPickerBox(title: String){
@@ -772,7 +786,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 tempCounter.weeklySum = tempCounter.weeklySum + difference
                 tempCounter.totalSum = tempCounter.totalSum + difference
                 
-                self.updateOverviewValues()
+                self.updateOverviewSegmentValues()
             }
             
    

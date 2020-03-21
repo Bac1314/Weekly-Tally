@@ -30,7 +30,6 @@ var FutureState: Bool = false
 let searchController = UISearchController(searchResultsController: nil)
 let defaults = UserDefaults.standard
 var AddBtn = UIButton(type: .custom)
-var EditBtn = UIBarButtonItem()
 
 protocol customCellDelegate{
     func didTapButton(_ cellCounter: Counter)
@@ -71,10 +70,10 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
     
     var audioPlayer: AVAudioPlayer?
     
-    @IBOutlet weak var RecordsBtn: UIBarButtonItem!
     @IBOutlet weak var ArchivedListBtn: UIButton!
     @IBOutlet weak var FutureListBtn: UIButton!
     @IBOutlet weak var GlobeBtn: UIBarButtonItem!
+    @IBOutlet weak var EditBtn: UIBarButtonItem!
     
     
     override func viewDidLoad() {
@@ -291,6 +290,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+
             // Delete the row from the data source
             if ArchivedState {
                 countersArchived.remove(at: indexPath.row)
@@ -362,6 +362,17 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         return true
     }
     
+    // Disable full swipe to delete
+//    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+//        let delete = UIContextualAction(style: .destructive, title: "Delete") { (action, sourceView, completionHandler) in
+//             print("index path of delete: \(indexPath)")
+//             completionHandler(true)
+//         }
+//         let swipeAction = UISwipeActionsConfiguration(actions: [delete])
+//         swipeAction.performsFirstActionWithFullSwipe = false // This is the line which disables full swipe
+//         return swipeAction
+//    }
+    
 
     
 
@@ -408,12 +419,12 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
             
             counterDetailViewController.counter = selectedCounter
 //            counterDetailViewController.hidesBottomBarWhenPushed = true
-        case "Records":
-            guard let counterTotalTableViewController = segue.destination as? RecordViewController else{
-                      fatalError("Unexpected destination on: \(segue.destination)")
-            }
-
-            counterTotalTableViewController.counters = counters
+//        case "Records":
+//            guard let counterTotalTableViewController = segue.destination as? RecordViewController else{
+//                      fatalError("Unexpected destination on: \(segue.destination)")
+//            }
+//
+//            counterTotalTableViewController.counters = counters
 //            counterTotalTableViewController.hidesBottomBarWhenPushed = true
             
         default:
@@ -590,12 +601,9 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
                 leftBarButton = UIBarButtonItem(title: "Add New Tally", style: .plain,target: self, action: #selector(addNewTally))
             }
         
-
-            EditBtn = UIBarButtonItem(title: "Edit", style: .plain,target: self, action: #selector(editTallyList))
            
             let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-
-            toolbarItems = [leftBarButton, spacer, EditBtn]
+            toolbarItems = [leftBarButton, spacer]
         }
     }
     
@@ -814,7 +822,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
             ArchivedState = true
             FutureState = false
             
-            RecordsBtn.isEnabled = false
+            EditBtn.isEnabled = false
             GlobeBtn.isEnabled = false
             
             ArchivedListBtn.isHidden = true
@@ -838,7 +846,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
             FutureState = true
             ArchivedState = false
             
-            RecordsBtn.isEnabled = false
+            EditBtn.isEnabled = false
             GlobeBtn.isEnabled = false
             
             ArchivedListBtn.isHidden = true
@@ -854,6 +862,36 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         
         tableView.reloadData()
         scrollToTop()
+    }
+    
+    @IBAction func EditAction(_ sender: UIBarButtonItem) {
+        
+                if(tableView.isEditing == true)
+                {
+                    searchController.searchBar.isUserInteractionEnabled = true
+                    searchController.searchBar.alpha = 1
+                    tableView.setEditing(false, animated: true)
+        //            EditBtn.image = UIImage(systemName: "pencil.circle")
+                    EditBtn.title = "Edit"
+                    AddBtn.isEnabled = true
+                    AddBtn.alpha = 1
+                    GlobeBtn.isEnabled = true
+
+                    saveCounters()
+                }
+                else
+                {
+                    searchController.searchBar.isUserInteractionEnabled = false
+                    searchController.searchBar.alpha = 0.5
+                    tableView.setEditing(true, animated: true)
+        //            EditBtn.image = nil
+                    EditBtn.title = "Done"
+                    AddBtn.isEnabled = false
+                    AddBtn.alpha = 0.5
+                    GlobeBtn.isEnabled = false
+                
+                }
+        
     }
     
     // MARK: Protocol functions/ Overwritten functions
@@ -873,7 +911,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         FutureState = false
 
         // Change button states
-        RecordsBtn.isEnabled = true
+        EditBtn.isEnabled = true
         GlobeBtn.isEnabled = true
         ArchivedListBtn.isHidden = false
         FutureListBtn.isHidden = false
@@ -890,35 +928,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         scrollToTop()
     }
     
-    @objc func editTallyList() {
-        if(tableView.isEditing == true)
-        {
-            searchController.searchBar.isUserInteractionEnabled = true
-            searchController.searchBar.alpha = 1
-            tableView.setEditing(false, animated: true)
-//            EditBtn.image = UIImage(systemName: "pencil.circle")
-            EditBtn.title = "Edit"
-            AddBtn.isEnabled = true
-            AddBtn.alpha = 1
-            RecordsBtn.isEnabled = true
-            GlobeBtn.isEnabled = true
+    
 
-            saveCounters()
-        }
-        else
-        {
-            searchController.searchBar.isUserInteractionEnabled = false
-            searchController.searchBar.alpha = 0.5
-            tableView.setEditing(true, animated: true)
-//            EditBtn.image = nil
-            EditBtn.title = "Done"
-            AddBtn.isEnabled = false
-            AddBtn.alpha = 0.5
-            RecordsBtn.isEnabled = false
-            GlobeBtn.isEnabled = false
-        
-        }
-            
-    }
 }
 

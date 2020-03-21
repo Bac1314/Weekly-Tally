@@ -10,7 +10,11 @@ import UIKit
 
 @IBDesignable class CustomOverviewView: CustomView {
     
-    var overview_data: overview?
+    var overview_data: overview? {
+        didSet{
+            setupData()
+        }
+    }
     
     lazy var labelTitle : UILabel = {
         let label = UILabel()
@@ -168,23 +172,19 @@ import UIKit
     
     //MARK: Private Methods
     private func setupViews() {
-        borderWidth = 0.3
-        borderColor = UIColor.white
+//        borderWidth = 0.3
+//        borderColor = UIColor.white
         cornerRadius = 20
-        backgroundColor = UIColor.systemBackground
-      
+        backgroundColor = UIColor.init(named: "TallyCard")
         addSubview(labelTitle)
         addSubview(labelSubtitle)
         addSubview(viewDivider)
         addSubview(stackParent)
-//        addSubview(viewDivider2)
-//        addSubview(progressView)
-//        addSubview(labelPercentage)
-//        addSubview(labelPercentDescription)
         setupLayout()
+
     }
     
-    func setupData(tempCounter: Counter){
+    func setupData(){
         
         if let overview_data = overview_data {
             
@@ -206,7 +206,7 @@ import UIKit
         }
 
     }
-    
+   
     private func setupLayout(){
         
 //        progressView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true

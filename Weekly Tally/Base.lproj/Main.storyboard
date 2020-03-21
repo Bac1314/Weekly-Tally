@@ -3,6 +3,7 @@
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -145,7 +146,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                            <color key="backgroundColor" name="TallyCard"/>
                                             <constraints>
                                                 <constraint firstItem="phV-I1-Cgf" firstAttribute="leading" secondItem="qkx-7a-iVj" secondAttribute="trailing" constant="16" id="8yP-fa-H4s"/>
                                                 <constraint firstItem="qkx-7a-iVj" firstAttribute="centerY" secondItem="Lqz-sS-D8P" secondAttribute="centerY" id="9l1-xv-gso"/>
@@ -171,7 +172,7 @@
                                                     <real key="value" value="20"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                    <real key="value" value="0.29999999999999999"/>
+                                                    <real key="value" value="0.0"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                                                     <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -219,9 +220,9 @@
                     </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Home" largeTitleDisplayMode="always" id="xwH-9U-wjV" colorLabel="IBBuiltInLabel-Purple">
-                        <barButtonItem key="leftBarButtonItem" title="Records" style="done" id="srm-9B-YpO">
+                        <barButtonItem key="leftBarButtonItem" title="Edit" id="hxR-oP-SoR">
                             <connections>
-                                <segue destination="Oer-Lc-fBJ" kind="show" identifier="Records" id="pTc-yR-NTX"/>
+                                <action selector="EditAction:" destination="XzB-Ke-95H" id="4iN-H1-Y16"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="globe" catalog="system" id="shO-Sb-2LB">
@@ -231,9 +232,9 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="ArchivedListBtn" destination="fdm-W4-7oa" id="hny-by-VxP"/>
+                        <outlet property="EditBtn" destination="hxR-oP-SoR" id="rTH-4z-GnM"/>
                         <outlet property="FutureListBtn" destination="E3T-om-faC" id="Tde-MZ-7BC"/>
                         <outlet property="GlobeBtn" destination="shO-Sb-2LB" id="pYx-cs-xFt"/>
-                        <outlet property="RecordsBtn" destination="srm-9B-YpO" id="j7u-v1-iV1"/>
                         <segue destination="Ibo-p3-S7F" kind="presentation" identifier="AddItem" id="uNe-OG-QNJ"/>
                     </connections>
                 </tableViewController>
@@ -246,14 +247,14 @@
             <objects>
                 <viewController id="MWQ-m2-8Dt" customClass="DetailViewController" customModule="Weekly_Tally" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleAspectFit" id="U8n-bo-ueD">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="556"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="610"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IcR-Nr-Ekl">
-                                <rect key="frame" x="0.0" y="56" width="320" height="451"/>
+                                <rect key="frame" x="0.0" y="88" width="320" height="473"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xpw-Fk-dZC" userLabel="ContentView">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="1407"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="1556"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="New Weekly Goal" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="uMg-qe-aGb" userLabel="Large Title">
                                                 <rect key="frame" x="24" y="15.999999999999996" width="272" height="40.666666666666657"/>
@@ -262,7 +263,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleAspectFit" axis="vertical" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="ena-p9-58w" userLabel="Overview Segment Stack">
-                                                <rect key="frame" x="24" y="72.666666666666629" width="272" height="1314.3333333333335"/>
+                                                <rect key="frame" x="24" y="72.666666666666629" width="272" height="1463.3333333333335"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="15y-Cf-bi7" userLabel="Stack View Stepper" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="272" height="50"/>
@@ -324,7 +325,7 @@
                                                                 </connections>
                                                             </button>
                                                         </subviews>
-                                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                        <color key="backgroundColor" name="TallyCard"/>
                                                         <constraints>
                                                             <constraint firstItem="4hg-cr-9OX" firstAttribute="centerX" secondItem="15y-Cf-bi7" secondAttribute="centerX" id="1o4-7o-ax1"/>
                                                             <constraint firstAttribute="trailing" secondItem="5ZX-De-w7D" secondAttribute="trailing" id="FSR-36-0rm"/>
@@ -342,23 +343,33 @@
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                <real key="value" value="12"/>
+                                                                <real key="value" value="20"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                                                                 <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                <real key="value" value="0.29999999999999999"/>
+                                                                <real key="value" value="0.0"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zt6-Lk-Slr" userLabel="OverViewP" customClass="CustomOverviewView" customModule="Weekly_Tally" customModuleProvider="target">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zt6-Lk-Slr" userLabel="Custom Overview " customClass="CustomOverviewView" customModule="Weekly_Tally" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="67.999999999999972" width="272" height="474.33333333333326"/>
-                                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                        <color key="backgroundColor" name="TallyCard"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                <real key="value" value="20"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iK0-Ky-ZhR" customClass="CustomOverviewGraph" customModule="Weekly_Tally" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="560.33333333333337" width="272" height="754.00000000000011"/>
-                                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                        <rect key="frame" x="0.0" y="560.33333333333337" width="272" height="903.00000000000011"/>
+                                                        <color key="backgroundColor" name="TallyCard"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                <real key="value" value="20"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
                                                     </view>
                                                 </subviews>
                                             </stackView>
@@ -418,7 +429,7 @@
                                                                 </subviews>
                                                             </stackView>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="TVk-n7-dyi">
-                                                                <rect key="frame" x="0.0" y="24.333333333333343" width="272" height="45"/>
+                                                                <rect key="frame" x="0.0" y="24.333333333333314" width="272" height="45"/>
                                                                 <subviews>
                                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="e.g. 500 (push-ups), 10 (hours)" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ZsR-w5-Nt3" customClass="CustomTextField" customModule="Weekly_Tally" customModuleProvider="target">
                                                                         <rect key="frame" x="0.0" y="0.0" width="128" height="45"/>
@@ -721,7 +732,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uI2-MP-m4b" userLabel="Extra Data Stack">
-                                                <rect key="frame" x="24" y="638.33333333333348" width="272" height="736.66666666666652"/>
+                                                <rect key="frame" x="24" y="638.33333333333348" width="272" height="885.66666666666652"/>
                                                 <subviews>
                                                     <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="ePK-WX-hAI" userLabel="Divider View">
                                                         <rect key="frame" x="32" y="0.0" width="208" height="1"/>
@@ -743,8 +754,11 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AmW-5x-OXG" customClass="CustomButton" customModule="Weekly_Tally" customModuleProvider="target">
-                                                        <rect key="frame" x="101" y="11.666666666666629" width="70" height="0.0"/>
+                                                        <rect key="frame" x="36" y="11.666666666666629" width="200" height="40"/>
                                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="40" id="7wQ-9u-vZv"/>
+                                                        </constraints>
                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                                         <state key="normal" title="ARCHIVE">
                                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -759,14 +773,17 @@
                                                         </connections>
                                                     </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dov-u8-wAP" userLabel="FlexibleSpace">
-                                                        <rect key="frame" x="0.0" y="22" width="272" height="714.66666666666663"/>
+                                                        <rect key="frame" x="0.0" y="22" width="272" height="863.66666666666663"/>
                                                     </view>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstAttribute="trailing" secondItem="ePK-WX-hAI" secondAttribute="trailing" constant="32" id="0iV-TE-4HC"/>
+                                                    <constraint firstAttribute="trailing" secondItem="AmW-5x-OXG" secondAttribute="trailing" constant="36" id="5cS-rm-ecf"/>
                                                     <constraint firstItem="Dov-u8-wAP" firstAttribute="leading" secondItem="uI2-MP-m4b" secondAttribute="leading" id="Ldt-ob-tOV"/>
+                                                    <constraint firstItem="AmW-5x-OXG" firstAttribute="leading" secondItem="uI2-MP-m4b" secondAttribute="leading" constant="36" id="dfz-sd-QsE"/>
                                                     <constraint firstAttribute="trailing" secondItem="Dov-u8-wAP" secondAttribute="trailing" id="p4t-Ee-PIz"/>
                                                     <constraint firstItem="ePK-WX-hAI" firstAttribute="top" secondItem="uI2-MP-m4b" secondAttribute="top" id="r8z-Gf-rNO"/>
+                                                    <constraint firstItem="joh-pK-daM" firstAttribute="top" secondItem="S29-hu-8hO" secondAttribute="bottom" id="uHO-Ty-6JO"/>
                                                 </constraints>
                                             </stackView>
                                         </subviews>
@@ -832,7 +849,7 @@
                             </connections>
                         </barButtonItem>
                         <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="jdM-5m-7Ec">
-                            <rect key="frame" x="83.666666666666686" y="11.666666666666664" width="153" height="33"/>
+                            <rect key="frame" x="83.666666666666686" y="5.6666666666666679" width="153" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <segments>
                                 <segment title="Overview"/>
@@ -885,7 +902,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iuu-iN-N5d" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="eD2-0K-tPp" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1663.7681159420292" y="109.82142857142857"/>
+            <point key="canvasLocation" x="1670" y="128"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="Dxq-tG-cDZ">
@@ -904,22 +921,22 @@
                                 <rect key="frame" x="18" y="366" width="378" height="191"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NEF-WO-1Cx">
-                                        <rect key="frame" x="16" y="16" width="45" height="15.666666666666664"/>
+                                        <rect key="frame" x="16" y="16" width="350" height="15.666666666666664"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
                                         <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="crU-gH-zpu">
-                                        <rect key="frame" x="16" y="39.666666666666629" width="45" height="21.666666666666671"/>
+                                        <rect key="frame" x="16" y="39.666666666666629" width="350" height="21.666666666666671"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="rNh-ie-TDQ">
-                                        <rect key="frame" x="16" y="71" width="150" height="100"/>
+                                        <rect key="frame" x="16" y="71" width="350" height="100"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8eh-rY-6Bx" customClass="CustomBarView" customModule="Weekly_Tally" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="50" height="100"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="116.66666666666667" height="100"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="progress">
@@ -928,10 +945,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wTZ-tm-u2u">
-                                                <rect key="frame" x="50" y="0.0" width="50" height="100"/>
+                                                <rect key="frame" x="116.66666666666666" y="0.0" width="116.66666666666666" height="100"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vHy-WH-LTO" userLabel="Bar Back" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
-                                                        <rect key="frame" x="10" y="0.0" width="30" height="100"/>
+                                                        <rect key="frame" x="43.333333333333343" y="0.0" width="30" height="100"/>
                                                         <color key="backgroundColor" systemColor="systemFillColor" red="0.47058823529999999" green="0.47058823529999999" blue="0.50196078430000002" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="30" id="AX4-27-Ixg"/>
@@ -943,7 +960,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l0r-nd-qk5" userLabel="Bar Front" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
-                                                        <rect key="frame" x="10" y="38" width="30" height="62"/>
+                                                        <rect key="frame" x="43.333333333333343" y="38" width="30" height="62"/>
                                                         <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="62" id="3zl-JL-OET"/>
@@ -971,10 +988,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ivy-xH-21U">
-                                                <rect key="frame" x="100" y="0.0" width="50" height="100"/>
+                                                <rect key="frame" x="233.33333333333329" y="0.0" width="116.66666666666666" height="100"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y0U-eg-xON" userLabel="Bar Back" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
-                                                        <rect key="frame" x="10" y="0.0" width="30" height="100"/>
+                                                        <rect key="frame" x="43.333333333333371" y="0.0" width="30" height="100"/>
                                                         <color key="backgroundColor" systemColor="systemFillColor" red="0.47058823529999999" green="0.47058823529999999" blue="0.50196078430000002" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="30" id="AFb-3T-8Fh"/>
@@ -986,7 +1003,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yrW-ew-R1A" userLabel="Bar Front" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
-                                                        <rect key="frame" x="10" y="38" width="30" height="62"/>
+                                                        <rect key="frame" x="43.333333333333371" y="38" width="30" height="62"/>
                                                         <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="62" id="6lg-TD-SPm"/>
@@ -1016,7 +1033,7 @@
                                         </subviews>
                                     </stackView>
                                     <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cbf-eE-FbX" userLabel="Divider View">
-                                        <rect key="frame" x="16" y="69.333333333333314" width="45" height="1"/>
+                                        <rect key="frame" x="16" y="69.333333333333314" width="350" height="1"/>
                                         <color key="backgroundColor" systemColor="separatorColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="1" id="k3W-9H-brd"/>
@@ -1053,7 +1070,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Ax-Zk-jeH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2682.608695652174" y="551.11607142857144"/>
+            <point key="canvasLocation" x="887" y="-860"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="9xT-tH-0ep">
@@ -1083,22 +1100,6 @@
             </objects>
             <point key="canvasLocation" x="-715.94202898550725" y="127.90178571428571"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="Oft-yP-uz4">
-            <objects>
-                <viewController id="RL4-km-6Ua" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="pgU-4x-oCL">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="v9d-Cz-UgN"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="X5M-ov-pdV"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="O1O-fQ-AXC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2448" y="-344"/>
-        </scene>
         <!--Records-->
         <scene sceneID="ieE-ND-dEy">
             <objects>
@@ -1108,7 +1109,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="qug-nC-bWS">
-                                <rect key="frame" x="24" y="156" width="366" height="32"/>
+                                <rect key="frame" x="24" y="60" width="366" height="32"/>
                                 <segments>
                                     <segment title="TOTAL"/>
                                     <segment title="W"/>
@@ -1119,7 +1120,7 @@
                                 </connections>
                             </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="229" estimatedRowHeight="-1" sectionHeaderHeight="28" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zad-xf-em8">
-                                <rect key="frame" x="0.0" y="195" width="414" height="618"/>
+                                <rect key="frame" x="0.0" y="99" width="414" height="714"/>
                                 <color key="backgroundColor" systemColor="systemGroupedBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellRecord" id="R7b-yX-ohX" customClass="recordCell" customModule="Weekly_Tally" customModuleProvider="target">
@@ -1129,7 +1130,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="229"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NTE-cc-zWT" userLabel="Container">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NTE-cc-zWT" userLabel="Container" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
                                                     <rect key="frame" x="36" y="21" width="342" height="187"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="stY-VV-bh9">
@@ -1169,7 +1170,6 @@
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                     </subviews>
-                                                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                                     <constraints>
                                                                         <constraint firstItem="6kK-Zl-mEd" firstAttribute="leading" secondItem="tWL-mB-WOC" secondAttribute="leading" constant="8" id="0mF-s5-coM"/>
                                                                         <constraint firstAttribute="trailing" secondItem="0Wj-Hk-dvP" secondAttribute="trailing" constant="8" id="8ww-a9-kII"/>
@@ -1204,7 +1204,6 @@
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                     </subviews>
-                                                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                                     <constraints>
                                                                         <constraint firstItem="cdA-WI-VE3" firstAttribute="top" secondItem="WFu-nH-ooN" secondAttribute="bottom" id="8RH-3B-bkx"/>
                                                                         <constraint firstItem="cdA-WI-VE3" firstAttribute="leading" secondItem="3O8-6q-F78" secondAttribute="leading" constant="8" id="AOf-Hc-J1O"/>
@@ -1227,7 +1226,7 @@
                                                             </constraints>
                                                         </view>
                                                     </subviews>
-                                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                    <color key="backgroundColor" name="TallyCard"/>
                                                     <constraints>
                                                         <constraint firstItem="ZZA-aS-CrV" firstAttribute="leading" secondItem="NTE-cc-zWT" secondAttribute="leading" constant="16" id="1hC-k9-85Q"/>
                                                         <constraint firstItem="stY-VV-bh9" firstAttribute="top" secondItem="NTE-cc-zWT" secondAttribute="top" constant="16" id="FEs-nq-aW0"/>
@@ -1243,6 +1242,11 @@
                                                         <constraint firstItem="eku-Cv-Ex0" firstAttribute="leading" secondItem="NTE-cc-zWT" secondAttribute="leading" constant="16" id="wOe-Z7-ofX"/>
                                                         <constraint firstAttribute="bottom" secondItem="ZZA-aS-CrV" secondAttribute="bottom" constant="16" id="yed-li-PJ6"/>
                                                     </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <real key="value" value="12"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
                                                 </view>
                                             </subviews>
                                             <constraints>
@@ -1267,7 +1271,6 @@
                                             <outlet property="recordTitle" destination="stY-VV-bh9" id="rLq-YE-ubF"/>
                                             <outlet property="recordTotal" destination="0Wj-Hk-dvP" id="x6d-Wv-LWZ"/>
                                             <outlet property="recordTotalUnit" destination="9Gs-Sf-Ner" id="Vnd-zJ-Yqy"/>
-                                            <segue destination="RL4-km-6Ua" kind="show" id="6Ds-3s-vz6"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -1318,7 +1321,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k22-J3-PG5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="966.66666666666674" y="-343.52678571428572"/>
+            <point key="canvasLocation" x="-209" y="-860"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="NqX-7T-92w">
@@ -1350,8 +1353,11 @@
         <image name="plus" catalog="system" width="64" height="56"/>
         <image name="trash" catalog="system" width="60" height="64"/>
         <image name="xmark.circle.fill" catalog="system" width="64" height="60"/>
+        <namedColor name="TallyCard">
+            <color red="1" green="0.99998801950000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="NSc-x9-k25"/>
+        <segue reference="rVw-vX-TAc"/>
     </inferredMetricsTieBreakers>
 </document>

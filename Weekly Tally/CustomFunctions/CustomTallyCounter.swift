@@ -116,7 +116,6 @@ class CustomTallyCounter {
 
         }
 
-
         return totalWeeks
     }
     

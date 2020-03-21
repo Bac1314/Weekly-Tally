@@ -212,10 +212,10 @@ class recordCell: UITableViewCell {
     
     @IBOutlet weak var ContainerView: UIView!{
         didSet {
-            // Make it card-like
-            ContainerView.layer.cornerRadius = 12
-            ContainerView.layer.borderWidth = 0.3
-            ContainerView.layer.borderColor = UIColor.white.cgColor
+//            // Make it card-like
+//            ContainerView.layer.cornerRadius = 12
+//            ContainerView.layer.borderWidth = 0.3
+//            ContainerView.layer.borderColor = UIColor.white.cgColor
         }
     }
 
