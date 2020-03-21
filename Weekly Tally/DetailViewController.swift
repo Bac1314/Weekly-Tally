@@ -54,12 +54,14 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     var includeWeekends: Bool = true
     var counter: Counter?
     var tempCounter: Counter?
+    var activeWeeks: Bool = false
     let formatter = DateFormatter()
     
     var pickerChoices: [String] = []
     var pickerView =  UIPickerView()
     var pickerTypeValue =  String()
     var customDate = CustomDate()
+    
     
     
     override func viewDidLoad() {
@@ -99,6 +101,8 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             
             //Set segment to EDIT
             setSegmentValues(segmentIndex: 1)
+            
+//           navigationItem.rightBarButtonItem = editButtonIte
             over_edit_segmentControl.isEnabled = false
         }
     }
@@ -148,6 +152,49 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             //Delete the counter, no other steps necessary
         }
 
+
+    }
+    
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        
+        if let tempCounter = tempCounter {
+            if activeWeeks {
+                activeWeeks = false
+                
+                // SETUP TOTAL PROGRESS
+                let allWeeks = CustomTallyCounter().getTotalWeeks(counter: tempCounter, DateCreated: tempCounter.dateCreated, pausedPeriod: 0, activeWeeksSelected: false)
+                
+                
+                let labelTitleTOT = "TOTAL WEEKS"
+                let labelSubtitleTOT = "Tally of \(allWeeks) week(s)"
+                let labelRightScoreTOT = (allWeeks > 0) ? String((tempCounter.totalSum-tempCounter.weeklySum)/allWeeks) :  "-"
+                
+                customOverviewTotal.overview_data?.title = labelTitleTOT
+                customOverviewTotal.overview_data?.subtitle = labelSubtitleTOT
+                customOverviewTotal.overview_data?.rightSub = labelRightScoreTOT
+                
+                customOverviewTotal.history_data = CustomTallyCounter().getListOfWeekTallies(counter: tempCounter, activeWeeksSelected: activeWeeks)
+                
+                
+            } else {
+                activeWeeks = true
+                
+                // SETUP TOTAL PROGRESS
+                let allWeeks = CustomTallyCounter().getTotalWeeks(counter: tempCounter, DateCreated: tempCounter.dateCreated, pausedPeriod: 0, activeWeeksSelected: true)
+                
+                
+                let labelTitleTOT = "ACTIVE WEEKS"
+                let labelSubtitleTOT = "Tally of \(allWeeks) active week(s)"
+                let labelRightScoreTOT = (allWeeks > 0) ? String((tempCounter.totalSum-tempCounter.weeklySum)/allWeeks) :  "-"
+                
+                customOverviewTotal.overview_data?.title = labelTitleTOT
+                customOverviewTotal.overview_data?.subtitle = labelSubtitleTOT
+                customOverviewTotal.overview_data?.rightSub = labelRightScoreTOT
+                
+                customOverviewTotal.history_data = CustomTallyCounter().getListOfWeekTallies(counter: tempCounter, activeWeeksSelected: activeWeeks)
+                
+            }
+        }
 
     }
 
@@ -257,62 +304,12 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    @objc func dailyPickerTapped(_ sender: UITapGestureRecognizer) {
-        if let tempCounter = tempCounter {
-            guard let tempDaySum = Int(counterDaySum.text ?? "-1"), tempDaySum != -1 else {
-                fatalError("counterDaySum.text is nil")
-            }
-            alertUIPickerBox(title: tempCounter.title)
-        }
-    }
-
-    
-    // MARK: UITextFieldDelegate
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        // Hide the keyboard
-        textField.resignFirstResponder()
-        return true
-    }
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        saveButton.isEnabled = false
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        // Calls after textfield resign first responder
-        updateDailyGoal()
-        
-        // Update navigation title based on all the textfields
-        if(counterTitle.text?.isEmpty == true && counterWeeklyGoal.text?.isEmpty == true && counterUnit.text?.isEmpty == true){
-            LargeTitle.text = "New Weekly Goal"
-        }
-        
-        if(counterTitle.text?.isEmpty == false && counterTitle.text != LargeTitle.text){
-            LargeTitle.text = counterTitle.text
-        }
-        
-        if(counterTitle.text?.isEmpty == true && counterWeeklyGoal.text?.isEmpty == false){
-            counterTitle.text = "\(counterWeeklyGoal.text ?? "") per week"
-            LargeTitle.text = counterTitle.text
-        }
-        
-        if(counterUnit.text?.isEmpty == false && counterTitle.text == "\(counterWeeklyGoal.text ?? "") per week"){
-            counterTitle.text = "\(counterWeeklyGoal.text ?? "") \(counterUnit.text ?? "unit") per week"
-            LargeTitle.text = counterTitle.text
-        }
-        
-        if(!(counterTitle.text?.isEmpty ?? false) && !(counterWeeklyGoal.text?.isEmpty ?? false)){
-           saveButton.isEnabled = true
-        }
-    
-    }
-    
     @IBAction func deleteAction(_ sender: Any) {
-        let alert = UIAlertController(title: "Are you sure?", message: "Delete this Tally, '\(counter?.title ?? "Unknown")'", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Delete this tally", message: nil, preferredStyle: .actionSheet)
 
 
         alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (UIAlertAction) in
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (UIAlertAction) in
             self.counter?.unit = "delete"
             self.performSegue(withIdentifier: "unwindIdentifier", sender: self)
         }))
@@ -340,7 +337,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                            self.StartDatePicker.date = tempCounter.dateCreated
                            self.StartDatePicker.minimumDate = Date()
                         
-                            if(Calendar.current.isDate(tempCounter.dateCreated, equalTo: Date() , toGranularity: .weekOfYear)){
+                            if(Calendar.current.isDate(tempCounter.dateCreated, equalTo: Date() , toGranularity: .day)){
                                 self.StartDateOptions.selectedSegmentIndex = 0
                             }else {
                                 self.StartDateOptions.selectedSegmentIndex = 2
@@ -355,7 +352,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                     StartDatePicker.date = tempCounter.dateCreated
                     StartDatePicker.minimumDate = Date()
                     
-                    if(Calendar.current.isDate(tempCounter.dateCreated, equalTo: Date() , toGranularity: .weekOfYear)){
+                    if(Calendar.current.isDate(tempCounter.dateCreated, equalTo: Date() , toGranularity: .day)){
                         StartDateOptions.selectedSegmentIndex = 0
                     }else {
                         StartDateOptions.selectedSegmentIndex = 2
@@ -581,6 +578,56 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     }
     
     
+    @objc func dailyPickerTapped(_ sender: UITapGestureRecognizer) {
+        if let tempCounter = tempCounter {
+            guard let tempDaySum = Int(counterDaySum.text ?? "-1"), tempDaySum != -1 else {
+                fatalError("counterDaySum.text is nil")
+            }
+            alertUIPickerBox(title: tempCounter.title)
+        }
+    }
+
+    
+    // MARK: UITextFieldDelegate
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // Hide the keyboard
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        saveButton.isEnabled = false
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        // Calls after textfield resign first responder
+        updateDailyGoal()
+        
+        // Update navigation title based on all the textfields
+        if(counterTitle.text?.isEmpty == true && counterWeeklyGoal.text?.isEmpty == true && counterUnit.text?.isEmpty == true){
+            LargeTitle.text = "New Weekly Goal"
+        }
+        
+        if(counterTitle.text?.isEmpty == false && counterTitle.text != LargeTitle.text){
+            LargeTitle.text = counterTitle.text
+        }
+        
+        if(counterTitle.text?.isEmpty == true && counterWeeklyGoal.text?.isEmpty == false){
+            counterTitle.text = "\(counterWeeklyGoal.text ?? "") per week"
+            LargeTitle.text = counterTitle.text
+        }
+        
+        if(counterUnit.text?.isEmpty == false && counterTitle.text == "\(counterWeeklyGoal.text ?? "") per week"){
+            counterTitle.text = "\(counterWeeklyGoal.text ?? "") \(counterUnit.text ?? "unit") per week"
+            LargeTitle.text = counterTitle.text
+        }
+        
+        if(!(counterTitle.text?.isEmpty ?? false) && !(counterWeeklyGoal.text?.isEmpty ?? false)){
+           saveButton.isEnabled = true
+        }
+    
+    }
+    
     
     // MARK: Private functions
     private func setSegmentValues(segmentIndex: Int){
@@ -651,7 +698,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
              let aOverviewTOT = overview(title: labelTitleTOT, subtitle: labelSubtitleTOT, leftTitle: labelLeftTitleTOT, leftSub: labelLeftScoreTOT, leftUnit: labelLeftScoreUnitTOT, rightTitle: labelRightTitleTOT, rightSub: labelRightScoreTOT, rightUnit: labelRightScoreUnitTOT)
 
              customOverviewTotal.overview_data = aOverviewTOT
-             customOverviewTotal.history_data = CustomTallyCounter().getListOfWeekTallies(counter: tempCounter)
+             customOverviewTotal.history_data = CustomTallyCounter().getListOfWeekTallies(counter: tempCounter, activeWeeksSelected: activeWeeks)
 //             customOverviewTotal.setupData()
             
         }

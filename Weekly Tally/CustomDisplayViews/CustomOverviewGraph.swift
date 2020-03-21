@@ -28,6 +28,7 @@ import UIKit
         label.text = "Your weekly goal for this activity"
         label.textColor = UIColor.systemBlue
         //      label.textAlignment = .center
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -36,6 +37,7 @@ import UIKit
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         label.text = "400 pushups per week"
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -67,6 +69,7 @@ import UIKit
         label.font = UIFont.preferredFont(forTextStyle: .headline)
         label.text = "This week"
         label.textColor = UIColor.lightGray
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -75,6 +78,7 @@ import UIKit
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 28, weight: .semibold)
         label.text = "1000"
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -84,6 +88,7 @@ import UIKit
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
         label.text = "UNIT"
         label.textColor = UIColor.lightGray
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -93,6 +98,7 @@ import UIKit
         label.font = UIFont.preferredFont(forTextStyle: .headline)
         label.text = "Today"
         label.textColor = UIColor.lightGray
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -101,6 +107,7 @@ import UIKit
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 28, weight: .semibold)
         label.text = "100"
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -110,6 +117,7 @@ import UIKit
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
         label.text = "UNIT"
         label.textColor = UIColor.lightGray
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -150,9 +158,11 @@ import UIKit
     lazy var labelGraphFoot : UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
-        label.text = "Note: Average does not include this week's tally"
+        label.text = "Note: Average doesn't include this week's tally \nShake to see active weeks only"
         label.textColor = UIColor.lightGray
         label.font = UIFont.preferredFont(forTextStyle: .footnote)
+        label.numberOfLines = 2
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -191,7 +201,6 @@ import UIKit
     
     func setupData(){
     
-        var max_score: Int = 1
         
         if let overview_data = overview_data {
 
@@ -208,6 +217,8 @@ import UIKit
         }
         
         // SETUP BARS
+        
+        var max_score: Int = 1
         // Remove bars if exist
         stackBars.subviews.forEach({ $0.removeFromSuperview() })
     
@@ -291,13 +302,14 @@ import UIKit
     func updateData(){
     
         if let overview_data = overview_data {
+            labelTitle.text = overview_data.title
+            labelSubtitle.text = overview_data.subtitle
+            
             labelLeftScore.text = overview_data.leftSub
             labelRightScore.text = overview_data.rightSub
         }
-
-
     }
-
+    
     
     private func setupLayout(){
         
@@ -363,10 +375,10 @@ import UIKit
         labelRightScoreUnit.trailingAnchor.constraint(equalTo: viewRight.trailingAnchor, constant: -8).isActive = true
         
         
-        labelGraphFoot.topAnchor.constraint(equalTo: stackParent.bottomAnchor, constant: 8).isActive = true
-        labelGraphFoot.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
-        labelGraphFoot.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
-        labelGraphFoot.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -24).isActive = true
+        labelGraphFoot.topAnchor.constraint(equalTo: stackParent.bottomAnchor, constant: 16).isActive = true
+        labelGraphFoot.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -24).isActive = true
+        labelGraphFoot.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 24).isActive = true
+        labelGraphFoot.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16).isActive = true
         
     }
 }

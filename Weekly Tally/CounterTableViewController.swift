@@ -95,7 +95,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
 //        components.day = 14
 //        components.month = 3
 //        components.year = 2020
-//
+////
 //        let date2 = Calendar.current.date(from: components)!
 //        defaults.set(date2, forKey: "LastRun")
 //        defaults.set(date2, forKey: "LastUpdate")
@@ -531,8 +531,6 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         //Check if NOT in the same week
         if(!(Calendar.current.isDate(lastUpdated, equalTo: today, toGranularity: .weekOfYear))){
             
-        
-            
             let compToday = Calendar.current.dateComponents([.year, .weekOfYear], from: today)
             let compLastUpdate = Calendar.current.dateComponents([.year, .weekOfYear], from: lastUpdated)
             
@@ -559,7 +557,6 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
             }
             
             defaults.set(Date(), forKey: "LastUpdate")
-            saveCounters()
         }
         
         //Update the daily sum if new day
@@ -570,9 +567,10 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
             for counter in counters {
                 counter.dailySum = 0
             }
-            saveCounters()
         }
-    
+        
+        //Save Date
+        saveCounters()
     }
     
     private func setupToolBarButtons(){

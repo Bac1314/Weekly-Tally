@@ -16,7 +16,7 @@ class CustomTallyCounter {
     public func getTallyForPastXweeks(counter: Counter, Weeks: Int, activeWeeksSelected: Bool) -> Int{
         var tally: Int = 0
         
-        let histArrReversed: [Int] = getListOfWeekTallies(counter: counter)
+        let histArrReversed: [Int] = getListOfWeekTallies(counter: counter, activeWeeksSelected: false)
 
         if histArrReversed.count > Weeks {
             
@@ -49,7 +49,7 @@ class CustomTallyCounter {
     }
     
     
-    public func getListOfWeekTalliesReversed(counter: Counter) -> [Int] {
+    public func getListOfWeekTalliesReversed(counter: Counter, activeWeeksSelected: Bool) -> [Int] {
         
         var listOfPastTallies: [Int] = []
         
@@ -64,12 +64,17 @@ class CustomTallyCounter {
             
         }
         
+        // Remove all 0 tallies
+        if activeWeeksSelected {
+            listOfPastTallies.removeAll { $0 == 0 }
+        }
+        
         return listOfPastTallies
         
     }
     
     
-    public func getListOfWeekTallies(counter: Counter) -> [Int] {
+    public func getListOfWeekTallies(counter: Counter, activeWeeksSelected: Bool) -> [Int] {
         
         var listOfPastTallies: [Int] = []
         
@@ -82,6 +87,11 @@ class CustomTallyCounter {
             
             listOfPastTallies = history.components(separatedBy: ",").compactMap { Int($0) }
             
+        }
+        
+        // Remove all 0 tallies
+        if activeWeeksSelected {
+            listOfPastTallies.removeAll { $0 == 0 }
         }
         
         return listOfPastTallies

@@ -22,6 +22,7 @@ import UIKit
         label.text = "Your weekly goal for this activity"
         label.textColor = UIColor.systemBlue
         //      label.textAlignment = .center
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -30,6 +31,7 @@ import UIKit
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         label.text = "400 pushups per week"
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -46,6 +48,7 @@ import UIKit
         label.font = UIFont.preferredFont(forTextStyle: .headline)
         label.text = "This week"
         label.textColor = UIColor.lightGray
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -54,6 +57,7 @@ import UIKit
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 28, weight: .semibold)
         label.text = "1000"
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -62,6 +66,7 @@ import UIKit
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
         label.text = "UNIT"
+        label.adjustsFontSizeToFitWidth = true
         label.textColor = UIColor.lightGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -72,6 +77,7 @@ import UIKit
         label.font = UIFont.preferredFont(forTextStyle: .headline)
         label.text = "Today"
         label.textColor = UIColor.lightGray
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -80,6 +86,7 @@ import UIKit
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 28, weight: .semibold)
         label.text = "100"
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -89,6 +96,7 @@ import UIKit
         label.font = UIFont.preferredFont(forTextStyle: .subheadline)
         label.text = "UNIT"
         label.textColor = UIColor.lightGray
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

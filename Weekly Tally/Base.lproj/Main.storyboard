@@ -82,7 +82,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                     <variation key="heightClass=regular-widthClass=regular">
-                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="30"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="25"/>
                                                     </variation>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" contentHorizontalAlignment="left" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" adjustsImageWhenHighlighted="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bkb-dm-FVj">
@@ -174,8 +174,11 @@
                                                 <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
                                                     <real key="value" value="0.0"/>
                                                 </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                    <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
+                                                    <color key="value" systemColor="opaqueSeparatorColor" red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                                    <real key="value" value="9"/>
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </view>
@@ -186,11 +189,11 @@
                                         <constraint firstAttribute="bottomMargin" secondItem="Lqz-sS-D8P" secondAttribute="bottom" constant="15" id="Dd2-gv-ZaN"/>
                                         <constraint firstItem="Lqz-sS-D8P" firstAttribute="leading" secondItem="cRA-QY-HOQ" secondAttribute="leadingMargin" constant="40" id="l45-p1-EIF">
                                             <variation key="heightClass=compact" constant="150"/>
-                                            <variation key="heightClass=regular-widthClass=regular" constant="200"/>
+                                            <variation key="heightClass=regular-widthClass=regular" constant="175"/>
                                         </constraint>
                                         <constraint firstAttribute="trailingMargin" secondItem="Lqz-sS-D8P" secondAttribute="trailing" constant="40" id="qTt-ea-TNu">
                                             <variation key="heightClass=compact" constant="150"/>
-                                            <variation key="heightClass=regular-widthClass=regular" constant="200"/>
+                                            <variation key="heightClass=regular-widthClass=regular" constant="175"/>
                                         </constraint>
                                         <constraint firstItem="Lqz-sS-D8P" firstAttribute="top" secondItem="cRA-QY-HOQ" secondAttribute="topMargin" constant="15" id="uWf-5E-br3"/>
                                     </constraints>
@@ -254,7 +257,7 @@
                                 <rect key="frame" x="0.0" y="88" width="320" height="473"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xpw-Fk-dZC" userLabel="ContentView">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="1556"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="1556.3333333333333"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="New Weekly Goal" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="uMg-qe-aGb" userLabel="Large Title">
                                                 <rect key="frame" x="24" y="15.999999999999996" width="272" height="40.666666666666657"/>
@@ -263,7 +266,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleAspectFit" axis="vertical" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="ena-p9-58w" userLabel="Overview Segment Stack">
-                                                <rect key="frame" x="24" y="72.666666666666629" width="272" height="1463.3333333333335"/>
+                                                <rect key="frame" x="24" y="72.666666666666629" width="272" height="1463.666666666667"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="15y-Cf-bi7" userLabel="Stack View Stepper" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="272" height="50"/>
@@ -354,7 +357,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zt6-Lk-Slr" userLabel="Custom Overview " customClass="CustomOverviewView" customModule="Weekly_Tally" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="67.999999999999972" width="272" height="474.33333333333326"/>
+                                                        <rect key="frame" x="0.0" y="68.000000000000028" width="272" height="474.66666666666674"/>
                                                         <color key="backgroundColor" name="TallyCard"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -363,7 +366,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iK0-Ky-ZhR" customClass="CustomOverviewGraph" customModule="Weekly_Tally" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="560.33333333333337" width="272" height="903.00000000000011"/>
+                                                        <rect key="frame" x="0.0" y="560.66666666666674" width="272" height="903"/>
                                                         <color key="backgroundColor" name="TallyCard"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -732,7 +735,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uI2-MP-m4b" userLabel="Extra Data Stack">
-                                                <rect key="frame" x="24" y="638.33333333333348" width="272" height="885.66666666666652"/>
+                                                <rect key="frame" x="24" y="638.33333333333348" width="272" height="886"/>
                                                 <subviews>
                                                     <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="ePK-WX-hAI" userLabel="Divider View">
                                                         <rect key="frame" x="32" y="0.0" width="208" height="1"/>
@@ -773,7 +776,7 @@
                                                         </connections>
                                                     </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dov-u8-wAP" userLabel="FlexibleSpace">
-                                                        <rect key="frame" x="0.0" y="22" width="272" height="863.66666666666663"/>
+                                                        <rect key="frame" x="0.0" y="22" width="272" height="864"/>
                                                     </view>
                                                 </subviews>
                                                 <constraints>
@@ -823,16 +826,20 @@
                         <constraints>
                             <constraint firstItem="IcR-Nr-Ekl" firstAttribute="top" secondItem="XkX-Qz-qv1" secondAttribute="top" id="9zg-Sw-bcc"/>
                             <constraint firstItem="XkX-Qz-qv1" firstAttribute="bottom" secondItem="IcR-Nr-Ekl" secondAttribute="bottom" id="HWP-Yc-C6n"/>
-                            <constraint firstItem="IcR-Nr-Ekl" firstAttribute="leading" secondItem="XkX-Qz-qv1" secondAttribute="leading" id="jUM-ib-mMY"/>
-                            <constraint firstItem="XkX-Qz-qv1" firstAttribute="trailing" secondItem="IcR-Nr-Ekl" secondAttribute="trailing" id="t7h-kN-zcG"/>
+                            <constraint firstItem="IcR-Nr-Ekl" firstAttribute="leading" secondItem="XkX-Qz-qv1" secondAttribute="leading" id="jUM-ib-mMY">
+                                <variation key="heightClass=regular-widthClass=regular" constant="100"/>
+                            </constraint>
+                            <constraint firstItem="XkX-Qz-qv1" firstAttribute="trailing" secondItem="IcR-Nr-Ekl" secondAttribute="trailing" id="t7h-kN-zcG">
+                                <variation key="heightClass=regular-widthClass=regular" constant="100"/>
+                            </constraint>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="XkX-Qz-qv1"/>
                     </view>
                     <toolbarItems>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="zy3-aD-cOv"/>
-                        <barButtonItem title="Item" image="person.badge.plus" catalog="system" id="JHc-cO-x5v"/>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="iyS-WA-DAK"/>
                         <barButtonItem title="Item" image="paperplane" catalog="system" id="c9w-mX-z6V"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="iyS-WA-DAK"/>
+                        <barButtonItem title="Item" image="qrcode" catalog="system" id="JHc-cO-x5v"/>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="vP8-Ff-oMN"/>
                         <barButtonItem title="Item" image="trash" catalog="system" id="L0F-aK-UT6">
                             <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1349,12 +1356,12 @@
         <image name="globe" catalog="system" width="64" height="60"/>
         <image name="minus" catalog="system" width="64" height="12"/>
         <image name="paperplane" catalog="system" width="64" height="60"/>
-        <image name="person.badge.plus" catalog="system" width="64" height="58"/>
         <image name="plus" catalog="system" width="64" height="56"/>
+        <image name="qrcode" catalog="system" width="64" height="56"/>
         <image name="trash" catalog="system" width="60" height="64"/>
         <image name="xmark.circle.fill" catalog="system" width="64" height="60"/>
         <namedColor name="TallyCard">
-            <color red="1" green="0.99998801950000005" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
     <inferredMetricsTieBreakers>
