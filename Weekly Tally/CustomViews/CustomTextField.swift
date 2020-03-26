@@ -34,7 +34,7 @@ class CustomTextField: UITextField {
          }
     }
     @IBInspectable public var cornerRadius:CGFloat {
-         get {
+        get {
              return layer.cornerRadius
          }
          set {

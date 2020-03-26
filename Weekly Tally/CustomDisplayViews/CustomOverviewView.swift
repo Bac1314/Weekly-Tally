@@ -183,7 +183,7 @@ import UIKit
 //        borderWidth = 0.3
 //        borderColor = UIColor.white
         cornerRadius = 20
-        backgroundColor = UIColor.init(named: "TallyCard")
+//        backgroundColor = UIColor.init(named: "TallyCard")
         addSubview(labelTitle)
         addSubview(labelSubtitle)
         addSubview(viewDivider)
@@ -216,14 +216,7 @@ import UIKit
     }
    
     private func setupLayout(){
-        
-//        progressView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
-////        progressView.heightAnchor.constraint(equalToConstant: 6).isActive = true
-//        progressView.centerXAnchor.constraint(equalToSystemSpacingAfter: self.centerXAnchor, multiplier: 0).isActive = true
-//        progressView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
-//        progressView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
-//
-        
+
         labelTitle.topAnchor.constraint(equalTo: self.topAnchor, constant: 16).isActive = true
         labelTitle.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
         labelTitle.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
@@ -239,12 +232,12 @@ import UIKit
             -16).isActive = true
         
         
-        
         stackParent.heightAnchor.constraint(equalToConstant: 90).isActive = true
         stackParent.topAnchor.constraint(equalTo: viewDivider.bottomAnchor, constant: 8).isActive = true
         stackParent.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
         stackParent.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
         stackParent.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -24).isActive = true
+        
         
         labelLeftTitle.topAnchor.constraint(equalTo: viewLeft.topAnchor, constant: 8).isActive = true
         labelLeftTitle.leadingAnchor.constraint(equalTo: viewLeft.leadingAnchor, constant: 8).isActive = true

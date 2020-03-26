@@ -20,6 +20,21 @@ import UIKit
             setupData()
         }
     }
+    
+    @IBInspectable public var backColor:UIColor? = UIColor.init(named: "TallyCard") {
+        didSet {
+            backgroundColor = backColor
+        }
+    }
+    @IBInspectable public var textColor:UIColor? = UIColor.label {
+        didSet {
+            labelSubtitle.textColor = textColor
+            labelLeftScore.textColor = textColor
+            labelRightScore.textColor = textColor
+            
+         }
+    }
+    @IBInspectable public var footHidden:Bool = false
 
     
     lazy var labelTitle : UILabel = {
@@ -37,6 +52,7 @@ import UIKit
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         label.text = "400 pushups per week"
+        label.textColor = textColor
         label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -78,6 +94,7 @@ import UIKit
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 28, weight: .semibold)
         label.text = "1000"
+        label.textColor = textColor
         label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -107,6 +124,7 @@ import UIKit
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 28, weight: .semibold)
         label.text = "100"
+        label.textColor = textColor
         label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -157,13 +175,14 @@ import UIKit
 
     lazy var labelGraphFoot : UILabel = {
         let label = UILabel()
-        label.numberOfLines = 2
-        label.text = "Note: Average doesn't include this week's tally \nShake to see active weeks only"
+        label.numberOfLines = 1
+        label.text = "Note: Shake to see active weeks only"
         label.textColor = UIColor.lightGray
         label.font = UIFont.preferredFont(forTextStyle: .footnote)
         label.numberOfLines = 2
         label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.isHidden = footHidden
         return label
     }()
     
@@ -185,7 +204,8 @@ import UIKit
     private func setupViews() {
 
         cornerRadius = 20
-        backgroundColor = UIColor.init(named: "TallyCard")
+        backgroundColor = backColor
+//            UIColor.init(named: "TallyCard")
         
         addSubview(labelTitle)
         addSubview(labelSubtitle)
@@ -200,8 +220,6 @@ import UIKit
     }
     
     func setupData(){
-    
-        
         if let overview_data = overview_data {
 
             labelTitle.text = overview_data.title

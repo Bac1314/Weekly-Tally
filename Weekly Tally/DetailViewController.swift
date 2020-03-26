@@ -12,6 +12,7 @@ import os.log
 class DetailViewController: UIViewController, UITextFieldDelegate {
 
     // MARK: Properties
+    @IBOutlet weak var scrollView: UIScrollView!
     
     // Navigationbar Properties
     @IBOutlet weak var overviewSegmentStack: UIStackView!
@@ -104,6 +105,12 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             
 //           navigationItem.rightBarButtonItem = editButtonIte
             over_edit_segmentControl.isEnabled = false
+            
+            // Set toolbar scan to add a Tally through QR code
+            let centerBarButton: UIBarButtonItem! = UIBarButtonItem(image: UIImage(systemName: "qrcode.viewfinder"), style: .plain, target: self, action: #selector(addNewTallyQR))
+            
+            let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            toolbarItems = [spacer, centerBarButton, spacer]
         }
     }
     
@@ -119,7 +126,9 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 //            os_log("The save button was not pressed, cancelling", log: OSLog.default, type: .debug)
 //            return
 //        }
-        
+ 
+        print("Reach here")
+            
         if let button = sender as? UIBarButtonItem, button === saveButton {
             if let counter = counter, let tempCounter = tempCounter {
                     
@@ -148,8 +157,18 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 counter?.dateEnds = tempCounter?.dateEnds
 
             }
+        }else if let identifier = segue.identifier, identifier == "ShareItem" {
+            print("Reach here here")
+            guard let shareViewController = segue.destination as? ShareViewController else{
+                fatalError("Unexpected destination on: \(segue.destination)")
+            }
+            
+            shareViewController.counter = counter
+            
         }else if let identifier = segue.identifier, identifier == "unwindIdentifier", let _ = segue.destination as? CounterTableViewController, let counter = counter, counter.unit == "delete" {
             //Delete the counter, no other steps necessary
+        }else{
+                print("NOTHING")
         }
 
 
@@ -166,8 +185,8 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 
                 
                 let labelTitleTOT = "TOTAL WEEKS"
-                let labelSubtitleTOT = "Tally of \(allWeeks) week(s)"
-                let labelRightScoreTOT = (allWeeks > 0) ? String((tempCounter.totalSum-tempCounter.weeklySum)/allWeeks) :  "-"
+                let labelSubtitleTOT = "Tally of \(Int(allWeeks)) week(s)"
+                let labelRightScoreTOT = (allWeeks > 0) ? String(Int(Float(tempCounter.totalSum)/Float(allWeeks))) :  "-"
                 
                 customOverviewTotal.overview_data?.title = labelTitleTOT
                 customOverviewTotal.overview_data?.subtitle = labelSubtitleTOT
@@ -184,8 +203,8 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 
                 
                 let labelTitleTOT = "ACTIVE WEEKS"
-                let labelSubtitleTOT = "Tally of \(allWeeks) active week(s)"
-                let labelRightScoreTOT = (allWeeks > 0) ? String((tempCounter.totalSum-tempCounter.weeklySum)/allWeeks) :  "-"
+                let labelSubtitleTOT = "Tally of \(Int(allWeeks)) active week(s)"
+                let labelRightScoreTOT = (allWeeks > 0) ? String(Int(Float(tempCounter.totalSum)/allWeeks)) :  "-"
                 
                 customOverviewTotal.overview_data?.title = labelTitleTOT
                 customOverviewTotal.overview_data?.subtitle = labelSubtitleTOT
@@ -303,20 +322,6 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    
-    @IBAction func deleteAction(_ sender: Any) {
-        let alert = UIAlertController(title: "Delete this tally", message: nil, preferredStyle: .actionSheet)
-
-
-        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (UIAlertAction) in
-            self.counter?.unit = "delete"
-            self.performSegue(withIdentifier: "unwindIdentifier", sender: self)
-        }))
-             
-        
-        present(alert, animated: true)
-    }
     
     @IBAction func startBtnAction(_ sender: Any) {
         if(StartDatePicker.isHidden == true){
@@ -577,6 +582,69 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         setSegmentValues(segmentIndex: sender.selectedSegmentIndex)
     }
     
+
+    @IBAction func shareAction(_ sender: UIBarButtonItem) {
+        
+//        let image = UIImage(view: customOverviewTotal)
+//        let image = CustomShare().viewToImage(view: customOverviewTotal)
+        guard let image = CustomShare().generateQRCode(from: "Bac is cool") else { return }
+
+
+        let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        
+        activityController.completionWithItemsHandler = { (nil, completed, _, error) in
+            if completed {
+                print("completed")
+            } else {
+                print("cancled")
+            }
+        }
+        present(activityController, animated: true)
+    }
+    
+    @IBAction func challengeAction(_ sender: UIBarButtonItem) {
+        
+        // Share on instagram stories
+        if let storiesUrl = URL(string: "instagram-stories://share") {
+            if UIApplication.shared.canOpenURL(storiesUrl) {
+//                guard let image = sharingImageView.image else { return }
+                let image = UIImage(view: customOverviewTotal)
+                guard let imageData = image.pngData() else { return }
+                let pasteboardItems: [String: Any] = [
+                    "com.instagram.sharedSticker.stickerImage": imageData,
+                    "com.instagram.sharedSticker.backgroundTopColor":  "#34b1eb",
+                    "com.instagram.sharedSticker.backgroundBottomColor": "#bff2eb"
+                ]
+                
+                let pasteboardOptions = [
+                    UIPasteboard.OptionsKey.expirationDate: Date().addingTimeInterval(300)
+                ]
+                UIPasteboard.general.setItems([pasteboardItems], options: pasteboardOptions)
+                UIApplication.shared.open(storiesUrl, options: [:], completionHandler: nil)
+            } else {
+                print("User doesn't have instagram on their device.")
+            }
+        }
+
+    }
+    
+    @IBAction func deleteAction(_ sender: Any) {
+        let alert = UIAlertController(title: "Delete this tally", message: nil, preferredStyle: .actionSheet)
+
+
+        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (UIAlertAction) in
+            self.counter?.unit = "delete"
+            self.performSegue(withIdentifier: "unwindIdentifier", sender: self)
+        }))
+             
+        
+        present(alert, animated: true)
+    }
+    
+    @IBAction func shareBtnAction(_ sender: Any) {
+    }
+    
     
     @objc func dailyPickerTapped(_ sender: UITapGestureRecognizer) {
         if let tempCounter = tempCounter {
@@ -586,7 +654,11 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             alertUIPickerBox(title: tempCounter.title)
         }
     }
-
+    
+    @objc func addNewTallyQR() {
+        // Scan QR code
+    }
+    
     
     // MARK: UITextFieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -632,18 +704,22 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     // MARK: Private functions
     private func setSegmentValues(segmentIndex: Int){
         over_edit_segmentControl.selectedSegmentIndex = segmentIndex
+
+        // Scroll to top
+        scrollView.setContentOffset(CGPoint(x: 0,y: 0), animated: false)
         
         if(segmentIndex == 0){
             overviewSegmentStack.isHidden = false
             editSegmentStack.isHidden = true
             extraDataStack.isHidden = true
-
         
         }else{
             overviewSegmentStack.isHidden = true
             editSegmentStack.isHidden = false
             extraDataStack.isHidden = false
             counterPause.isHidden = counter == nil ? true : false
+            
+            updateDailyGoal()
              
         }
         
@@ -684,14 +760,14 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 
 
              let labelTitleTOT = "TOTAL WEEKS"
-             let labelSubtitleTOT = "Tally of \(allWeeks) week(s)"
+             let labelSubtitleTOT = "Tally of \(Int(allWeeks)) week(s)"
 
              let labelLeftTitleTOT = "Tally"
              let labelLeftScoreTOT = String(tempCounter.totalSum)
              let labelLeftScoreUnitTOT = tempCounter.unit ?? ""
 
              let labelRightTitleTOT = "Average"
-             let labelRightScoreTOT = (allWeeks > 0) ? String((tempCounter.totalSum-tempCounter.weeklySum)/allWeeks) :  "-"
+             let labelRightScoreTOT = (allWeeks > 0) ? String(Int(Float(tempCounter.totalSum)/allWeeks)) :  "-"
              let labelRightScoreUnitTOT = "\(tempCounter.unit ?? "")/week"
 
 
@@ -707,16 +783,19 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     private func updateOverviewSegmentValues(){
         if let _ = counter, let tempCounter = tempCounter{
             
+            let allWeeks = CustomTallyCounter().getTotalWeeks(counter: tempCounter, DateCreated: tempCounter.dateCreated, pausedPeriod: 0, activeWeeksSelected: false)
+            
             // Update This Week values
             let fractionDone = Float(tempCounter.weeklySum)/Float(tempCounter.weeklyGoal)
             let percentage = String(Int(fractionDone * 100)) + "%"
+            let labelRightScoreTOT = (allWeeks > 0) ? String(Int(Float(tempCounter.totalSum)/allWeeks)) :  "-"
             
             customOverview.overview_data?.leftSub = String(tempCounter.weeklySum)
             customOverview.overview_data?.rightSub = percentage
-            customOverview.setupData()
             
             // Update Total Tally Values
             customOverviewTotal.overview_data?.leftSub = String(tempCounter.totalSum)
+            customOverviewTotal.overview_data?.rightSub = labelRightScoreTOT
         }
     }
 
@@ -883,5 +962,16 @@ extension UIViewController
     @objc func dismissKeyboard()
     {
         view.endEditing(true)
+    }
+}
+
+extension UIImage {
+    convenience init(view: UIView) {
+        
+        let renderer = UIGraphicsImageRenderer(size: view.bounds.size)
+        let image = renderer.image { ctx in
+            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+        }
+        self.init(cgImage: image.cgImage!)
     }
 }

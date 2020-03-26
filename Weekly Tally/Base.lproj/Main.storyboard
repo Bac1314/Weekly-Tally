@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Fuj-Uz-WkA">
-    <device id="retina6_5" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Fuj-Uz-WkA">
+    <device id="retina6_5" orientation="portrait" appearance="dark"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -183,7 +183,6 @@
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                     </subviews>
-                                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                     <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
                                     <constraints>
                                         <constraint firstAttribute="bottomMargin" secondItem="Lqz-sS-D8P" secondAttribute="bottom" constant="15" id="Dd2-gv-ZaN"/>
@@ -265,7 +264,7 @@
                                                 <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <stackView opaque="NO" contentMode="scaleAspectFit" axis="vertical" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="ena-p9-58w" userLabel="Overview Segment Stack">
+                                            <stackView opaque="NO" contentMode="scaleAspectFit" misplaced="YES" axis="vertical" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="ena-p9-58w" userLabel="Overview Segment Stack">
                                                 <rect key="frame" x="24" y="72.666666666666629" width="272" height="1463.666666666667"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="15y-Cf-bi7" userLabel="Stack View Stepper" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
@@ -357,7 +356,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zt6-Lk-Slr" userLabel="Custom Overview " customClass="CustomOverviewView" customModule="Weekly_Tally" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="68.000000000000028" width="272" height="474.66666666666674"/>
+                                                        <rect key="frame" x="0.0" y="68.000000000000014" width="272" height="188.33333333333337"/>
                                                         <color key="backgroundColor" name="TallyCard"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -366,7 +365,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iK0-Ky-ZhR" customClass="CustomOverviewGraph" customModule="Weekly_Tally" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="560.66666666666674" width="272" height="903"/>
+                                                        <rect key="frame" x="0.0" y="274.33333333333337" width="272" height="1189.333333333333"/>
                                                         <color key="backgroundColor" name="TallyCard"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -377,7 +376,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView hidden="YES" opaque="NO" contentMode="scaleAspectFill" axis="vertical" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="3Tv-4M-pPc" userLabel="Edit Segment Stack">
-                                                <rect key="frame" x="24" y="72.666666666666686" width="272" height="541.66666666666652"/>
+                                                <rect key="frame" x="24" y="72.666666666666657" width="272" height="350.66666666666674"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="hxL-Tv-Rbw" userLabel="Title Container">
                                                         <rect key="frame" x="0.0" y="0.0" width="272" height="69.333333333333329"/>
@@ -389,7 +388,7 @@
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Tally title e.g. 100 pushups per week" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Vv1-wC-d6c" customClass="CustomTextField" customModule="Weekly_Tally" customModuleProvider="target">
+                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="e.g. 100 pushups per week, 2 hours reading per week" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Vv1-wC-d6c" customClass="CustomTextField" customModule="Weekly_Tally" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="24.333333333333343" width="272" height="45"/>
                                                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                                 <constraints>
@@ -434,7 +433,7 @@
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="TVk-n7-dyi">
                                                                 <rect key="frame" x="0.0" y="24.333333333333314" width="272" height="45"/>
                                                                 <subviews>
-                                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="e.g. 500 (push-ups), 10 (hours)" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ZsR-w5-Nt3" customClass="CustomTextField" customModule="Weekly_Tally" customModuleProvider="target">
+                                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="e.g. 10 (hours)" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ZsR-w5-Nt3" customClass="CustomTextField" customModule="Weekly_Tally" customModuleProvider="target">
                                                                         <rect key="frame" x="0.0" y="0.0" width="128" height="45"/>
                                                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                                         <constraints>
@@ -700,10 +699,10 @@
                                                         </connections>
                                                     </datePicker>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eA7-Qz-rI5" userLabel="Include Container">
-                                                        <rect key="frame" x="0.0" y="300.66666666666663" width="272" height="241"/>
+                                                        <rect key="frame" x="0.0" y="300.66666666666663" width="272" height="50"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" INCLUDE WEEKENDS?" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I8G-pc-ZjZ">
-                                                                <rect key="frame" x="0.0" y="0.0" width="120" height="241"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="120" height="50"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="120" id="X3N-GH-wyP"/>
                                                                 </constraints>
@@ -712,7 +711,7 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="4DQ-cH-V7d">
-                                                                <rect key="frame" x="120" y="8" width="152" height="226"/>
+                                                                <rect key="frame" x="120" y="8" width="152" height="35"/>
                                                                 <segments>
                                                                     <segment title="7 days"/>
                                                                     <segment title="5 days"/>
@@ -735,7 +734,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uI2-MP-m4b" userLabel="Extra Data Stack">
-                                                <rect key="frame" x="24" y="638.33333333333348" width="272" height="886"/>
+                                                <rect key="frame" x="24" y="447.33333333333337" width="272" height="1077"/>
                                                 <subviews>
                                                     <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="ePK-WX-hAI" userLabel="Divider View">
                                                         <rect key="frame" x="32" y="0.0" width="208" height="1"/>
@@ -776,7 +775,7 @@
                                                         </connections>
                                                     </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dov-u8-wAP" userLabel="FlexibleSpace">
-                                                        <rect key="frame" x="0.0" y="22" width="272" height="864"/>
+                                                        <rect key="frame" x="0.0" y="22" width="272" height="1055"/>
                                                     </view>
                                                 </subviews>
                                                 <constraints>
@@ -837,10 +836,13 @@
                     </view>
                     <toolbarItems>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="zy3-aD-cOv"/>
-                        <barButtonItem title="Item" image="paperplane" catalog="system" id="c9w-mX-z6V"/>
+                        <barButtonItem title="Item" image="paperplane" catalog="system" id="c9w-mX-z6V">
+                            <connections>
+                                <action selector="shareBtnAction:" destination="MWQ-m2-8Dt" id="hUp-0G-8mT"/>
+                                <segue destination="qwP-Lr-5PV" kind="presentation" identifier="ShareItem" id="KFO-Eb-GQm"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="iyS-WA-DAK"/>
-                        <barButtonItem title="Item" image="qrcode" catalog="system" id="JHc-cO-x5v"/>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="vP8-Ff-oMN"/>
                         <barButtonItem title="Item" image="trash" catalog="system" id="L0F-aK-UT6">
                             <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
@@ -881,7 +883,6 @@
                         <outlet property="StartDateOptions" destination="6iH-o5-7nE" id="Uyy-ae-sKQ"/>
                         <outlet property="StartDatePicker" destination="RIU-Iq-VCh" id="9IW-gJ-CCn"/>
                         <outlet property="cancelButton" destination="sKF-hz-Fec" id="1yF-vv-1HB"/>
-                        <outlet property="challengeBtn" destination="JHc-cO-x5v" id="TId-Hu-0M1"/>
                         <outlet property="contentView" destination="xpw-Fk-dZC" id="UUn-AP-aGA"/>
                         <outlet property="counterDailyGoal" destination="S29-hu-8hO" id="PHV-cZ-5g6"/>
                         <outlet property="counterDaySum" destination="4hg-cr-9OX" id="HML-pS-vrB"/>
@@ -902,6 +903,7 @@
                         <outlet property="overviewSegmentStack" destination="ena-p9-58w" id="rZb-Xp-WGL"/>
                         <outlet property="perDayLabel" destination="joh-pK-daM" id="lD6-qn-c0A"/>
                         <outlet property="saveButton" destination="giK-IH-IEg" id="eXr-1T-fz0"/>
+                        <outlet property="scrollView" destination="IcR-Nr-Ekl" id="G79-lY-1Wc"/>
                         <outlet property="shareBtn" destination="c9w-mX-z6V" id="FBE-o2-uPA"/>
                         <outlet property="startsBtn" destination="jye-aG-udf" id="Y0h-AN-qcP"/>
                     </connections>
@@ -911,173 +913,300 @@
             </objects>
             <point key="canvasLocation" x="1670" y="128"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="Dxq-tG-cDZ">
+        <!--Share View Controller-->
+        <scene sceneID="Dhg-jV-hPf">
             <objects>
-                <viewController id="dRX-17-v8n" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Q4F-t0-dVM">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                <viewController title="Share View Controller" id="qwP-Lr-5PV" customClass="ShareViewController" customModule="Weekly_Tally" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="HgE-bV-8Rb">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="946"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6uD-xf-DA9" customClass="CustomOverviewGraph" customModule="Weekly_Tally" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="63" width="414" height="266"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                            </view>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZXj-ox-CIr" userLabel="Container">
-                                <rect key="frame" x="18" y="366" width="378" height="191"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qAE-4I-o2c">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="912"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NEF-WO-1Cx">
-                                        <rect key="frame" x="16" y="16" width="350" height="15.666666666666664"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
-                                        <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="crU-gH-zpu">
-                                        <rect key="frame" x="16" y="39.666666666666629" width="350" height="21.666666666666671"/>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="rNh-ie-TDQ">
-                                        <rect key="frame" x="16" y="71" width="350" height="100"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u4Y-n0-dia" userLabel="ContentView">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1012.6666666666666"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8eh-rY-6Bx" customClass="CustomBarView" customModule="Weekly_Tally" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="116.66666666666667" height="100"/>
-                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="progress">
-                                                        <integer key="value" value="70"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wTZ-tm-u2u">
-                                                <rect key="frame" x="116.66666666666666" y="0.0" width="116.66666666666666" height="100"/>
+                                            <stackView opaque="NO" contentMode="scaleAspectFit" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="NyU-Ff-B7o" userLabel="Cards Holder">
+                                                <rect key="frame" x="42" y="24" width="330" height="968.66666666666663"/>
                                                 <subviews>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vHy-WH-LTO" userLabel="Bar Back" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
-                                                        <rect key="frame" x="43.333333333333343" y="0.0" width="30" height="100"/>
-                                                        <color key="backgroundColor" systemColor="systemFillColor" red="0.47058823529999999" green="0.47058823529999999" blue="0.50196078430000002" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="30" id="AX4-27-Ixg"/>
-                                                        </constraints>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share your goal" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z9k-ed-H2B">
+                                                        <rect key="frame" x="0.0" y="0.0" width="330" height="27.666666666666668"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="23"/>
+                                                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uGv-pS-R4B" customClass="CustomShareView" customModule="Weekly_Tally" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="35.666666666666657" width="330" height="289.66666666666674"/>
+                                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                         <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="backColor">
+                                                                <color key="value" name="TallyCard"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="textColor">
+                                                                <color key="value" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                                <color key="value" cocoaTouchSystemColor="lightTextColor"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                                <real key="value" value="1.3"/>
+                                                            </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                <real key="value" value="15"/>
+                                                                <real key="value" value="20"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l0r-nd-qk5" userLabel="Bar Front" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
-                                                        <rect key="frame" x="43.333333333333343" y="38" width="30" height="62"/>
-                                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cWd-jU-DvG" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="333.33333333333331" width="330" height="50"/>
+                                                        <subviews>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="Pds-Q6-1wT">
+                                                                <rect key="frame" x="0.0" y="0.0" width="330" height="50"/>
+                                                                <subviews>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XzW-wf-Fzb" customClass="CustomButton" customModule="Weekly_Tally" customModuleProvider="target">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="108.66666666666667" height="50"/>
+                                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                                                        <inset key="imageEdgeInsets" minX="-4" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                        <state key="normal" title="share" image="paperplane" catalog="system">
+                                                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                        </state>
+                                                                        <userDefinedRuntimeAttributes>
+                                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                                                <color key="value" white="0.75" alpha="1" colorSpace="calibratedWhite"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                        </userDefinedRuntimeAttributes>
+                                                                        <connections>
+                                                                            <action selector="shareAction:" destination="qwP-Lr-5PV" eventType="touchUpInside" id="Eg9-t9-nke"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PWS-8t-L6g" customClass="CustomButton" customModule="Weekly_Tally" customModuleProvider="target">
+                                                                        <rect key="frame" x="110.66666666666666" y="0.0" width="108.66666666666666" height="50"/>
+                                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                                                        <inset key="imageEdgeInsets" minX="-4" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                        <state key="normal" title="IG" image="camera" catalog="system">
+                                                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                        </state>
+                                                                        <userDefinedRuntimeAttributes>
+                                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                                                <color key="value" name="TallyCard"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                                                <real key="value" value="0.0"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                        </userDefinedRuntimeAttributes>
+                                                                        <connections>
+                                                                            <action selector="igAction:" destination="qwP-Lr-5PV" eventType="touchUpInside" id="U5G-1F-WmV"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dxf-d9-7rx">
+                                                                        <rect key="frame" x="221.33333333333329" y="0.0" width="108.66666666666666" height="50"/>
+                                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                                                        <inset key="imageEdgeInsets" minX="-4" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                        <state key="normal" title="download" image="square.and.arrow.down" catalog="system">
+                                                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                        </state>
+                                                                        <connections>
+                                                                            <action selector="downloadAction:" destination="qwP-Lr-5PV" eventType="touchUpInside" id="AxO-HQ-GgS"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                </subviews>
+                                                            </stackView>
+                                                        </subviews>
+                                                        <color key="backgroundColor" name="TallyCard"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" constant="62" id="3zl-JL-OET"/>
-                                                            <constraint firstAttribute="width" constant="30" id="d5C-Uk-vpS"/>
+                                                            <constraint firstAttribute="bottom" secondItem="Pds-Q6-1wT" secondAttribute="bottom" id="1LF-JL-5j9"/>
+                                                            <constraint firstAttribute="height" constant="50" id="7tD-wb-uQ1"/>
+                                                            <constraint firstItem="Pds-Q6-1wT" firstAttribute="leading" secondItem="cWd-jU-DvG" secondAttribute="leading" id="Gzo-4X-QoC"/>
+                                                            <constraint firstAttribute="trailing" secondItem="Pds-Q6-1wT" secondAttribute="trailing" id="IQZ-gE-j7d"/>
+                                                            <constraint firstItem="Pds-Q6-1wT" firstAttribute="top" secondItem="cWd-jU-DvG" secondAttribute="top" id="Ndv-We-Uvx"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                <real key="value" value="15"/>
+                                                                <real key="value" value="20"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                                <real key="value" value="1.3"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                                <color key="value" cocoaTouchSystemColor="lightTextColor"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Szx-3h-LfT" userLabel="Extra Space">
+                                                        <rect key="frame" x="0.0" y="391.33333333333331" width="330" height="18"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="18" id="wH7-JV-48H"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share your record" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J8p-mx-ILm">
+                                                        <rect key="frame" x="0.0" y="417.33333333333331" width="330" height="27.666666666666686"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="23"/>
+                                                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5hu-It-g2o" customClass="CustomOverviewGraph" customModule="Weekly_Tally" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="453" width="330" height="295.66666666666674"/>
+                                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="backColor">
+                                                                <color key="value" name="TallyCard"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="textColor">
+                                                                <color key="value" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="footHidden" value="YES"/>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                                <color key="value" cocoaTouchSystemColor="lightTextColor"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                                <real key="value" value="1.3"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                <real key="value" value="20"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9LU-UM-ViF" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="756.66666666666663" width="330" height="50"/>
+                                                        <subviews>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="bIv-qH-zwC">
+                                                                <rect key="frame" x="0.0" y="0.0" width="330" height="50"/>
+                                                                <subviews>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7SZ-JK-esZ" customClass="CustomButton" customModule="Weekly_Tally" customModuleProvider="target">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="108.66666666666667" height="50"/>
+                                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                                                        <inset key="imageEdgeInsets" minX="-4" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                        <state key="normal" title="share" image="paperplane" catalog="system">
+                                                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                        </state>
+                                                                        <userDefinedRuntimeAttributes>
+                                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                                                <color key="value" white="0.75" alpha="1" colorSpace="calibratedWhite"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                        </userDefinedRuntimeAttributes>
+                                                                        <connections>
+                                                                            <action selector="shareActionTotal:" destination="qwP-Lr-5PV" eventType="touchUpInside" id="RNE-jO-Wqo"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xOT-8N-Yph" customClass="CustomButton" customModule="Weekly_Tally" customModuleProvider="target">
+                                                                        <rect key="frame" x="110.66666666666666" y="0.0" width="108.66666666666666" height="50"/>
+                                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                                                        <inset key="imageEdgeInsets" minX="-4" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                        <state key="normal" title="IG" image="camera" catalog="system">
+                                                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                        </state>
+                                                                        <userDefinedRuntimeAttributes>
+                                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                                                <color key="value" name="TallyCard"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                                                <real key="value" value="0.0"/>
+                                                                            </userDefinedRuntimeAttribute>
+                                                                        </userDefinedRuntimeAttributes>
+                                                                        <connections>
+                                                                            <action selector="igActionTotal:" destination="qwP-Lr-5PV" eventType="touchUpInside" id="37j-IC-nuz"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7On-31-1PJ">
+                                                                        <rect key="frame" x="221.33333333333329" y="0.0" width="108.66666666666666" height="50"/>
+                                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                                                        <inset key="imageEdgeInsets" minX="-4" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                        <state key="normal" title="download" image="square.and.arrow.down" catalog="system">
+                                                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                        </state>
+                                                                        <connections>
+                                                                            <action selector="downloadActionTotal:" destination="qwP-Lr-5PV" eventType="touchUpInside" id="qXn-q6-FSr"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                </subviews>
+                                                            </stackView>
+                                                        </subviews>
+                                                        <color key="backgroundColor" name="TallyCard"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="trailing" secondItem="bIv-qH-zwC" secondAttribute="trailing" id="Mo0-fT-QDW"/>
+                                                            <constraint firstAttribute="height" constant="50" id="QGc-VY-dka"/>
+                                                            <constraint firstItem="bIv-qH-zwC" firstAttribute="top" secondItem="9LU-UM-ViF" secondAttribute="top" id="YUt-Qe-iBO"/>
+                                                            <constraint firstItem="bIv-qH-zwC" firstAttribute="leading" secondItem="9LU-UM-ViF" secondAttribute="leading" id="bck-Kd-Pnp"/>
+                                                            <constraint firstAttribute="bottom" secondItem="bIv-qH-zwC" secondAttribute="bottom" id="wmb-OK-6Ie"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                <real key="value" value="20"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                                <real key="value" value="1.3"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                                <color key="value" cocoaTouchSystemColor="lightTextColor"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4ek-zs-api" userLabel="Extra Space">
+                                                        <rect key="frame" x="0.0" y="814.66666666666663" width="330" height="18"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="18" id="C53-gJ-QtE"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bar-XB-aMf" userLabel="FlexibleSpace">
+                                                        <rect key="frame" x="0.0" y="840.66666666666663" width="330" height="128"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="128" id="gHb-6f-dUh"/>
+                                                        </constraints>
                                                     </view>
                                                 </subviews>
-                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                 <constraints>
-                                                    <constraint firstItem="l0r-nd-qk5" firstAttribute="centerX" secondItem="wTZ-tm-u2u" secondAttribute="centerX" id="Dw8-HD-S2n"/>
-                                                    <constraint firstItem="vHy-WH-LTO" firstAttribute="centerX" secondItem="wTZ-tm-u2u" secondAttribute="centerX" id="H13-V1-AXy"/>
-                                                    <constraint firstItem="vHy-WH-LTO" firstAttribute="top" secondItem="wTZ-tm-u2u" secondAttribute="top" id="Pwt-kV-NmD"/>
-                                                    <constraint firstAttribute="bottom" secondItem="l0r-nd-qk5" secondAttribute="bottom" id="YFB-LW-asW"/>
-                                                    <constraint firstAttribute="bottom" secondItem="vHy-WH-LTO" secondAttribute="bottom" id="xP4-Hy-VmS"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Bar-XB-aMf" secondAttribute="bottom" priority="750" id="ERI-cd-dc9"/>
+                                                    <constraint firstItem="cWd-jU-DvG" firstAttribute="leading" secondItem="NyU-Ff-B7o" secondAttribute="leading" id="H6I-I8-WeW"/>
+                                                    <constraint firstAttribute="trailing" secondItem="cWd-jU-DvG" secondAttribute="trailing" id="Xkb-zC-bab"/>
                                                 </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                        <real key="value" value="20"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ivy-xH-21U">
-                                                <rect key="frame" x="233.33333333333329" y="0.0" width="116.66666666666666" height="100"/>
-                                                <subviews>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y0U-eg-xON" userLabel="Bar Back" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
-                                                        <rect key="frame" x="43.333333333333371" y="0.0" width="30" height="100"/>
-                                                        <color key="backgroundColor" systemColor="systemFillColor" red="0.47058823529999999" green="0.47058823529999999" blue="0.50196078430000002" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="30" id="AFb-3T-8Fh"/>
-                                                        </constraints>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                <real key="value" value="15"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                    </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yrW-ew-R1A" userLabel="Bar Front" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
-                                                        <rect key="frame" x="43.333333333333371" y="38" width="30" height="62"/>
-                                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="62" id="6lg-TD-SPm"/>
-                                                            <constraint firstAttribute="width" constant="30" id="C9p-so-8Qk"/>
-                                                        </constraints>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                <real key="value" value="15"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                    </view>
-                                                </subviews>
-                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="bottom" secondItem="Y0U-eg-xON" secondAttribute="bottom" id="BUB-Xb-V0r"/>
-                                                    <constraint firstItem="Y0U-eg-xON" firstAttribute="top" secondItem="Ivy-xH-21U" secondAttribute="top" id="S1x-v8-UU7"/>
-                                                    <constraint firstItem="Y0U-eg-xON" firstAttribute="centerX" secondItem="Ivy-xH-21U" secondAttribute="centerX" id="aH1-bL-XTJ"/>
-                                                    <constraint firstItem="yrW-ew-R1A" firstAttribute="centerX" secondItem="Ivy-xH-21U" secondAttribute="centerX" id="fFd-Lz-Rei"/>
-                                                    <constraint firstAttribute="bottom" secondItem="yrW-ew-R1A" secondAttribute="bottom" id="y1Z-AE-7Nh"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                        <real key="value" value="20"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
+                                            </stackView>
                                         </subviews>
-                                    </stackView>
-                                    <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cbf-eE-FbX" userLabel="Divider View">
-                                        <rect key="frame" x="16" y="69.333333333333314" width="350" height="1"/>
-                                        <color key="backgroundColor" systemColor="separatorColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" systemColor="systemGroupedBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="k3W-9H-brd"/>
+                                            <constraint firstItem="NyU-Ff-B7o" firstAttribute="leading" secondItem="u4Y-n0-dia" secondAttribute="leading" constant="42" id="1pD-i5-TgW"/>
+                                            <constraint firstAttribute="bottom" secondItem="NyU-Ff-B7o" secondAttribute="bottom" priority="750" constant="20" symbolic="YES" id="ODi-fS-Bcs"/>
+                                            <constraint firstAttribute="trailing" secondItem="NyU-Ff-B7o" secondAttribute="trailing" constant="42" id="Q8T-Gc-MOq"/>
+                                            <constraint firstItem="NyU-Ff-B7o" firstAttribute="top" secondItem="u4Y-n0-dia" secondAttribute="top" constant="24" id="tMu-Nf-GBe"/>
                                         </constraints>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="crU-gH-zpu" secondAttribute="trailing" constant="16" id="45e-PB-5gx"/>
-                                    <constraint firstItem="Cbf-eE-FbX" firstAttribute="leading" secondItem="ZXj-ox-CIr" secondAttribute="leading" constant="16" id="6nf-Mz-fLy"/>
-                                    <constraint firstAttribute="height" constant="187" id="8ai-Re-TZL"/>
-                                    <constraint firstItem="NEF-WO-1Cx" firstAttribute="leading" secondItem="ZXj-ox-CIr" secondAttribute="leading" constant="16" id="OGR-2S-icl"/>
-                                    <constraint firstItem="rNh-ie-TDQ" firstAttribute="top" secondItem="Cbf-eE-FbX" secondAttribute="bottom" priority="250" constant="8" id="OK0-YZ-Mbd"/>
-                                    <constraint firstItem="crU-gH-zpu" firstAttribute="leading" secondItem="ZXj-ox-CIr" secondAttribute="leading" constant="16" id="Vl6-fq-bPQ"/>
-                                    <constraint firstItem="Cbf-eE-FbX" firstAttribute="top" secondItem="crU-gH-zpu" secondAttribute="bottom" constant="8" id="WVE-BB-U4K"/>
-                                    <constraint firstItem="NEF-WO-1Cx" firstAttribute="top" secondItem="ZXj-ox-CIr" secondAttribute="top" constant="16" id="Xnb-Tq-cRn"/>
-                                    <constraint firstAttribute="bottom" secondItem="rNh-ie-TDQ" secondAttribute="bottom" constant="16" id="ZEB-N5-2or"/>
-                                    <constraint firstAttribute="trailing" secondItem="rNh-ie-TDQ" secondAttribute="trailing" constant="16" id="Zqy-zq-qfd"/>
-                                    <constraint firstItem="rNh-ie-TDQ" firstAttribute="leading" secondItem="ZXj-ox-CIr" secondAttribute="leading" constant="16" id="dgc-Ah-R0H"/>
-                                    <constraint firstItem="crU-gH-zpu" firstAttribute="top" secondItem="NEF-WO-1Cx" secondAttribute="bottom" constant="8" id="fS4-pE-5Yy"/>
-                                    <constraint firstAttribute="trailing" secondItem="NEF-WO-1Cx" secondAttribute="trailing" constant="16" id="q4p-1i-YPt"/>
-                                    <constraint firstAttribute="trailing" secondItem="Cbf-eE-FbX" secondAttribute="trailing" constant="16" id="wWK-3l-zEm"/>
+                                    <constraint firstItem="u4Y-n0-dia" firstAttribute="width" secondItem="qAE-4I-o2c" secondAttribute="width" id="5EZ-Ku-rpw"/>
+                                    <constraint firstAttribute="trailing" secondItem="u4Y-n0-dia" secondAttribute="trailing" id="6BN-V2-abj"/>
+                                    <constraint firstItem="u4Y-n0-dia" firstAttribute="top" secondItem="qAE-4I-o2c" secondAttribute="top" id="6h1-3K-7dq"/>
+                                    <constraint firstAttribute="bottom" secondItem="u4Y-n0-dia" secondAttribute="bottom" id="CWq-EZ-y5t"/>
+                                    <constraint firstItem="u4Y-n0-dia" firstAttribute="height" secondItem="qAE-4I-o2c" secondAttribute="height" priority="250" id="sew-aU-IYW"/>
+                                    <constraint firstItem="u4Y-n0-dia" firstAttribute="leading" secondItem="qAE-4I-o2c" secondAttribute="leading" id="zw5-zR-58X"/>
                                 </constraints>
-                            </view>
+                                <viewLayoutGuide key="contentLayoutGuide" id="Wmf-A4-ieE"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="SmD-VC-eKP"/>
+                            </scrollView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemGroupedBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="ZXj-ox-CIr" firstAttribute="leading" secondItem="Q4F-t0-dVM" secondAttribute="leading" constant="16" id="InD-UU-Sz2"/>
-                            <constraint firstItem="ZXj-ox-CIr" firstAttribute="centerY" secondItem="Q4F-t0-dVM" secondAttribute="centerY" id="hx9-pP-Uik"/>
-                            <constraint firstItem="CaE-fY-bTA" firstAttribute="trailing" secondItem="ZXj-ox-CIr" secondAttribute="trailing" constant="16" id="r1J-wm-bK9"/>
+                            <constraint firstItem="uhE-cU-QZ5" firstAttribute="trailing" secondItem="qAE-4I-o2c" secondAttribute="trailing" id="CHV-QP-MRz"/>
+                            <constraint firstItem="qAE-4I-o2c" firstAttribute="top" secondItem="uhE-cU-QZ5" secondAttribute="top" id="W7L-yf-n5h"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="qAE-4I-o2c" secondAttribute="bottom" id="cBS-Hi-ifb"/>
+                            <constraint firstItem="qAE-4I-o2c" firstAttribute="leading" secondItem="uhE-cU-QZ5" secondAttribute="leading" id="hbg-gI-Rat"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="CaE-fY-bTA"/>
+                        <viewLayoutGuide key="safeArea" id="uhE-cU-QZ5"/>
                     </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Select a card" largeTitleDisplayMode="always" id="QMd-Rs-aBf">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="rLG-u9-c3X">
+                            <connections>
+                                <action selector="cancel:" destination="qwP-Lr-5PV" id="oqY-AQ-soR"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <size key="freeformSize" width="414" height="1000"/>
+                    <connections>
+                        <outlet property="customOverViewGraph" destination="5hu-It-g2o" id="rKu-JF-cNl"/>
+                        <outlet property="customShareView" destination="uGv-pS-R4B" id="GYL-mG-SPR"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="6Ax-Zk-jeH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1Ec-Ps-Ck4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="887" y="-860"/>
+            <point key="canvasLocation" x="2755" y="162"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="9xT-tH-0ep">
@@ -1333,13 +1462,17 @@
         <!--Navigation Controller-->
         <scene sceneID="NqX-7T-92w">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Ibo-p3-S7F" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="Ibo-p3-S7F" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="zLe-hZ-HHN">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="V4S-vx-d1F">
+                        <rect key="frame" x="0.0" y="759" width="414" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
                         <segue destination="MWQ-m2-8Dt" kind="relationship" relationship="rootViewController" id="NSc-x9-k25"/>
                     </connections>
@@ -1349,22 +1482,23 @@
             <point key="canvasLocation" x="967" y="574"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="rVw-vX-TAc"/>
+    </inferredMetricsTieBreakers>
     <resources>
-        <image name="archivebox" catalog="system" width="64" height="52"/>
-        <image name="calendar" catalog="system" width="64" height="52"/>
-        <image name="exclamationmark.circle" catalog="system" width="64" height="60"/>
-        <image name="globe" catalog="system" width="64" height="60"/>
-        <image name="minus" catalog="system" width="64" height="12"/>
-        <image name="paperplane" catalog="system" width="64" height="60"/>
-        <image name="plus" catalog="system" width="64" height="56"/>
-        <image name="qrcode" catalog="system" width="64" height="56"/>
-        <image name="trash" catalog="system" width="60" height="64"/>
-        <image name="xmark.circle.fill" catalog="system" width="64" height="60"/>
+        <image name="archivebox" catalog="system" width="128" height="106"/>
+        <image name="calendar" catalog="system" width="128" height="106"/>
+        <image name="camera" catalog="system" width="128" height="96"/>
+        <image name="exclamationmark.circle" catalog="system" width="128" height="121"/>
+        <image name="globe" catalog="system" width="128" height="121"/>
+        <image name="minus" catalog="system" width="128" height="24"/>
+        <image name="paperplane" catalog="system" width="128" height="121"/>
+        <image name="plus" catalog="system" width="128" height="113"/>
+        <image name="square.and.arrow.down" catalog="system" width="121" height="128"/>
+        <image name="trash" catalog="system" width="121" height="128"/>
+        <image name="xmark.circle.fill" catalog="system" width="128" height="121"/>
         <namedColor name="TallyCard">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="rVw-vX-TAc"/>
-    </inferredMetricsTieBreakers>
 </document>

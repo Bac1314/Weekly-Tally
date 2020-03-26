@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		090AAF8A241C521500F587FB /* CustomOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AAF89241C521500F587FB /* CustomOverviewView.swift */; };
+		0926BDE12429031000EF3F85 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0926BDE02429031000EF3F85 /* ShareViewController.swift */; };
 		09272CE224226BA20048DBEB /* CustomOverviewGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09272CE124226BA20048DBEB /* CustomOverviewGraph.swift */; };
 		09272CE424227AFC0048DBEB /* CustomBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09272CE324227AFC0048DBEB /* CustomBarView.swift */; };
 		09272CE7242342AF0048DBEB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09272CE5242342AF0048DBEB /* Main.storyboard */; };
@@ -25,6 +26,8 @@
 		09ADE0A5241F9CFF00AEFAB5 /* CustomDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09ADE0A4241F9CFF00AEFAB5 /* CustomDate.swift */; };
 		09ADE0A824225A6C00AEFAB5 /* overview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09ADE0A724225A6C00AEFAB5 /* overview.swift */; };
 		09ADE0AA24225ACE00AEFAB5 /* overview_p.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09ADE0A924225ACE00AEFAB5 /* overview_p.swift */; };
+		09AEDABD242760C000E98368 /* CustomShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AEDABC242760C000E98368 /* CustomShareView.swift */; };
+		09AEDAC2242782F700E98368 /* CustomShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AEDAC1242782F700E98368 /* CustomShare.swift */; };
 		09E6B81E23ED3BBB0090E898 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E6B81D23ED3BBB0090E898 /* DetailViewController.swift */; };
 		09E6B82223EDC4E20090E898 /* Counter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E6B82123EDC4E20090E898 /* Counter.swift */; };
 		09E7DBA9241B8CE600F29E0B /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E7DBA8241B8CE600F29E0B /* CustomView.swift */; };
@@ -53,6 +56,7 @@
 
 /* Begin PBXFileReference section */
 		090AAF89241C521500F587FB /* CustomOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomOverviewView.swift; sourceTree = "<group>"; };
+		0926BDE02429031000EF3F85 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		09272CE124226BA20048DBEB /* CustomOverviewGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomOverviewGraph.swift; sourceTree = "<group>"; };
 		09272CE324227AFC0048DBEB /* CustomBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBarView.swift; sourceTree = "<group>"; };
 		09272CE6242342AF0048DBEB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -76,6 +80,8 @@
 		09ADE0A4241F9CFF00AEFAB5 /* CustomDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDate.swift; sourceTree = "<group>"; };
 		09ADE0A724225A6C00AEFAB5 /* overview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = overview.swift; sourceTree = "<group>"; };
 		09ADE0A924225ACE00AEFAB5 /* overview_p.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = overview_p.swift; sourceTree = "<group>"; };
+		09AEDABC242760C000E98368 /* CustomShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomShareView.swift; sourceTree = "<group>"; };
+		09AEDAC1242782F700E98368 /* CustomShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomShare.swift; sourceTree = "<group>"; };
 		09E6B81D23ED3BBB0090E898 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		09E6B82123EDC4E20090E898 /* Counter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Counter.swift; sourceTree = "<group>"; };
 		09E7DBA8241B8CE600F29E0B /* CustomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
@@ -159,11 +165,13 @@
 				0999BF4E23D7EF3400A0B2A0 /* SceneDelegate.swift */,
 				0999BF7C23D7F06400A0B2A0 /* CounterTableViewController.swift */,
 				09E6B81D23ED3BBB0090E898 /* DetailViewController.swift */,
+				0926BDE02429031000EF3F85 /* ShareViewController.swift */,
 				092EA328241544F90080DC8F /* RecordViewController.swift */,
 				09ADE0A6241FAC9C00AEFAB5 /* CustomFunctions */,
 				09977A87241925D400E9FB98 /* CustomClasses */,
 				09EA5C6723F16351003141A3 /* CustomViews */,
 				09ADE0AB242263E900AEFAB5 /* CustomDisplayViews */,
+				09AEDABE242760D900E98368 /* CustomShareViews */,
 				0999BF5523D7EF3700A0B2A0 /* Assets.xcassets */,
 				098CF53C23F43E7300342018 /* Sounds */,
 				0999BF5723D7EF3700A0B2A0 /* LaunchScreen.storyboard */,
@@ -195,6 +203,7 @@
 			children = (
 				09ADE0A4241F9CFF00AEFAB5 /* CustomDate.swift */,
 				09272CE82423AF590048DBEB /* CustomTallyCounter.swift */,
+				09AEDAC1242782F700E98368 /* CustomShare.swift */,
 			);
 			path = CustomFunctions;
 			sourceTree = "<group>";
@@ -206,6 +215,14 @@
 				09272CE124226BA20048DBEB /* CustomOverviewGraph.swift */,
 			);
 			path = CustomDisplayViews;
+			sourceTree = "<group>";
+		};
+		09AEDABE242760D900E98368 /* CustomShareViews */ = {
+			isa = PBXGroup;
+			children = (
+				09AEDABC242760C000E98368 /* CustomShareView.swift */,
+			);
+			path = CustomShareViews;
 			sourceTree = "<group>";
 		};
 		09EA5C6723F16351003141A3 /* CustomViews */ = {
@@ -354,15 +371,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				0999BF7D23D7F06400A0B2A0 /* CounterTableViewController.swift in Sources */,
+				09AEDABD242760C000E98368 /* CustomShareView.swift in Sources */,
 				09272CE92423AF590048DBEB /* CustomTallyCounter.swift in Sources */,
 				09ADE0AA24225ACE00AEFAB5 /* overview_p.swift in Sources */,
 				09EA5C6023F10BD2003141A3 /* CustomButton.swift in Sources */,
 				0999BF4D23D7EF3400A0B2A0 /* AppDelegate.swift in Sources */,
 				090AAF8A241C521500F587FB /* CustomOverviewView.swift in Sources */,
+				09AEDAC2242782F700E98368 /* CustomShare.swift in Sources */,
 				09ADE0A5241F9CFF00AEFAB5 /* CustomDate.swift in Sources */,
 				09EA5C6623F111A1003141A3 /* CustomLabel.swift in Sources */,
 				097AB40023F84CB3001F546E /* records.swift in Sources */,
 				09E7DBA9241B8CE600F29E0B /* CustomView.swift in Sources */,
+				0926BDE12429031000EF3F85 /* ShareViewController.swift in Sources */,
 				09272CE224226BA20048DBEB /* CustomOverviewGraph.swift in Sources */,
 				092EA329241544F90080DC8F /* RecordViewController.swift in Sources */,
 				09E7DBB1241C4D1000F29E0B /* CustomProgressView.swift in Sources */,

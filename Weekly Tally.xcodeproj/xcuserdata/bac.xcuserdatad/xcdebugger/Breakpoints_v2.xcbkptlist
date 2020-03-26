@@ -14,8 +14,8 @@
             filePath = "Weekly Tally/CustomDisplayViews/CustomOverviewGraph.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "326"
-            endingLineNumber = "326"
+            startingLineNumber = "346"
+            endingLineNumber = "346"
             landmarkName = "setupLayout()"
             landmarkType = "7">
          </BreakpointContent>

@@ -100,12 +100,10 @@ class CustomTallyCounter {
     
     
     
-    public func getTotalWeeks(counter: Counter, DateCreated: Date, pausedPeriod: Int, activeWeeksSelected: Bool) -> Int{
+    public func getTotalWeeks(counter: Counter, DateCreated: Date, pausedPeriod: Int, activeWeeksSelected: Bool) -> Float{
         
-        var totalWeeks = 0
+        var totalWeeks: Float = 0
         var history: String = counter.history ?? ""
-        
-        print(counter.title)
         
         if(!history.isEmpty){
             
@@ -119,13 +117,16 @@ class CustomTallyCounter {
                         totalWeeks += 1
                     }
                 }
-                return totalWeeks
+//                return totalWeeks
             }else{
-                return histArrReversed.count
+                totalWeeks =  Float(histArrReversed.count)
             }
 
         }
 
+        let dayOfWeek = Calendar.current.component(.weekday, from: Date())
+        totalWeeks += Float(dayOfWeek)/7.0
+        
         return totalWeeks
     }
     
