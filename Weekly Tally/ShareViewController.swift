@@ -12,14 +12,15 @@ class ShareViewController: UIViewController {
     @IBOutlet weak var customShareView: CustomShareView!
     @IBOutlet weak var customOverViewGraph: CustomOverviewGraph!
 
+    @IBOutlet weak var testImage: UIImageView!
+    
     var counter: Counter?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupCardvalues()
-
-        // Do any additional setup after loading the view.
+        
     }
     
 
@@ -39,10 +40,6 @@ class ShareViewController: UIViewController {
     
 
     @IBAction func shareAction(_ sender: Any) {
-        guard let qrimage = CustomShare().generateQRCode(from: "Bac is cool") else { return }
-
-        customShareView.QRImage.image = qrimage
-        
         sharePhoto(view: customShareView)
     }
     
@@ -72,32 +69,27 @@ class ShareViewController: UIViewController {
     private func setupCardvalues(){
         
         if let tempCounter = counter{
+
+            // Create new counter (with no data for sharing)
+            let newCounter = Counter(title: tempCounter.title, unit: tempCounter.unit, weeklyGoal: tempCounter.weeklyGoal, weekendsIncluded: tempCounter.weekendsIncluded)
             
-//            // SETUP WEEKLY PROGRESS
-//            let fractionDone = Float(tempCounter.weeklySum)/Float(tempCounter.weeklyGoal)
-//            let percentage = String(Int(fractionDone * 100)) + "%"
-//
-//            let labelTitle = "CURRENT WEEK"
-//            let labelSubtitle = "\(tempCounter.weeklyGoal) \(tempCounter.unit ?? "unit") per week"
-//
-//            let labelLeftTitle = "Tally"
-//            let labelLeftScore = String(tempCounter.weeklySum)
-//            let labelLeftScoreUnit = tempCounter.unit ?? ""
-//
-//            let labelRightTitle = "Progress"
-//            let labelRightScore = percentage
-//            let labelRightScoreUnit = "completed"
-//
-//            let aOverview = overview(title: labelTitle, subtitle: labelSubtitle, leftTitle: labelLeftTitle, leftSub: labelLeftScore, leftUnit: labelLeftScoreUnit, rightTitle: labelRightTitle, rightSub: labelRightScore, rightUnit: labelRightScoreUnit)
-            
-//            customShareView.overview_data = aOverview
-//            customOverview.setupData()
-            
+            // Create QR code for sharing
+            let encoder = JSONEncoder()
+            if let encoded = try? encoder.encode(newCounter) {
+                let jsonString = String(data: encoded, encoding: .utf8)!
+                guard let qrimage = CustomShare().generateQRCode(from:jsonString) else {return}
+                customShareView.QRImage.image = qrimage
+            }else{
+                customShareView.QRImage.image = nil
+            }
+           
+        
+            customShareView.labelTitle.font = UIFont.preferredFont(forTextStyle: .caption2)
             customShareView.labelTitle.text = "Weekly Tally App"
             customShareView.labelSubtitle.text = tempCounter.title
             customShareView.labelCenterScore.text = String(tempCounter.weeklyGoal)
             customShareView.labelCenterScoreUnit.text = tempCounter.unit ?? "" + "/week"
-  
+
         
             // SETUP TOTAL PROGRESS
              let allWeeks = CustomTallyCounter().getTotalWeeks(counter: tempCounter, DateCreated: tempCounter.dateCreated, pausedPeriod: 0, activeWeeksSelected: false)
@@ -121,8 +113,9 @@ class ShareViewController: UIViewController {
 
              customOverViewGraph.overview_data = aOverviewTOT
              customOverViewGraph.history_data = CustomTallyCounter().getListOfWeekTallies(counter: tempCounter, activeWeeksSelected: false)
-        
-//             customOverviewTotal.setupData()
+            
+            customOverViewGraph.labelTitle.font = UIFont.preferredFont(forTextStyle: .caption2)
+
             
         }
     }

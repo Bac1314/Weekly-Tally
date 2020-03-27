@@ -7,8 +7,14 @@
 //
 
 import UIKit
+import AVFoundation
 
-class CustomShare {
+class CustomShare  {
+    
+    var imageOrientation: AVCaptureVideoOrientation?
+    var captureSession: AVCaptureSession?
+    var videoPreviewLayer: AVCaptureVideoPreviewLayer?
+    var capturePhotoOutput: AVCapturePhotoOutput?
 
     init() {
     }
@@ -39,5 +45,13 @@ class CustomShare {
 
         return nil
     }
+    
+    // Scan QR code
+    func scanQRcode() {
+
+        
+    }
+    
+    
 
 }

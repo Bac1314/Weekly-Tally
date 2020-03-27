@@ -90,12 +90,15 @@ import UIKit
     
     lazy var QRImage : UIImageView = {
         let image = UIImageView()
-        image.image = UIImage(systemName: "qrcode")
+//        image.image = UIImage(systemName: "qrcode")
         image.contentMode = .scaleAspectFit
         image.autoresizesSubviews = true
+        image.clearsContextBeforeDrawing = true
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
+    
+
     
     //MARK: Initialization
     //programatically initializing the view
@@ -123,12 +126,8 @@ import UIKit
         addSubview(labelCenterScoreUnit)
         addSubview(QRImage)
         setupLayout()
-        
     }
-    
-    func setupData(){
 
-    }
     
 
     
@@ -161,14 +160,13 @@ import UIKit
         labelCenterScoreUnit.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
         labelCenterScoreUnit.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
 
-        
-
         QRImage.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-
         QRImage.widthAnchor.constraint(equalToConstant: 100).isActive = true
         QRImage.heightAnchor.constraint(equalTo: QRImage.widthAnchor, multiplier: 1.0/1.0).isActive = true
         QRImage.topAnchor.constraint(equalTo: labelCenterScoreUnit.bottomAnchor, constant: 16).isActive = true
         QRImage.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16).isActive = true
+        
+        
         
     }
 }

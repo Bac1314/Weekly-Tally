@@ -6,13 +6,15 @@
 //  Copyright © 2020 THEBAC. All rights reserved.
 //
 
+import AVFoundation
 import UIKit
 import os.log
 
-class DetailViewController: UIViewController, UITextFieldDelegate {
-
+class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMetadataOutputObjectsDelegate {
+    
     // MARK: Properties
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var scannerView: UIView!
     
     // Navigationbar Properties
     @IBOutlet weak var overviewSegmentStack: UIStackView!
@@ -47,7 +49,6 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var divider: UIView!
     
     // Toolbar Properties
-    @IBOutlet weak var challengeBtn: UIBarButtonItem!
     @IBOutlet weak var shareBtn: UIBarButtonItem!
     @IBOutlet weak var deleteBtn: UIBarButtonItem!
 
@@ -56,14 +57,24 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     var counter: Counter?
     var tempCounter: Counter?
     var activeWeeks: Bool = false
+    var centerBarButton: UIBarButtonItem!
     let formatter = DateFormatter()
+    
     
     var pickerChoices: [String] = []
     var pickerView =  UIPickerView()
     var pickerTypeValue =  String()
     var customDate = CustomDate()
+
+    
+    // Initiliaze capture session object
+    let avCaptureSession = AVCaptureSession()
     
     
+    enum error: Error {
+        case noCameraAvailable
+        case videoInputInitFail
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,18 +94,27 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             
             tempCounter = Counter(title: counter.title, dailyGoal:counter.dailyGoal, unit: counter.unit, dailySum: counter.dailySum, weeklySum: counter.weeklySum, totalSum: counter.totalSum,  weeklyGoal: counter.weeklyGoal, weekendsIncluded: counter.weekendsIncluded, dateCreated: counter.dateCreated, dateEnds: counter.dateEnds, dateUpdated: counter.dateUpdated, paused: counter.paused, pausedPeriod: counter.pausedPeriod, history: counter.history)
             
-            
-            // Setup Overview Segment Values
-            setupOverviewSegmentValues()
-            
             // Setup Edit Segment Values
             setUpEditSegmentValues()
             
-            // Set Overview Segment Values
-            setSegmentValues(segmentIndex: 0)
+            if !FutureState {
+                // Setup Overview Segment Values
+                setupOverviewSegmentValues()
+                
+                // Set Overview Segment Values
+                setSegmentValues(segmentIndex: 0)
+                
+                // Setup daily values and method
+                setupDailyPickerValues()
+            }else {
+                
+                // Set segment to EDIT
+                setSegmentValues(segmentIndex: 1)
+                
+                over_edit_segmentControl.isEnabled = false
+                            
+            }
             
-            // Setup daily values and method
-            setupDailyPickerValues()
             
         }else{
 
@@ -103,14 +123,9 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             //Set segment to EDIT
             setSegmentValues(segmentIndex: 1)
             
-//           navigationItem.rightBarButtonItem = editButtonIte
             over_edit_segmentControl.isEnabled = false
             
-            // Set toolbar scan to add a Tally through QR code
-            let centerBarButton: UIBarButtonItem! = UIBarButtonItem(image: UIImage(systemName: "qrcode.viewfinder"), style: .plain, target: self, action: #selector(addNewTallyQR))
-            
-            let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-            toolbarItems = [spacer, centerBarButton, spacer]
+            setToolBarButtons()
         }
     }
     
@@ -126,8 +141,6 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 //            os_log("The save button was not pressed, cancelling", log: OSLog.default, type: .debug)
 //            return
 //        }
- 
-        print("Reach here")
             
         if let button = sender as? UIBarButtonItem, button === saveButton {
             if let counter = counter, let tempCounter = tempCounter {
@@ -158,8 +171,11 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
 
             }
         }else if let identifier = segue.identifier, identifier == "ShareItem" {
-            print("Reach here here")
-            guard let shareViewController = segue.destination as? ShareViewController else{
+            
+            guard let navVC = segue.destination as? UINavigationController else {
+                fatalError("Unexpected destination on: \(segue.destination)")
+            }
+            guard let shareViewController = navVC.topViewController as? ShareViewController else{
                 fatalError("Unexpected destination on: \(segue.destination)")
             }
             
@@ -583,50 +599,6 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     }
     
 
-    @IBAction func shareAction(_ sender: UIBarButtonItem) {
-        
-//        let image = UIImage(view: customOverviewTotal)
-//        let image = CustomShare().viewToImage(view: customOverviewTotal)
-        guard let image = CustomShare().generateQRCode(from: "Bac is cool") else { return }
-
-
-        let activityController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-        
-        activityController.completionWithItemsHandler = { (nil, completed, _, error) in
-            if completed {
-                print("completed")
-            } else {
-                print("cancled")
-            }
-        }
-        present(activityController, animated: true)
-    }
-    
-    @IBAction func challengeAction(_ sender: UIBarButtonItem) {
-        
-        // Share on instagram stories
-        if let storiesUrl = URL(string: "instagram-stories://share") {
-            if UIApplication.shared.canOpenURL(storiesUrl) {
-//                guard let image = sharingImageView.image else { return }
-                let image = UIImage(view: customOverviewTotal)
-                guard let imageData = image.pngData() else { return }
-                let pasteboardItems: [String: Any] = [
-                    "com.instagram.sharedSticker.stickerImage": imageData,
-                    "com.instagram.sharedSticker.backgroundTopColor":  "#34b1eb",
-                    "com.instagram.sharedSticker.backgroundBottomColor": "#bff2eb"
-                ]
-                
-                let pasteboardOptions = [
-                    UIPasteboard.OptionsKey.expirationDate: Date().addingTimeInterval(300)
-                ]
-                UIPasteboard.general.setItems([pasteboardItems], options: pasteboardOptions)
-                UIApplication.shared.open(storiesUrl, options: [:], completionHandler: nil)
-            } else {
-                print("User doesn't have instagram on their device.")
-            }
-        }
-
-    }
     
     @IBAction func deleteAction(_ sender: Any) {
         let alert = UIAlertController(title: "Delete this tally", message: nil, preferredStyle: .actionSheet)
@@ -656,7 +628,15 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func addNewTallyQR() {
-        // Scan QR code
+        
+        do {
+            try scanQRCode()
+            
+            editSegmentStack.isHidden = true
+            LargeTitle.isHidden = true
+        }catch {
+            print("error scanning")
+        }
     }
     
     
@@ -921,6 +901,132 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         
         present(alertController, animated: true)
     }
+    
+    private func setToolBarButtons(){
+        // Set toolbar scan to add a Tally through QR code
+        let addScanBtn = UIButton(type: .custom)
+
+        addScanBtn.setTitle("  Scan to add", for: .normal)
+        addScanBtn.setTitleColor(view.tintColor, for: .normal)
+        addScanBtn.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        addScanBtn.setImage(UIImage(systemName: "qrcode.viewfinder"), for: .normal)
+        addScanBtn.addTarget(self, action: #selector(addNewTallyQR), for: .touchUpInside)
+        addScanBtn.sizeToFit()
+        
+        centerBarButton = UIBarButtonItem(customView: addScanBtn)
+
+
+        if (centerBarButton == nil) {
+            centerBarButton = UIBarButtonItem(image: UIImage(systemName: "qrcode.viewfinder"), style: .plain, target: self, action: #selector(addNewTallyQR))
+        }
+
+        let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        toolbarItems = [spacer, centerBarButton, spacer]
+    }
+    
+   func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+        
+        // Check if the metadataObjects array is contains at least one object.
+        if metadataObjects.count == 0 {
+            return
+        }
+        
+        self.avCaptureSession.stopRunning()
+        
+        // Get the metadata object.
+        let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
+        
+        if metadataObj.type == AVMetadataObject.ObjectType.qr {
+            if let outputString = metadataObj.stringValue {
+                DispatchQueue.main.async {
+                    self.setupTallyByQRCode(counterString: outputString)
+                }
+            }
+        }
+    }
+    
+    func scanQRCode() throws {
+        
+        guard let avCaptureDevice = AVCaptureDevice.default(for: AVMediaType.video) else {
+            print ("no camera boyy")
+            throw error.noCameraAvailable
+        }
+        
+    
+        guard let avCaptureInput = try? AVCaptureDeviceInput(device: avCaptureDevice) else {
+            print ("failed to init camera")
+            throw error.videoInputInitFail
+        }
+        
+        let avCaptureMetadataOutput = AVCaptureMetadataOutput()
+        avCaptureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main )
+        
+        // Add input and output
+        avCaptureSession.addInput(avCaptureInput)
+        avCaptureSession.addOutput(avCaptureMetadataOutput)
+        
+        // Set delegate
+        avCaptureMetadataOutput.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
+        
+        // Initialize video preview
+        let avCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: avCaptureSession)
+        avCaptureVideoPreviewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        avCaptureVideoPreviewLayer.frame = scannerView.layer.bounds
+        scannerView.layer.addSublayer(avCaptureVideoPreviewLayer)
+        
+        // Start video capture
+        avCaptureSession.startRunning()
+    }
+    
+    
+    func setupTallyByQRCode(counterString: String){
+        
+        // Show and hide views 
+        LargeTitle.isHidden = false
+        editSegmentStack.isHidden = false
+        scannerView.isHidden = true
+        centerBarButton.isEnabled = false
+
+        // Decode it
+        if let jsonData = counterString.data(using: .utf8)
+        {
+            let decoder = JSONDecoder()
+            
+            do {
+                let newcounter = try decoder.decode(Counter.self, from: jsonData)
+                
+                // Set the Edit Segment values
+                LargeTitle.text = newcounter.title
+                counterTitle.text = newcounter.title
+                counterWeeklyGoal.text = String(newcounter.weeklyGoal)
+                counterUnit.text = newcounter.unit
+                includeWeekends = newcounter.weekendsIncluded
+                
+                if (!includeWeekends){
+                    counterSegmentedControl.selectedSegmentIndex = 1
+                    includeWeekends = false
+                }
+                
+                startsBtn.setTitle(formatter.string(from: newcounter.dateCreated), for: .normal)
+                
+                if(newcounter.dateEnds != nil){
+                    endsBtn.setTitle(formatter.string(from: newcounter.dateEnds!), for: .normal)
+                    endsBtn.setTitleColor(.label, for: .normal)
+                }
+                
+                if(newcounter.paused == true){
+                    counterPause.setTitle("UNARCHIVE", for: .normal)
+                    counterPause.backgroundColor = self.view.tintColor
+                }
+                
+            } catch {
+                print(error.localizedDescription)
+            }
+            
+        }
+        
+    }
+
 }
 
 extension DetailViewController: UIPickerViewDelegate, UIPickerViewDataSource{

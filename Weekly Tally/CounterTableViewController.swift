@@ -10,65 +10,24 @@ import UIKit
 import os.log
 import AVFoundation
 
-//struct TallyView {
-//    var title: String
-//    var addValue: String
-//    var sum: String
-//    var unit: String
-//}
-
-// MARK: Properties
-var counters: [Counter] = []
-var filteredCounters: [Counter] = []
-var countersArchived : [Counter] = []
-var countersFuture : [Counter] = []
-
-var newCountersEnded : String = ""
+// MARK: Global Properties
+var audioPlayer: AVAudioPlayer?
 
 var ArchivedState: Bool = false
 var FutureState: Bool = false
-let searchController = UISearchController(searchResultsController: nil)
 let defaults = UserDefaults.standard
-var AddBtn = UIButton(type: .custom)
 
-protocol customCellDelegate{
-    func didTapButton(_ cellCounter: Counter)
-}
-
-class customCell: UITableViewCell{
-    @IBOutlet weak var cellTitle: UILabel!
-    @IBOutlet weak var cellDailySum: UILabel!
-    @IBOutlet weak var cellWeeklySum: UILabel!
-    @IBOutlet weak var cellWeekLabel: UILabel!
-    @IBOutlet weak var cellDailyAdd: UILabel!
-    @IBOutlet weak var cellUnit: UILabel!
-    @IBOutlet weak var cellBtn: UIButton!
-    @IBOutlet weak var cellProgress: UIProgressView!
-    
-    var cellDelegate: customCellDelegate?
-    var cellCounter: Counter?
-    
-    @IBOutlet weak var ContainerView: CustomView!
-//        {
-//    didSet {
-//        // Make it card-like
-//        ContainerView.layer.cornerRadius = 20
-//        ContainerView.layer.borderWidth = 0.0
-//        ContainerView.layer.borderColor = UIColor.white.cgColor
-//        }
-//    }
-    
-    @IBAction func buttonPress(_ sender: UIButton) {
-        if let cellCounter = cellCounter{
-             cellDelegate?.didTapButton(cellCounter)
-        }
-    }
-    
-}
 
 class CounterTableViewController: UITableViewController, UISearchResultsUpdating, customCellDelegate{
     
-    var audioPlayer: AVAudioPlayer?
+    var counters: [Counter] = []
+    var filteredCounters: [Counter] = []
+    var countersArchived : [Counter] = []
+    var countersFuture : [Counter] = []
+    var newCountersEnded : String = ""
+    
+    let searchController = UISearchController(searchResultsController: nil)
+    var AddBtn = UIButton(type: .custom)
     
     @IBOutlet weak var ArchivedListBtn: UIButton!
     @IBOutlet weak var FutureListBtn: UIButton!
@@ -926,7 +885,34 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         scrollToTop()
     }
     
-    
 
+}
+
+protocol customCellDelegate{
+    func didTapButton(_ cellCounter: Counter)
+}
+
+class customCell: UITableViewCell{
+    @IBOutlet weak var cellTitle: UILabel!
+    @IBOutlet weak var cellDailySum: UILabel!
+    @IBOutlet weak var cellWeeklySum: UILabel!
+    @IBOutlet weak var cellWeekLabel: UILabel!
+    @IBOutlet weak var cellDailyAdd: UILabel!
+    @IBOutlet weak var cellUnit: UILabel!
+    @IBOutlet weak var cellBtn: UIButton!
+    @IBOutlet weak var cellProgress: UIProgressView!
+    
+    var cellDelegate: customCellDelegate?
+    var cellCounter: Counter?
+    
+    @IBOutlet weak var ContainerView: CustomView!
+
+    
+    @IBAction func buttonPress(_ sender: UIButton) {
+        if let cellCounter = cellCounter{
+             cellDelegate?.didTapButton(cellCounter)
+        }
+    }
+    
 }
 
