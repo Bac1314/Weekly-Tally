@@ -12,7 +12,6 @@ class ShareViewController: UIViewController {
     @IBOutlet weak var customShareView: CustomShareView!
     @IBOutlet weak var customOverViewGraph: CustomOverviewGraph!
 
-    @IBOutlet weak var testImage: UIImageView!
     
     var counter: Counter?
     
@@ -73,6 +72,9 @@ class ShareViewController: UIViewController {
             // Create new counter (with no data for sharing)
             let newCounter = Counter(title: tempCounter.title, unit: tempCounter.unit, weeklyGoal: tempCounter.weeklyGoal, weekendsIncluded: tempCounter.weekendsIncluded)
             
+            newCounter?.dateCreated = tempCounter.dateCreated
+            
+            
             // Create QR code for sharing
             let encoder = JSONEncoder()
             if let encoded = try? encoder.encode(newCounter) {
@@ -85,7 +87,7 @@ class ShareViewController: UIViewController {
            
         
             customShareView.labelTitle.font = UIFont.preferredFont(forTextStyle: .caption2)
-            customShareView.labelTitle.text = "Weekly Tally App"
+            customShareView.labelTitle.text = "WEEKLY TALLY APP"
             customShareView.labelSubtitle.text = tempCounter.title
             customShareView.labelCenterScore.text = String(tempCounter.weeklyGoal)
             customShareView.labelCenterScoreUnit.text = tempCounter.unit ?? "" + "/week"
@@ -95,15 +97,15 @@ class ShareViewController: UIViewController {
              let allWeeks = CustomTallyCounter().getTotalWeeks(counter: tempCounter, DateCreated: tempCounter.dateCreated, pausedPeriod: 0, activeWeeksSelected: false)
 
 
-             let labelTitleTOT = "Weekly Tally App"
+             let labelTitleTOT = "WEEKLY TALLY APP"
              let labelSubtitleTOT = tempCounter.title
 
-             let labelLeftTitleTOT = "Tally (\(Int(allWeeks))weeks)"
+             let labelLeftTitleTOT = "Tally (\(Int(allWeeks)) weeks)"
              let labelLeftScoreTOT = String(tempCounter.totalSum)
              let labelLeftScoreUnitTOT = tempCounter.unit ?? ""
 
              let labelRightTitleTOT = "Average"
-             let labelRightScoreTOT = (allWeeks > 0) ? String(Int(Float(tempCounter.totalSum)/allWeeks)) :  "-"
+             let labelRightScoreTOT = (allWeeks > 1) ? String(Int(Float(tempCounter.totalSum)/allWeeks)) :  String(Int(Float(tempCounter.totalSum)))
              let labelRightScoreUnitTOT = "\(tempCounter.unit ?? "")/week"
             
             customOverViewGraph.labelGraphFoot.isHidden = true
@@ -164,7 +166,22 @@ class ShareViewController: UIViewController {
     }
     
     private func downloadPhoto(view: UIView){
-        
+        let image = UIImage(view: view)
+
+        UIImageWriteToSavedPhotosAlbum(image, self, #selector(saveImage(_:didFinishSavingWithError:contextInfo:)), nil)
+    }
+    
+    @objc func saveImage(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        if let error = error {
+            // we got back an error!
+            let ac = UIAlertController(title: "Save error", message: error.localizedDescription, preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            present(ac, animated: true)
+        } else {
+            let ac = UIAlertController(title: "Saved!", message: "Image is saved to your photo library.", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            present(ac, animated: true)
+        }
     }
     
     

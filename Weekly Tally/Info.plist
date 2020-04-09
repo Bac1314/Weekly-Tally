@@ -66,5 +66,7 @@
 	<string>This app uses the camera to add new Tally from QR codes</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app allow you scan new Tallies from QR codes</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Save tally image to your Photo Library</string>
 </dict>
 </plist>

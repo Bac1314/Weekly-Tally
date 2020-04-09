@@ -227,8 +227,11 @@
                                 <action selector="EditAction:" destination="XzB-Ke-95H" id="4iN-H1-Y16"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Item" image="globe" catalog="system" id="shO-Sb-2LB">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="person.circle" catalog="system" id="shO-Sb-2LB" userLabel="Profile Btn">
                             <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="profileAction:" destination="XzB-Ke-95H" id="6zk-1E-BO4"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
@@ -236,7 +239,7 @@
                         <outlet property="ArchivedListBtn" destination="fdm-W4-7oa" id="hny-by-VxP"/>
                         <outlet property="EditBtn" destination="hxR-oP-SoR" id="rTH-4z-GnM"/>
                         <outlet property="FutureListBtn" destination="E3T-om-faC" id="Tde-MZ-7BC"/>
-                        <outlet property="GlobeBtn" destination="shO-Sb-2LB" id="pYx-cs-xFt"/>
+                        <outlet property="ProfileBtn" destination="shO-Sb-2LB" id="pYx-cs-xFt"/>
                         <segue destination="Ibo-p3-S7F" kind="presentation" identifier="AddItem" id="uNe-OG-QNJ"/>
                     </connections>
                 </tableViewController>
@@ -249,17 +252,17 @@
             <objects>
                 <viewController id="MWQ-m2-8Dt" customClass="DetailViewController" customModule="Weekly_Tally" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleAspectFit" id="U8n-bo-ueD">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="556"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="610"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IcR-Nr-Ekl">
-                                <rect key="frame" x="0.0" y="56" width="320" height="451"/>
+                                <rect key="frame" x="0.0" y="88" width="320" height="473"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xpw-Fk-dZC" userLabel="ContentView">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="1556.3333333333333"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="2632.3333333333335"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n52-I0-dP0" userLabel="ScannerView">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="1556.3333333333333"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="2632.3333333333335"/>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="New Weekly Goal" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="uMg-qe-aGb" userLabel="Large Title">
                                                 <rect key="frame" x="24" y="15.999999999999996" width="272" height="40.666666666666657"/>
@@ -268,7 +271,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleAspectFit" misplaced="YES" axis="vertical" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="ena-p9-58w" userLabel="Overview Segment Stack">
-                                                <rect key="frame" x="24" y="72.666666666666629" width="272" height="1463.666666666667"/>
+                                                <rect key="frame" x="24" y="72.666666666666515" width="272" height="2539.6666666666661"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="15y-Cf-bi7" userLabel="Stack View Stepper" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="272" height="50"/>
@@ -368,7 +371,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iK0-Ky-ZhR" customClass="CustomOverviewGraph" customModule="Weekly_Tally" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="274.33333333333337" width="272" height="1189.333333333333"/>
+                                                        <rect key="frame" x="0.0" y="274.33333333333326" width="272" height="2265.3333333333339"/>
                                                         <color key="backgroundColor" name="TallyCard"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -434,7 +437,7 @@
                                                                 </subviews>
                                                             </stackView>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="TVk-n7-dyi">
-                                                                <rect key="frame" x="0.0" y="24.333333333333343" width="272" height="45"/>
+                                                                <rect key="frame" x="0.0" y="24.333333333333314" width="272" height="45"/>
                                                                 <subviews>
                                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="e.g. 10 (hours)" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ZsR-w5-Nt3" customClass="CustomTextField" customModule="Weekly_Tally" customModuleProvider="target">
                                                                         <rect key="frame" x="0.0" y="0.0" width="128" height="45"/>
@@ -737,7 +740,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="uI2-MP-m4b" userLabel="Extra Data Stack">
-                                                <rect key="frame" x="24" y="447.33333333333326" width="272" height="1077"/>
+                                                <rect key="frame" x="24" y="447.33333333333348" width="272" height="2153"/>
                                                 <subviews>
                                                     <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="ePK-WX-hAI" userLabel="Divider View">
                                                         <rect key="frame" x="32" y="0.0" width="208" height="1"/>
@@ -747,19 +750,25 @@
                                                         </constraints>
                                                     </view>
                                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S29-hu-8hO">
-                                                        <rect key="frame" x="125.66666666666667" y="11.666666666666686" width="20.666666666666671" height="0.0"/>
+                                                        <rect key="frame" x="125.66666666666667" y="11.666666666666629" width="20.666666666666671" height="0.0"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="32"/>
                                                         <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="per day" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="joh-pK-daM">
-                                                        <rect key="frame" x="107.33333333333336" y="11.666666666666686" width="57.666666666666671" height="0.0"/>
+                                                        <rect key="frame" x="107.33333333333336" y="11.666666666666629" width="57.666666666666671" height="0.0"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Pv-kn-Bsm" userLabel="FlexibleSpace">
+                                                        <rect key="frame" x="0.0" y="22" width="272" height="10"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="10" id="GEH-vZ-Az6"/>
+                                                        </constraints>
+                                                    </view>
                                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AmW-5x-OXG" customClass="CustomButton" customModule="Weekly_Tally" customModuleProvider="target">
-                                                        <rect key="frame" x="36" y="11.666666666666686" width="200" height="40"/>
+                                                        <rect key="frame" x="36" y="42.666666666666629" width="200" height="40"/>
                                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="40" id="7wQ-9u-vZv"/>
@@ -778,7 +787,7 @@
                                                         </connections>
                                                     </button>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dov-u8-wAP" userLabel="FlexibleSpace">
-                                                        <rect key="frame" x="0.0" y="22" width="272" height="1055"/>
+                                                        <rect key="frame" x="0.0" y="53" width="272" height="2100"/>
                                                     </view>
                                                 </subviews>
                                                 <constraints>
@@ -865,7 +874,7 @@
                             </connections>
                         </barButtonItem>
                         <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="jdM-5m-7Ec">
-                            <rect key="frame" x="83.666666666666686" y="11.666666666666664" width="153" height="33"/>
+                            <rect key="frame" x="83.666666666666686" y="5.6666666666666679" width="153" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <segments>
                                 <segment title="Overview"/>
@@ -926,17 +935,17 @@
             <objects>
                 <viewController title="Share View Controller" id="qwP-Lr-5PV" customClass="ShareViewController" customModule="Weekly_Tally" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HgE-bV-8Rb">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="1000"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="890"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qAE-4I-o2c">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="890"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u4Y-n0-dia" userLabel="ContentView">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1041"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1012.6666666666666"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleAspectFit" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="NyU-Ff-B7o" userLabel="Cards Holder">
-                                                <rect key="frame" x="42" y="24" width="330" height="997"/>
+                                                <rect key="frame" x="42" y="24" width="330" height="968.66666666666663"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share your goal" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z9k-ed-H2B">
                                                         <rect key="frame" x="0.0" y="0.0" width="330" height="27.666666666666668"/>
@@ -954,25 +963,25 @@
                                                             <userDefinedRuntimeAttribute type="color" keyPath="textColor">
                                                                 <color key="value" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                                             </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                <color key="value" cocoaTouchSystemColor="lightTextColor"/>
-                                                            </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                <real key="value" value="1.3"/>
+                                                                <real key="value" value="1"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                                 <real key="value" value="20"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                                <color key="value" systemColor="systemGray3Color" red="0.78039215689999997" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cWd-jU-DvG" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="333.33333333333331" width="330" height="50"/>
                                                         <subviews>
-                                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Pds-Q6-1wT">
+                                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Pds-Q6-1wT">
                                                                 <rect key="frame" x="0.0" y="0.0" width="330" height="50"/>
                                                                 <subviews>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XzW-wf-Fzb" customClass="CustomButton" customModule="Weekly_Tally" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="104.66666666666667" height="50"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="110" height="50"/>
                                                                         <color key="backgroundColor" name="TallyCard"/>
                                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                                                         <inset key="imageEdgeInsets" minX="-4" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -980,14 +989,11 @@
                                                                             <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         </state>
                                                                         <userDefinedRuntimeAttributes>
-                                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                                <color key="value" cocoaTouchSystemColor="lightTextColor"/>
-                                                                            </userDefinedRuntimeAttribute>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                                <real key="value" value="10"/>
+                                                                                <real key="value" value="0.0"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                                <real key="value" value="1.3"/>
+                                                                                <real key="value" value="0.0"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
@@ -995,7 +1001,7 @@
                                                                         </connections>
                                                                     </button>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PWS-8t-L6g" customClass="CustomButton" customModule="Weekly_Tally" customModuleProvider="target">
-                                                                        <rect key="frame" x="112.66666666666666" y="0.0" width="104.66666666666666" height="50"/>
+                                                                        <rect key="frame" x="110" y="0.0" width="110" height="50"/>
                                                                         <color key="backgroundColor" name="TallyCard"/>
                                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                                                         <inset key="imageEdgeInsets" minX="-4" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -1004,13 +1010,13 @@
                                                                         </state>
                                                                         <userDefinedRuntimeAttributes>
                                                                             <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                                <color key="value" cocoaTouchSystemColor="lightTextColor"/>
+                                                                                <color key="value" systemColor="systemGray3Color" red="0.78039215689999997" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                                <real key="value" value="1.3"/>
+                                                                                <real key="value" value="1"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                                <real key="value" value="10"/>
+                                                                                <real key="value" value="0.0"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
@@ -1018,7 +1024,7 @@
                                                                         </connections>
                                                                     </button>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dxf-d9-7rx" customClass="CustomButton" customModule="Weekly_Tally" customModuleProvider="target">
-                                                                        <rect key="frame" x="225.33333333333329" y="0.0" width="104.66666666666666" height="50"/>
+                                                                        <rect key="frame" x="220" y="0.0" width="110" height="50"/>
                                                                         <color key="backgroundColor" name="TallyCard"/>
                                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                                                         <inset key="imageEdgeInsets" minX="-4" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -1026,14 +1032,11 @@
                                                                             <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         </state>
                                                                         <userDefinedRuntimeAttributes>
-                                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                                <color key="value" cocoaTouchSystemColor="lightTextColor"/>
-                                                                            </userDefinedRuntimeAttribute>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                                <real key="value" value="1.3"/>
+                                                                                <real key="value" value="0.0"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                                <real key="value" value="10"/>
+                                                                                <real key="value" value="0.0"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
@@ -1052,10 +1055,13 @@
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                <real key="value" value="0.0"/>
+                                                                <real key="value" value="10"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                <real key="value" value="0.0"/>
+                                                                <real key="value" value="1"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                                <color key="value" systemColor="systemGray3Color" red="0.78039215689999997" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
@@ -1083,10 +1089,10 @@
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="boolean" keyPath="footHidden" value="YES"/>
                                                             <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                <color key="value" cocoaTouchSystemColor="lightTextColor"/>
+                                                                <color key="value" systemColor="systemGray3Color" red="0.78039215689999997" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                <real key="value" value="1.3"/>
+                                                                <real key="value" value="1"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                                 <real key="value" value="20"/>
@@ -1096,11 +1102,11 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9LU-UM-ViF" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="756.66666666666663" width="330" height="50"/>
                                                         <subviews>
-                                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bIv-qH-zwC">
+                                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="bIv-qH-zwC">
                                                                 <rect key="frame" x="0.0" y="0.0" width="330" height="50"/>
                                                                 <subviews>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7SZ-JK-esZ" customClass="CustomButton" customModule="Weekly_Tally" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="104.66666666666667" height="50"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="110" height="50"/>
                                                                         <color key="backgroundColor" name="TallyCard"/>
                                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                                                         <inset key="imageEdgeInsets" minX="-4" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -1112,10 +1118,10 @@
                                                                                 <color key="value" cocoaTouchSystemColor="lightTextColor"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                                <real key="value" value="1.2"/>
+                                                                                <real key="value" value="0.0"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                                <real key="value" value="10"/>
+                                                                                <real key="value" value="0.0"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
@@ -1123,7 +1129,7 @@
                                                                         </connections>
                                                                     </button>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xOT-8N-Yph" customClass="CustomButton" customModule="Weekly_Tally" customModuleProvider="target">
-                                                                        <rect key="frame" x="112.66666666666666" y="0.0" width="104.66666666666666" height="50"/>
+                                                                        <rect key="frame" x="110" y="0.0" width="110" height="50"/>
                                                                         <color key="backgroundColor" name="TallyCard"/>
                                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                                                         <inset key="imageEdgeInsets" minX="-4" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -1132,13 +1138,13 @@
                                                                         </state>
                                                                         <userDefinedRuntimeAttributes>
                                                                             <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                                                <color key="value" cocoaTouchSystemColor="lightTextColor"/>
+                                                                                <color key="value" systemColor="systemGray3Color" red="0.78039215689999997" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                                <real key="value" value="1.2"/>
+                                                                                <real key="value" value="1"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                                <real key="value" value="10"/>
+                                                                                <real key="value" value="0.0"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
@@ -1146,7 +1152,7 @@
                                                                         </connections>
                                                                     </button>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7On-31-1PJ" customClass="CustomButton" customModule="Weekly_Tally" customModuleProvider="target">
-                                                                        <rect key="frame" x="225.33333333333329" y="0.0" width="104.66666666666666" height="50"/>
+                                                                        <rect key="frame" x="220" y="0.0" width="110" height="50"/>
                                                                         <color key="backgroundColor" name="TallyCard"/>
                                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                                                         <inset key="imageEdgeInsets" minX="-4" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -1158,10 +1164,10 @@
                                                                                 <color key="value" cocoaTouchSystemColor="lightTextColor"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                                <real key="value" value="1.2"/>
+                                                                                <real key="value" value="0.0"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                                <real key="value" value="10"/>
+                                                                                <real key="value" value="0.0"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
@@ -1180,10 +1186,13 @@
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                <real key="value" value="0.0"/>
+                                                                <real key="value" value="10"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                <real key="value" value="0.0"/>
+                                                                <real key="value" value="1"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                                <color key="value" systemColor="systemGray3Color" red="0.78039215689999997" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
@@ -1193,11 +1202,8 @@
                                                             <constraint firstAttribute="height" constant="18" id="C53-gJ-QtE"/>
                                                         </constraints>
                                                     </view>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="qrcode" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="vzm-AI-Kv1">
-                                                        <rect key="frame" x="0.0" y="842.33333333333326" width="330" height="17.333333333333371"/>
-                                                    </imageView>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bar-XB-aMf" userLabel="FlexibleSpace">
-                                                        <rect key="frame" x="0.0" y="869" width="330" height="128"/>
+                                                        <rect key="frame" x="0.0" y="840.66666666666663" width="330" height="128"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="128" id="gHb-6f-dUh"/>
                                                         </constraints>
@@ -1220,6 +1226,7 @@
                                         </constraints>
                                     </view>
                                 </subviews>
+                                <color key="backgroundColor" systemColor="systemGroupedBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="u4Y-n0-dia" firstAttribute="width" secondItem="qAE-4I-o2c" secondAttribute="width" id="5EZ-Ku-rpw"/>
                                     <constraint firstAttribute="trailing" secondItem="u4Y-n0-dia" secondAttribute="trailing" id="6BN-V2-abj"/>
@@ -1252,7 +1259,6 @@
                     <connections>
                         <outlet property="customOverViewGraph" destination="5hu-It-g2o" id="rKu-JF-cNl"/>
                         <outlet property="customShareView" destination="uGv-pS-R4B" id="GYL-mG-SPR"/>
-                        <outlet property="testImage" destination="vzm-AI-Kv1" id="CDG-cd-lnN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Ec-Ps-Ck4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1551,18 +1557,17 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="NSc-x9-k25"/>
+        <segue reference="rVw-vX-TAc"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="archivebox" catalog="system" width="128" height="106"/>
         <image name="calendar" catalog="system" width="128" height="106"/>
         <image name="camera" catalog="system" width="128" height="96"/>
         <image name="exclamationmark.circle" catalog="system" width="128" height="121"/>
-        <image name="globe" catalog="system" width="128" height="121"/>
         <image name="minus" catalog="system" width="128" height="24"/>
         <image name="paperplane" catalog="system" width="128" height="121"/>
+        <image name="person.circle" catalog="system" width="128" height="121"/>
         <image name="plus" catalog="system" width="128" height="113"/>
-        <image name="qrcode" catalog="system" width="128" height="114"/>
         <image name="square.and.arrow.down" catalog="system" width="121" height="128"/>
         <image name="trash" catalog="system" width="121" height="128"/>
         <image name="xmark" catalog="system" width="128" height="113"/>

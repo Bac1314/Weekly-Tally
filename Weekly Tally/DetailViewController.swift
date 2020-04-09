@@ -10,7 +10,7 @@ import AVFoundation
 import UIKit
 import os.log
 
-class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMetadataOutputObjectsDelegate {
+class DetailViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: Properties
     @IBOutlet weak var scrollView: UIScrollView!
@@ -58,6 +58,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMeta
     var tempCounter: Counter?
     var activeWeeks: Bool = false
     var centerBarButton: UIBarButtonItem!
+    var interaction: UIContextMenuInteraction!
     let formatter = DateFormatter()
     
     
@@ -69,6 +70,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMeta
     
     // Initiliaze capture session object
     let avCaptureSession = AVCaptureSession()
+    let avCaptureMetadataOutput = AVCaptureMetadataOutput()
     
     
     enum error: Error {
@@ -83,6 +85,8 @@ class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMeta
         counterTitle.delegate = self
         counterWeeklyGoal.delegate = self
         counterUnit.delegate = self
+        interaction = UIContextMenuInteraction(delegate: self)
+
         self.setupToHideKeyboardOnTapOnView()
     
         // Formatter for date
@@ -153,7 +157,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMeta
                 tempCounter.dateUpdated = Date()
                 
                 //If user changed the start date, reset the records
-                if(!(Calendar.current.isDate(tempCounter.dateCreated, equalTo: counter.dateCreated , toGranularity: .day))){
+                if(!(Calendar.current.isDate(tempCounter.dateCreated, inSameDayAs: counter.dateCreated))){
                     
                     tempCounter.dailySum = 0
                     tempCounter.weeklySum = 0
@@ -358,7 +362,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMeta
                            self.StartDatePicker.date = tempCounter.dateCreated
                            self.StartDatePicker.minimumDate = Date()
                         
-                            if(Calendar.current.isDate(tempCounter.dateCreated, equalTo: Date() , toGranularity: .day)){
+                            if(Calendar.current.isDate(tempCounter.dateCreated, inSameDayAs: Date())){
                                 self.StartDateOptions.selectedSegmentIndex = 0
                             }else {
                                 self.StartDateOptions.selectedSegmentIndex = 2
@@ -373,7 +377,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMeta
                     StartDatePicker.date = tempCounter.dateCreated
                     StartDatePicker.minimumDate = Date()
                     
-                    if(Calendar.current.isDate(tempCounter.dateCreated, equalTo: Date() , toGranularity: .day)){
+                    if(Calendar.current.isDate(tempCounter.dateCreated, inSameDayAs: Date())){
                         StartDateOptions.selectedSegmentIndex = 0
                     }else {
                         StartDateOptions.selectedSegmentIndex = 2
@@ -425,9 +429,9 @@ class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMeta
                 let nextMonthPre = Calendar.current.date(byAdding: .month, value: 1, to: tempCounter.dateCreated) ?? Date()
                 let nextMonth = customDate.getLastDayOfWeek(customDate: nextMonthPre) ?? Date()
                 
-                if (Calendar.current.isDate(EndDatePicker.date, equalTo: nextWeek, toGranularity: .day)){
+                if (Calendar.current.isDate(EndDatePicker.date, inSameDayAs: nextWeek)){
                     EndDateOptions.selectedSegmentIndex = 0
-                }else if (Calendar.current.isDate(EndDatePicker.date, equalTo: nextMonth, toGranularity: .day)){
+                }else if (Calendar.current.isDate(EndDatePicker.date, inSameDayAs: nextMonth)){
                     EndDateOptions.selectedSegmentIndex = 1
                 }else {
                     EndDateOptions.selectedSegmentIndex = 2
@@ -508,10 +512,10 @@ class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMeta
             tempCounter.dateCreated = StartDatePicker.date
             
             //Update the segment
-            if(Calendar.current.isDate(tempCounter.dateCreated, equalTo: Date() , toGranularity: .day)){
+            if(Calendar.current.isDate(tempCounter.dateCreated, inSameDayAs: Date())){
                 startsBtn.setTitle("today", for: .normal)
                 StartDateOptions.selectedSegmentIndex = 0
-            }else if(Calendar.current.isDate(tempCounter.dateCreated, equalTo: nextWeek , toGranularity: .day)){
+            }else if(Calendar.current.isDate(tempCounter.dateCreated, inSameDayAs: nextWeek)){
                 StartDateOptions.selectedSegmentIndex = 1
             }else{
                 StartDateOptions.selectedSegmentIndex = 2
@@ -555,9 +559,10 @@ class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMeta
             let nextMonth = Calendar.current.date(byAdding: .month, value: 1, to: tempCounter.dateCreated) ?? tempCounter.dateCreated.advanced(by: 2.628e+6)
             let lastDayNextMonthWK = customDate.getLastDayOfWeek(customDate: nextMonth)
             
-            if(Calendar.current.isDate(endDate, equalTo: EndDatePicker.minimumDate ?? Date() , toGranularity: .day)){
+            if(Calendar.current.isDate(endDate, inSameDayAs: EndDatePicker.minimumDate ?? Date())){
+           
                 EndDateOptions.selectedSegmentIndex = 0
-            }else if(Calendar.current.isDate(endDate, equalTo: lastDayNextMonthWK ?? tempCounter.dateCreated.advanced(by: 2.628e+6) , toGranularity: .day)) {
+            }else if(Calendar.current.isDate(endDate, inSameDayAs: lastDayNextMonthWK ?? tempCounter.dateCreated.advanced(by: 2.628e+6))) {
                 EndDateOptions.selectedSegmentIndex = 1
             }else {
                 EndDateOptions.selectedSegmentIndex = 2
@@ -629,14 +634,14 @@ class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMeta
     
     @objc func addNewTallyQR() {
         
-        do {
-            try scanQRCode()
-            
-            editSegmentStack.isHidden = true
-            LargeTitle.isHidden = true
-        }catch {
-            print("error scanning")
-        }
+//        do {
+//            try scanQRCodeCamera()
+//
+//            editSegmentStack.isHidden = true
+//            LargeTitle.isHidden = true
+//        }catch {
+//            print("error scanning")
+//        }
     }
     
     
@@ -747,7 +752,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMeta
              let labelLeftScoreUnitTOT = tempCounter.unit ?? ""
 
              let labelRightTitleTOT = "Average"
-             let labelRightScoreTOT = (allWeeks > 0) ? String(Int(Float(tempCounter.totalSum)/allWeeks)) :  "-"
+             let labelRightScoreTOT = (allWeeks >= 1) ? String(Int(Float(tempCounter.totalSum)/allWeeks)) :  String(Int(Float(tempCounter.totalSum)))
              let labelRightScoreUnitTOT = "\(tempCounter.unit ?? "")/week"
 
 
@@ -906,12 +911,14 @@ class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMeta
         // Set toolbar scan to add a Tally through QR code
         let addScanBtn = UIButton(type: .custom)
 
-        addScanBtn.setTitle("  Scan to add", for: .normal)
+        addScanBtn.setTitle("  hold to scan", for: .normal)
         addScanBtn.setTitleColor(view.tintColor, for: .normal)
         addScanBtn.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         addScanBtn.setImage(UIImage(systemName: "qrcode.viewfinder"), for: .normal)
-        addScanBtn.addTarget(self, action: #selector(addNewTallyQR), for: .touchUpInside)
+//        addScanBtn.addTarget(self, action: #selector(addNewTallyQR), for: .touchUpInside)
         addScanBtn.sizeToFit()
+        
+        addScanBtn.addInteraction(interaction)
         
         centerBarButton = UIBarButtonItem(customView: addScanBtn)
 
@@ -924,59 +931,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMeta
         toolbarItems = [spacer, centerBarButton, spacer]
     }
     
-   func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        
-        // Check if the metadataObjects array is contains at least one object.
-        if metadataObjects.count == 0 {
-            return
-        }
-        
-        self.avCaptureSession.stopRunning()
-        
-        // Get the metadata object.
-        let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
-        
-        if metadataObj.type == AVMetadataObject.ObjectType.qr {
-            if let outputString = metadataObj.stringValue {
-                DispatchQueue.main.async {
-                    self.setupTallyByQRCode(counterString: outputString)
-                }
-            }
-        }
-    }
     
-    func scanQRCode() throws {
-        
-        guard let avCaptureDevice = AVCaptureDevice.default(for: AVMediaType.video) else {
-            print ("no camera boyy")
-            throw error.noCameraAvailable
-        }
-        
-    
-        guard let avCaptureInput = try? AVCaptureDeviceInput(device: avCaptureDevice) else {
-            print ("failed to init camera")
-            throw error.videoInputInitFail
-        }
-        
-        let avCaptureMetadataOutput = AVCaptureMetadataOutput()
-        avCaptureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main )
-        
-        // Add input and output
-        avCaptureSession.addInput(avCaptureInput)
-        avCaptureSession.addOutput(avCaptureMetadataOutput)
-        
-        // Set delegate
-        avCaptureMetadataOutput.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
-        
-        // Initialize video preview
-        let avCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: avCaptureSession)
-        avCaptureVideoPreviewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        avCaptureVideoPreviewLayer.frame = scannerView.layer.bounds
-        scannerView.layer.addSublayer(avCaptureVideoPreviewLayer)
-        
-        // Start video capture
-        avCaptureSession.startRunning()
-    }
     
     
     func setupTallyByQRCode(counterString: String){
@@ -985,7 +940,8 @@ class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMeta
         LargeTitle.isHidden = false
         editSegmentStack.isHidden = false
         scannerView.isHidden = true
-        centerBarButton.isEnabled = false
+        centerBarButton.isEnabled = true
+    
 
         // Decode it
         if let jsonData = counterString.data(using: .utf8)
@@ -1007,16 +963,20 @@ class DetailViewController: UIViewController, UITextFieldDelegate, AVCaptureMeta
                     includeWeekends = false
                 }
                 
-                startsBtn.setTitle(formatter.string(from: newcounter.dateCreated), for: .normal)
-                
-                if(newcounter.dateEnds != nil){
-                    endsBtn.setTitle(formatter.string(from: newcounter.dateEnds!), for: .normal)
-                    endsBtn.setTitleColor(.label, for: .normal)
-                }
-                
-                if(newcounter.paused == true){
-                    counterPause.setTitle("UNARCHIVE", for: .normal)
-                    counterPause.backgroundColor = self.view.tintColor
+ 
+                // Set the start date if it is greater or equal to today else set it to today
+                if newcounter.dateCreated > Date() || Calendar.current.isDateInToday(newcounter.dateCreated){
+                    tempCounter?.dateCreated = newcounter.dateCreated
+                    startsBtn.setTitle(formatter.string(from: newcounter.dateCreated), for: .normal)
+                    
+                    if let endDate = newcounter.dateEnds {
+                        endsBtn.setTitle(formatter.string(from: endDate), for: .normal)
+                        endsBtn.setTitleColor(.label, for: .normal)
+                    }
+                }else{
+                    tempCounter?.dateCreated = Date()
+                    startsBtn.setTitle(formatter.string(from: Date()), for: .normal)
+                  
                 }
                 
             } catch {
@@ -1052,6 +1012,181 @@ extension DetailViewController: UIPickerViewDelegate, UIPickerViewDataSource{
     
 }
 
+extension DetailViewController: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        
+        return UIContextMenuConfiguration(
+          identifier: nil,
+          previewProvider: nil,
+          actionProvider: { _ in
+            let cameraAction = self.makeCameraAction()
+            let folderAction = self.makeFolderAction()
+            
+            let children = [cameraAction, folderAction]
+            return UIMenu(title: "", children: children)
+        })
+        
+    }
+    
+    func makeCameraAction() -> UIAction {
+       // Set attribtes
+        let actionAttr = UIMenuElement.Attributes.init()
+        
+        // Set images
+        let image = UIImage(systemName: "camera")
+        
+        // Return actions
+        return UIAction(
+            title: "use camera",
+            image: image,
+            identifier: nil,
+            attributes: actionAttr) {_ in
+                do {
+                    try self.scanQRCodeCamera()
+                    
+                    self.editSegmentStack.isHidden = true
+                    self.LargeTitle.isHidden = true
+                }catch {
+                    print("error scanning")
+                }
+        }
+    }
+    
+    func makeFolderAction() -> UIAction {
+       // Set attribtes
+        let actionAttr = UIMenuElement.Attributes.init()
+        
+        // Set images
+        let image = UIImage(systemName: "folder")
+        
+        // Return actions
+        return UIAction(
+            title: "image library",
+            image: image,
+            identifier: nil,
+            attributes: actionAttr) {_ in
+                   // UIImagePickerController is a view controller that lets a user pick media from their photo library.
+                let imagePickerController = UIImagePickerController()
+                
+                // Only allow photos to be picked, not taken.
+                imagePickerController.sourceType = .photoLibrary
+                
+                // Make sure ViewController is notified when the user picks an image.
+                imagePickerController.delegate = self
+                
+                self.present(imagePickerController, animated: true, completion: nil)
+        }
+    }
+    
+}
+
+extension DetailViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate,AVCaptureMetadataOutputObjectsDelegate {
+    
+    func scanQRCodeCamera() throws {
+        
+        scannerView.isHidden = false
+        
+        guard let avCaptureDevice = AVCaptureDevice.default(for: AVMediaType.video) else {
+            print ("no camera boyy")
+            throw error.noCameraAvailable
+        }
+        
+        
+        guard let avCaptureInput = try? AVCaptureDeviceInput(device: avCaptureDevice) else {
+            print ("failed to init camera")
+            throw error.videoInputInitFail
+        }
+        
+        let avCaptureMetadataOutput = AVCaptureMetadataOutput()
+        avCaptureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main )
+        
+        // Add input and output
+        if avCaptureSession.inputs.count == 0 {
+            avCaptureSession.addInput(avCaptureInput)
+        }
+        
+        if avCaptureSession.outputs.count == 0 {
+            avCaptureSession.addOutput(avCaptureMetadataOutput)
+            avCaptureMetadataOutput.metadataObjectTypes = [AVMetadataObject.ObjectType.qr]
+        }
+        
+        
+        // Initialize video preview
+        let avCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: avCaptureSession)
+        avCaptureVideoPreviewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        avCaptureVideoPreviewLayer.frame = scannerView.layer.bounds
+        scannerView.layer.addSublayer(avCaptureVideoPreviewLayer)
+        
+        self.avCaptureSession.startRunning()
+    }
+    
+
+//    func scanQRCodeLibrary(_ picker: UIImagePickerController,
+//                           didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+//
+//        guard let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage,
+//            let detector = CIDetector(ofType: CIDetectorTypeQRCode,
+//                                      context: nil,
+//                                      options: [CIDetectorAccuracy: CIDetectorAccuracyHigh]),
+//            let ciImage = CIImage(image: pickedImage),
+//            let features = detector.features(in: ciImage) as? [CIQRCodeFeature] else { return }
+//
+//        let qrCodeLink = features.reduce("") { $0 + ($1.messageString ?? "") }
+//
+//        print(qrCodeLink)//Your result from QR Code
+//    }
+    
+     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+          
+          // Check if the metadataObjects array is contains at least one object.
+          if metadataObjects.count == 0 {
+              return
+          }
+          
+          if avCaptureSession.isRunning {
+              DispatchQueue.global().async {
+                  self.avCaptureSession.stopRunning()
+              }
+          }
+          
+          // Get the metadata object.
+          let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
+          
+          if metadataObj.type == AVMetadataObject.ObjectType.qr {
+              if let outputString = metadataObj.stringValue {
+                  DispatchQueue.main.async {
+                      self.setupTallyByQRCode(counterString: outputString)
+                  }
+              }
+          }
+      }
+    
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let qrcodeImg = info[UIImagePickerController.InfoKey(rawValue: UIImagePickerController.InfoKey.originalImage.rawValue)] as? UIImage {
+            let detector:CIDetector=CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy:CIDetectorAccuracyHigh])!
+            let ciImage:CIImage=CIImage(image:qrcodeImg)!
+            var qrCodeMessage=""
+            
+            let features=detector.features(in: ciImage)
+            for feature in features as! [CIQRCodeFeature] {
+                qrCodeMessage += feature.messageString!
+            }
+            
+            if qrCodeMessage=="" {
+                print("nothing")
+            }else{
+                self.setupTallyByQRCode(counterString: qrCodeMessage)
+            }
+        }
+        else{
+            print("Something went wrong")
+        }
+        self.dismiss(animated: true, completion: nil)
+    }
+
+}
+
 
 extension UIViewController
 {
@@ -1070,6 +1205,8 @@ extension UIViewController
         view.endEditing(true)
     }
 }
+
+
 
 extension UIImage {
     convenience init(view: UIView) {

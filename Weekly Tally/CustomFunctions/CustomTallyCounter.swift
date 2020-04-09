@@ -127,6 +127,10 @@ class CustomTallyCounter {
         let dayOfWeek = Calendar.current.component(.weekday, from: Date())
         totalWeeks += Float(dayOfWeek)/7.0
         
+//        if(totalWeeks < 1) {
+//            totalWeeks = 1
+//        }
+        
         return totalWeeks
     }
     
