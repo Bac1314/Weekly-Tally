@@ -935,7 +935,7 @@
             <objects>
                 <viewController title="Share View Controller" id="qwP-Lr-5PV" customClass="ShareViewController" customModule="Weekly_Tally" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HgE-bV-8Rb">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="890"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="1000"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qAE-4I-o2c">

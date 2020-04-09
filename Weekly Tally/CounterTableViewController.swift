@@ -55,13 +55,14 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         //        components.day = 14
         //        components.month = 3
         //        components.year = 2020
-        ////
+        //
         //        let date2 = Calendar.current.date(from: components)!
         //        defaults.set(date2, forKey: "LastRun")
         //        defaults.set(date2, forKey: "LastUpdate")
         //
         //        print("date2 \(date2)")
         //        /* ~~~~~~~~~~ TESTING ~~~~~~~~~~ */
+        
         
         
         
@@ -190,7 +191,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         
         if ArchivedState {
             
-            let pausedDays = Int(Date().timeIntervalSince1970 - counter.dateUpdated.timeIntervalSince1970)/(86400)
+            let pausedDays = Calendar.current.dateComponents([.day], from: Date(), to: counter.dateUpdated).day ?? Int(Date().timeIntervalSince1970 - counter.dateUpdated.timeIntervalSince1970)/(86400)
             
             cell.cellDailySum.text = "ARCHIVED"
             cell.cellUnit.text = "for \(pausedDays) day(s)"
@@ -203,13 +204,12 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
             cell.cellProgress.isHidden = true
             //            cell.cellUnit.isHidden = true
         }else if FutureState {
+    
+            let startDate = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: counter.dateCreated)!
+
+            let futureDays =  Calendar.current.dateComponents([.day], from: Date(), to: startDate).day ?? Int((counter.dateCreated.timeIntervalSince1970 - Date().timeIntervalSince1970)/86400)
             
-            let startDateSecs = counter.dateCreated.timeIntervalSince1970
-            let todaySecs = Date().timeIntervalSince1970
-            let difference =  Int((startDateSecs - todaySecs)/86400)
-            
-            
-            cell.cellDailySum.text = "In \(difference) day(s)"
+            cell.cellDailySum.text = "In \(futureDays) day(s)"
             cell.cellUnit.text = "until the start"
             cell.cellDailySum.font = UIFont.systemFont(ofSize: 30.0)
             //            cell.ContainerView.alpha = 0.6
@@ -625,8 +625,14 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
                         tableView.reloadData()
                     }else if let isPaused = counter.paused, isPaused == false{
                         countersArchived.remove(at: selectedIndexPath.row)
-                        counters += [counter]
-                        tableView.reloadData()
+                        
+                        if (!(Calendar.current.isDate(counter.dateCreated , inSameDayAs: Date())) && counter.dateCreated > Date()){
+                            countersFuture += [counter]
+                        }else{
+                            counters += [counter]
+                            tableView.reloadData()
+                        }
+                        
                     }else{
                         countersArchived[selectedIndexPath.row] = counter
                         tableView.reloadRows(at: [selectedIndexPath], with: .none)
@@ -636,7 +642,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
                     if counter.unit == "delete" {
                         countersFuture.remove(at: selectedIndexPath.row)
                         tableView.reloadData()
-                    }else if let isPaused = counter.paused, isPaused == false{
+                    }else if (Calendar.current.isDate(counter.dateCreated , inSameDayAs: Date())){
                         countersFuture.remove(at: selectedIndexPath.row)
                         counters += [counter]
                         tableView.reloadData()
@@ -725,11 +731,11 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
                     // Future counter
                     countersFuture += [counter]
                     
-                    let startDateSecs = counter.dateCreated.timeIntervalSince1970
-                    let todaySecs = Date().timeIntervalSince1970
-                    let difference = Int((startDateSecs - todaySecs)/86400)
+                    let startDate = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: counter.dateCreated)!
+
+                    let futureDays =  Calendar.current.dateComponents([.day], from: Date(), to: startDate).day ?? Int((counter.dateCreated.timeIntervalSince1970 - Date().timeIntervalSince1970)/86400)
                     
-                    let popMessage = "This tally will show up in \(difference) day(s)"
+                    let popMessage = "This tally will show up in \(futureDays) day(s)"
                     
                     popUpAlert(title: counter.title, message: popMessage, buttonTitle: "Got it!")
                     
@@ -819,7 +825,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
             AddBtn.alpha = 1
             ProfileBtn.isEnabled = true
             
-//            saveCounters()
+            //            saveCounters()
         }
         else
         {

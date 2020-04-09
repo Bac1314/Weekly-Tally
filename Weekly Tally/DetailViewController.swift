@@ -110,6 +110,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 
                 // Setup daily values and method
                 setupDailyPickerValues()
+                
             }else {
                 
                 // Set segment to EDIT
@@ -702,13 +703,10 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             overviewSegmentStack.isHidden = true
             editSegmentStack.isHidden = false
             extraDataStack.isHidden = false
-            counterPause.isHidden = counter == nil ? true : false
+            counterPause.isHidden = counter == nil || FutureState == true ? true : false
             
             updateDailyGoal()
-             
         }
-        
-//        updateDailyGoal()
     }
     
     
