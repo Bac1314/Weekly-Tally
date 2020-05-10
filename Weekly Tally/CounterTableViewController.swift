@@ -9,6 +9,10 @@
 import UIKit
 import os.log
 import AVFoundation
+//import Firebase
+import GoogleSignIn
+import GoogleAPIClientForREST
+import GTMSessionFetcher
 
 // MARK: Global Properties
 var audioPlayer: AVAudioPlayer?
@@ -17,8 +21,18 @@ var ArchivedState: Bool = false
 var FutureState: Bool = false
 let defaults = UserDefaults.standard
 
+// Google Drive instances
+let googleDriveService = GTLRDriveService() // for making Google Drive calls
+var googleUser: GIDGoogleUser? // for listing user's files only
+var uploadFolderID: String?
+private var drive: CustomGoogleDrive?
 
 class CounterTableViewController: UITableViewController, UISearchResultsUpdating, customCellDelegate{
+    
+    /** @var handle
+     @brief The handler for the auth state listener, to allow cancelling later.
+     */
+//    var handle: AuthStateDidChangeListenerHandle?
     
     var counters: [Counter] = []
     var filteredCounters: [Counter] = []
@@ -34,11 +48,14 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
     @IBOutlet weak var FutureListBtn: UIButton!
     @IBOutlet weak var ProfileBtn: UIBarButtonItem!
     @IBOutlet weak var EditBtn: UIBarButtonItem!
-    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//        if let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.path {
+//            print("Documents Directory: \(documentsPath)")
+//        }
         // Set up the search bar
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -48,12 +65,15 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         definesPresentationContext = true
         //        navigationItem.rightBarButtonItem = editButtonIte
         
+        /***** Configure Google Sign In *****/
+        setupGoogleSignIn()
+        drive = CustomGoogleDrive(googleDriveService)
         
         //        /* ~~~~~~~~~~ TESTING ~~~~~~~~~~ */
         //        var components = DateComponents()
         //
-        //        components.day = 14
-        //        components.month = 3
+        //        components.day = 10
+        //        components.month = 4
         //        components.year = 2020
         //
         //        let date2 = Calendar.current.date(from: components)!
@@ -62,9 +82,6 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         //
         //        print("date2 \(date2)")
         //        /* ~~~~~~~~~~ TESTING ~~~~~~~~~~ */
-        
-        
-        
         
         // Load any saved meals, otherwise load sample data
         if let savedCounters = loadCounters(){
@@ -120,7 +137,15 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+//        handle = Auth.auth().addStateDidChangeListener { (auth, user) in
+//            // ...
+//        }
+    }
     
+    override func viewWillDisappear(_ animated: Bool) {
+//        Auth.auth().removeStateDidChangeListener(handle!)
+    }
     
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -166,16 +191,16 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         }
         
         //TESTING
-        //        if(counter.title == "Get a nice and firm a$$"){
-        //            counter.history = "250,400,250,300,250,300,160,251,"
-        //        }else
-        //            if(counter.title == "250 pushups per week"){
-        //            counter.history = "100,25,0,25,109,150,150,200,201,120,210,"
-        //        }
-        //            else if(counter.title == "5 apps per week"){
-        //            counter.history = "9,"
-        ////        }
-        //        print("counter title \(counter.title) - History \(counter.history) - Date \(counter.dateCreated)")
+        //                if(counter.title == "Get a nice and firm a$$"){
+        //                    counter.history = "250,400,250,300,250,300,160,251,"
+        //                }else
+        //                    if(counter.title == "250 pushups per week"){
+        //                    counter.history = "100,25,0,25,109,150,150,200,201,120,210,"
+        //                }
+        //                    else if(counter.title == "5 apps per week"){
+        //                    counter.history = "9,"
+        //                }
+        //                print("counter title \(counter.title) - History \(counter.history) - Date \(counter.dateCreated)")
         //
         
         cell.cellCounter = counter
@@ -185,13 +210,19 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         cell.cellTitle.text = counter.title
         cell.cellDailyAdd.text = String(counter.dailyGoal)
         cell.cellDailySum.text = String(counter.dailySum)
-        cell.cellUnit.text = counter.unit
+        cell.cellUnit.text = counter.unit?.uppercased()
         cell.cellWeeklySum?.text = "\(counter.weeklySum)|\(counter.weeklyGoal)"
         cell.cellProgress.progress = Float(counter.weeklySum)/Float(counter.weeklyGoal)
         
+        //        if (cell.cellProgress.progress >= 1) {
+        //            cell.cellProgress.progressTintColor = .green
+        //        }
+        
         if ArchivedState {
             
-            let pausedDays = Calendar.current.dateComponents([.day], from: Date(), to: counter.dateUpdated).day ?? Int(Date().timeIntervalSince1970 - counter.dateUpdated.timeIntervalSince1970)/(86400)
+            let today = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: Date())!
+            
+            let pausedDays = Calendar.current.dateComponents([.day], from: counter.dateUpdated, to: today).day ?? Int(Date().timeIntervalSince1970 - counter.dateUpdated.timeIntervalSince1970)/(86400)
             
             cell.cellDailySum.text = "ARCHIVED"
             cell.cellUnit.text = "for \(pausedDays) day(s)"
@@ -204,9 +235,9 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
             cell.cellProgress.isHidden = true
             //            cell.cellUnit.isHidden = true
         }else if FutureState {
-    
+            
             let startDate = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: counter.dateCreated)!
-
+            
             let futureDays =  Calendar.current.dateComponents([.day], from: Date(), to: startDate).day ?? Int((counter.dateCreated.timeIntervalSince1970 - Date().timeIntervalSince1970)/86400)
             
             cell.cellDailySum.text = "In \(futureDays) day(s)"
@@ -393,6 +424,9 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
             //            counterTotalTableViewController.counters = counters
             //            counterTotalTableViewController.hidesBottomBarWhenPushed = true
             
+        case "ShowSlides":
+            os_log("Showing slides.", log: OSLog.default, type: .debug)
+            
         default:
             fatalError("Unexpected Segue Identifier: \(segue.identifier ?? "error")")
         }
@@ -423,9 +457,6 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         if let savedCounters = defaults.object(forKey: "savedCounters") as? Data {
             let decoder = JSONDecoder()
             if let loadedCounters = try? decoder.decode([Counter].self, from: savedCounters) {
-                
-                //                loadedCounters += [fixfixdatadata()]
-                //                loadedCounters += [fixfixdatadata2()]
                 return loadedCounters
             }
         }
@@ -438,6 +469,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         let encoder = JSONEncoder()
         if let encoded = try? encoder.encode(counters + countersArchived + countersFuture) {
             defaults.set(encoded, forKey: "savedCounters")
+            
         }
     }
     
@@ -629,8 +661,8 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
                         if (!(Calendar.current.isDate(counter.dateCreated , inSameDayAs: Date())) && counter.dateCreated > Date()){
                             countersFuture += [counter]
                         }else{
-                            counters += [counter]
-                            tableView.reloadData()
+                            counters.insert(counter, at: 0)
+                            tableView.deleteRows(at: [selectedIndexPath], with: .automatic)
                         }
                         
                     }else{
@@ -644,8 +676,8 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
                         tableView.reloadData()
                     }else if (Calendar.current.isDate(counter.dateCreated , inSameDayAs: Date())){
                         countersFuture.remove(at: selectedIndexPath.row)
-                        counters += [counter]
-                        tableView.reloadData()
+                        counters.insert(counter, at: 0)
+                        tableView.deleteRows(at: [selectedIndexPath], with: .automatic)
                     }else{
                         countersFuture[selectedIndexPath.row] = counter
                         tableView.reloadRows(at: [selectedIndexPath], with: .none)
@@ -716,8 +748,6 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
                         countersFuture += [counter]
                         counters.remove(at: selectedIndexPath.row)
                         tableView.reloadData()
-                        
-                        
                     }else{
                         counters[selectedIndexPath.row] = counter
                         tableView.reloadRows(at: [selectedIndexPath], with: .none)
@@ -726,13 +756,12 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
                 
             }else{
                 //Add a new counter to beginning
-                
                 if counter.dateCreated > Date(){
                     // Future counter
                     countersFuture += [counter]
                     
                     let startDate = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: counter.dateCreated)!
-
+                    
                     let futureDays =  Calendar.current.dateComponents([.day], from: Date(), to: startDate).day ?? Int((counter.dateCreated.timeIntervalSince1970 - Date().timeIntervalSince1970)/86400)
                     
                     let popMessage = "This tally will show up in \(futureDays) day(s)"
@@ -847,9 +876,45 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
     }
     
     @IBAction func profileAction(_ sender: UIBarButtonItem) {
-        let ac = UIAlertController(title: "Not available yet", message: "This feature is currently unavailable", preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "OK", style: .default))
-        present(ac, animated: true)
+        //        let ac = UIAlertController(title: "Not available yet", message: "This feature is currently unavailable", preferredStyle: .alert)
+        //        ac.addAction(UIAlertAction(title: "OK", style: .default))
+        //        present(ac, animated: true)
+        
+        
+//        // Start Google's OAuth authentication flow
+//        GIDSignIn.sharedInstance()?.signIn()
+        
+//        if let documentsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last {
+//            let testFilePath = documentsDir.appendingPathComponent("airport.jpeg").path
+//            drive?.uploadFile("weekly_tally_data", filePath: testFilePath, MIMEType: "image/jpeg") { (fileID, error) in
+//                print("Upload file ID: \(fileID); Error: \(error?.localizedDescription)")
+//            }
+//        }
+        
+          self.performSegue(withIdentifier: "ShowSlides", sender: self)
+        
+//        let encoder = JSONEncoder()
+//        if let encoded = try? encoder.encode(counters + countersArchived + countersFuture) {
+//            defaults.set(encoded, forKey: "savedCounters")
+//            
+//            
+//            let fileName = Bundle.main.bundleIdentifier!
+//            let library = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
+//            let preferences = library.appendingPathComponent("Preferences")
+//            let userDefaultsPlistURL = preferences.appendingPathComponent(fileName).appendingPathExtension("plist")
+////            print("Library directory:", userDefaultsPlistURL.path)
+////            print("Preferences directory:", userDefaultsPlistURL.path)
+////            print("UserDefaults plist file:", userDefaultsPlistURL.path)
+//            if FileManager.default.fileExists(atPath: userDefaultsPlistURL.path) {
+//                print("file found")
+//   
+//                drive?.uploadFile("weekly_tally_data", filePath: userDefaultsPlistURL.path, MIMEType: "application/octet-stream") { (fileID, error) in
+//                    print("Upload file ID: \(fileID); Error: \(error?.localizedDescription)")
+//                }
+//                
+//            }
+//        }
+        
     }
     
     
@@ -888,7 +953,6 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         scrollToTop()
     }
     
-    
 }
 
 protocol customCellDelegate{
@@ -918,4 +982,80 @@ class customCell: UITableViewCell{
     }
     
 }
+
+extension CounterTableViewController: GIDSignInDelegate {
+    // ALL GOOGLE API CALLS
+    
+    // MARK: - GIDSignInDelegate
+    public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
+                     withError error: Error!) {
+        if let error = error {
+            googleDriveService.authorizer = nil
+            googleUser = nil
+            
+            if (error as NSError).code == GIDSignInErrorCode.hasNoAuthInKeychain.rawValue {
+                print("The user has not signed in before or they have since signed out.")
+            } else {
+                print("\(error.localizedDescription)")
+            }
+            return
+        }else{
+            // Include authorization headers/values with each Drive API request.
+            googleDriveService.authorizer = user.authentication.fetcherAuthorizer()
+            googleUser = user
+        }
+        
+        //        // Perform any operations on signed in user here.
+        //        let userId = user.userID                  // For client-side use only!
+        //        let idToken = user.authentication.idToken // Safe to send to the server
+        //        let fullName = user.profile.name
+        //        let givenName = user.profile.givenName
+        //        let familyName = user.profile.familyName
+        //        let email = user.profile.email
+        //        // ...
+        //        let photo = user.profile.imageURL(withDimension: <#T##UInt#>)
+        
+        
+        //        let dimension = round(ProfileBtn.width * UIScreen.main.scale)
+        //        let pic = user.profile.imageURL(withDimension: dimension)
+        
+//        // Authenticate with Firebase
+//        guard let authentication = user.authentication else { return }
+//        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
+//                                                       accessToken: authentication.accessToken)
+//
+//        Auth.auth().signIn(with: credential) { (authResult, error) in
+//            if let error = error {
+//                print("sign in error")
+//                return
+//            }
+//        }
+//
+//        print("Firebase sign in okay")
+        
+    }
+    
+    
+    public func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
+        print("Did disconnect to user")
+    }
+    
+    public func setupGoogleSignIn() {
+        
+        /***** Configure Google Sign In *****/
+        GIDSignIn.sharedInstance()?.delegate = self
+        GIDSignIn.sharedInstance()?.presentingViewController = self
+        GIDSignIn.sharedInstance().scopes = [kGTLRAuthScopeDrive]
+        // Automatically sign in the user.
+        GIDSignIn.sharedInstance()?.restorePreviousSignIn()
+    }
+    
+
+}
+
+//extension UITableViewController: GIDSignInUIDelegate {}
+
+
+
+
 

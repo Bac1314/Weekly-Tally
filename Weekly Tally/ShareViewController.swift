@@ -150,8 +150,8 @@ class ShareViewController: UIViewController {
                 guard let imageData = image.pngData() else { return }
                 let pasteboardItems: [String: Any] = [
                     "com.instagram.sharedSticker.stickerImage": imageData,
-                    "com.instagram.sharedSticker.backgroundTopColor":  "#34b1eb",
-                    "com.instagram.sharedSticker.backgroundBottomColor": "#bff2eb"
+                    "com.instagram.sharedSticker.backgroundTopColor":  "#ffffff",
+                    "com.instagram.sharedSticker.backgroundBottomColor": "#8ccdff"
                 ]
                 
                 let pasteboardOptions = [

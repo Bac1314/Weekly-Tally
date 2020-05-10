@@ -39,7 +39,6 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var counterSegmentedControl: UISegmentedControl!
     @IBOutlet weak var counterDailyGoal: UILabel!
     @IBOutlet weak var perDayLabel: UILabel!
-    @IBOutlet weak var counterPause: CustomButton!
     @IBOutlet weak var startsBtn: UIButton!
     @IBOutlet weak var endsBtn: UIButton!
     @IBOutlet weak var StartDatePicker: UIDatePicker!
@@ -49,9 +48,10 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var divider: UIView!
     
     // Toolbar Properties
-    @IBOutlet weak var shareBtn: UIBarButtonItem!
-    @IBOutlet weak var deleteBtn: UIBarButtonItem!
-
+    var shareBtn: UIBarButtonItem!
+    var archiveBtn: UIBarButtonItem!
+    var deleteBtn: UIBarButtonItem!
+    
     var segmentOverview: Bool = true //Overview and Edit segment
     var includeWeekends: Bool = true
     var counter: Counter?
@@ -66,7 +66,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     var pickerView =  UIPickerView()
     var pickerTypeValue =  String()
     var customDate = CustomDate()
-
+    
     
     // Initiliaze capture session object
     let avCaptureSession = AVCaptureSession()
@@ -86,12 +86,15 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         counterWeeklyGoal.delegate = self
         counterUnit.delegate = self
         interaction = UIContextMenuInteraction(delegate: self)
-
+        
         self.setupToHideKeyboardOnTapOnView()
-    
+        
         // Formatter for date
         formatter.dateStyle = .long
         formatter.timeStyle = .none
+        
+        // Setup toolbar
+        setupToolBarButtons()
         
         // Update the textfields if counter exist
         if let counter = counter {
@@ -117,12 +120,12 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 setSegmentValues(segmentIndex: 1)
                 
                 over_edit_segmentControl.isEnabled = false
-                            
+                
             }
             
             
         }else{
-
+            
             tempCounter = Counter(title: "temp", unit: "", weeklyGoal: 1, weekendsIncluded: includeWeekends)
             
             //Set segment to EDIT
@@ -130,26 +133,25 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             
             over_edit_segmentControl.isEnabled = false
             
-            setToolBarButtons()
         }
     }
     
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
         
-//        guard let button = sender as? UIBarButtonItem, button === saveButton else {
-//            os_log("The save button was not pressed, cancelling", log: OSLog.default, type: .debug)
-//            return
-//        }
-            
+        //        guard let button = sender as? UIBarButtonItem, button === saveButton else {
+        //            os_log("The save button was not pressed, cancelling", log: OSLog.default, type: .debug)
+        //            return
+        //        }
+        
         if let button = sender as? UIBarButtonItem, button === saveButton {
             if let counter = counter, let tempCounter = tempCounter {
-                    
+                
                 tempCounter.title = counterTitle.text ?? "No title"
                 tempCounter.unit = counterUnit.text ?? "Count"
                 tempCounter.weeklyGoal = Int(counterWeeklyGoal.text ?? "0") ?? 0
@@ -168,12 +170,12 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 
                 self.counter = tempCounter
             }else{
-
+                
                 counter = Counter(title: counterTitle.text ?? "", unit: counterUnit.text ?? "", weeklyGoal: Int(counterWeeklyGoal.text ?? "0") ?? 0, weekendsIncluded: includeWeekends)
-
+                
                 counter?.dateCreated = tempCounter?.dateCreated ?? Date()
                 counter?.dateEnds = tempCounter?.dateEnds
-
+                
             }
         }else if let identifier = segue.identifier, identifier == "ShareItem" {
             
@@ -189,10 +191,10 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         }else if let identifier = segue.identifier, identifier == "unwindIdentifier", let _ = segue.destination as? CounterTableViewController, let counter = counter, counter.unit == "delete" {
             //Delete the counter, no other steps necessary
         }else{
-                print("NOTHING")
+            print("NOTHING")
         }
-
-
+        
+        
     }
     
     override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -235,22 +237,22 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 
             }
         }
-
+        
     }
-
+    
     // MARK: Actions
     @IBAction func includeWeekends(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex
-         {
-         case 0:
+        {
+        case 0:
             includeWeekends = true
             updateDailyGoal()
-         case 1:
+        case 1:
             includeWeekends = false
             updateDailyGoal()
-         default:
-             break
-         }
+        default:
+            break
+        }
     }
     
     @IBAction func cancel(_ sender: UIBarButtonItem) {
@@ -264,30 +266,30 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         }else {
             fatalError("The DetailViewController is not inside a navigation controller.")
         }
-      
+        
     }
     @IBAction func subTrackCount(_ sender: CustomButton) {
-
-         if let tempCounter = tempCounter {
-
+        
+        if let tempCounter = tempCounter {
+            
             if tempCounter.dailySum > 0 {
                 tempCounter.dailySum -= 1
                 tempCounter.weeklySum -= 1
                 tempCounter.totalSum -= 1
-            
+                
                 counterDaySum.text = String(tempCounter.dailySum)
                 tempCounter.dateUpdated = Date()
                 
                 updateOverviewSegmentValues()
-          }
+            }
             
         }
-    
+        
     }
     @IBAction func addTrackCount(_ sender: CustomButton) {
         
         if let tempCounter = tempCounter {
-
+            
             if tempCounter.dailySum >= 0 {
                 tempCounter.dailySum += 1
                 tempCounter.weeklySum += 1
@@ -298,51 +300,9 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 
                 updateOverviewSegmentValues()
             }
-
-        }
-    }
-    
-    @IBAction func pauseTabbed(_ sender: CustomButton) {
-
-         if let tempCounter = tempCounter {
             
-            if let isPaused = tempCounter.paused, isPaused == true {
-                
-                //Check if counter has ended
-                if (tempCounter.dateEnds == nil || Date() < tempCounter.dateEnds!) {
-                    
-                    tempCounter.paused = false
-                    counterPause.setTitle("ARCHIVE", for: .normal)
-                    tempCounter.pausedPeriod = Int(Date().timeIntervalSince1970 - tempCounter.dateUpdated.timeIntervalSince1970) + (tempCounter.pausedPeriod ?? 0)
-                    tempCounter.dateUpdated = Date()
-                    counterPause.backgroundColor = UIColor.lightGray
-                }else {
-                    //Counter has cended has ended
-                
-                    let alert = UIAlertController(title: "Change the end date", message: "This tally has already ended, please change or remove the end date", preferredStyle: .alert)
-
-
-                    alert.addAction(UIAlertAction(title: "Okay", style: .cancel, handler: nil))
-//                    alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (UIAlertAction) in
-//                        self.counter?.unit = "delete"
-//                        self.performSegue(withIdentifier: "unwindIdentifier", sender: self)
-//                    }))
-                         
-                    
-                    present(alert, animated: true)
-                }
-
-            }else{
-                tempCounter.paused = true
-                counterPause.setTitle("UNARCHIVE", for: .normal)
-                tempCounter.dateUpdated = Date()
-                counterPause.backgroundColor = self.view.tintColor
-            }
- 
         }
-        
     }
-    
     
     @IBAction func startBtnAction(_ sender: Any) {
         if(StartDatePicker.isHidden == true){
@@ -354,24 +314,24 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 //If user edit this date, they will lose all previous data
                 if let counter = counter, counter.totalSum > 0{
                     let alert = UIAlertController(title: "Continue?", message: "Changing the start date will clear your current records", preferredStyle: .alert)
-
-
-                       alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-                       alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (UIAlertAction) in
-                           self.StartDateOptions.isHidden = false
-                           self.StartDatePicker.isHidden = false
-                           self.StartDatePicker.date = tempCounter.dateCreated
-                           self.StartDatePicker.minimumDate = Date()
+                    
+                    
+                    alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+                    alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (UIAlertAction) in
+                        self.StartDateOptions.isHidden = false
+                        self.StartDatePicker.isHidden = false
+                        self.StartDatePicker.date = tempCounter.dateCreated
+                        self.StartDatePicker.minimumDate = Date()
                         
-                            if(Calendar.current.isDate(tempCounter.dateCreated, inSameDayAs: Date())){
-                                self.StartDateOptions.selectedSegmentIndex = 0
-                            }else {
-                                self.StartDateOptions.selectedSegmentIndex = 2
-                            }
-                           
-                       }))
-                            
-                       present(alert, animated: true)
+                        if(Calendar.current.isDate(tempCounter.dateCreated, inSameDayAs: Date())){
+                            self.StartDateOptions.selectedSegmentIndex = 0
+                        }else {
+                            self.StartDateOptions.selectedSegmentIndex = 2
+                        }
+                        
+                    }))
+                    
+                    present(alert, animated: true)
                 }else{
                     StartDateOptions.isHidden = false
                     StartDatePicker.isHidden = false
@@ -385,9 +345,9 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                     }
                     
                 }
-   
                 
-
+                
+                
                 
             }else {
                 StartDateOptions.isHidden = false
@@ -400,7 +360,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         }
         
         
-
+        
     }
     
     @IBAction func endBtnAction(_ sender: Any) {
@@ -414,16 +374,16 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             
             
             //Update minimum end date
-             if let tempCounter = tempCounter {
+            if let tempCounter = tempCounter {
                 EndDatePicker.minimumDate = customDate.getLastDayOfNextWeek(customDate: tempCounter.dateCreated)
                 endsBtn.setTitle(formatter.string(from: EndDatePicker.date), for: .normal)
                 endsBtn.setTitleColor(.label, for: .normal)
                 
                 tempCounter.dateEnds = EndDatePicker.date
             }
-
+            
             //Update the options segments
-             if let tempCounter = tempCounter, tempCounter.dateEnds != nil {
+            if let tempCounter = tempCounter, tempCounter.dateEnds != nil {
                 
                 //Using Date() instead of advance because we will never need to see the end date on today, so it will go to custom option
                 let nextWeek = EndDatePicker.minimumDate ?? Date()
@@ -437,29 +397,29 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 }else {
                     EndDateOptions.selectedSegmentIndex = 2
                 }
-             }
+            }
             
         }else{
             EndDatePicker.isHidden = true
             EndDateOptions.isHidden = true
-
+            
         }
-
+        
     }
-
+    
     @IBAction func StartOptionsAction(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 0:
             StartDatePicker.setDate(Date(), animated: true)
             tempCounter?.dateCreated = Date()
-//            startsBtn.setTitle(formatter.string(from: StartDatePicker.date), for: .normal)
+            //            startsBtn.setTitle(formatter.string(from: StartDatePicker.date), for: .normal)
             startsBtn.setTitle("today", for: .normal)
-
+            
         case 1:
-           if let tempCounter = tempCounter {
+            if let tempCounter = tempCounter {
                 tempCounter.dateCreated = StartDatePicker.date
                 let nextWeek = customDate.getFirstDayOfNextWeek(customDate: tempCounter.dateCreated)
-            
+                
                 StartDatePicker.setDate(nextWeek, animated: true)
                 tempCounter.dateCreated = nextWeek
                 startsBtn.setTitle(formatter.string(from: StartDatePicker.date), for: .normal)
@@ -468,43 +428,43 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             StartDatePicker.setDate(Date(), animated: true)
             tempCounter?.dateCreated = Date()
             startsBtn.setTitle(formatter.string(from: StartDatePicker.date), for: .normal)
-        
+            
         default:
             print("something")
-          
+            
         }
     }
     
     @IBAction func EndOptionsAction(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 0:
-
+            
             EndDatePicker.setDate(EndDatePicker.minimumDate ?? Date().advanced(by: 604800), animated: true)
             endsBtn.setTitle(formatter.string(from: EndDatePicker.date), for: .normal)
-
+            
         case 1:
-
+            
             let startDate = tempCounter?.dateCreated ?? Date()
             
             let nextMonth = Calendar.current.date(byAdding: .month, value: 1, to: startDate) ?? startDate.advanced(by: 2.628e+6)
             let lastDayNextMonthWK = customDate.getLastDayOfWeek(customDate: nextMonth)
-                        
+            
             EndDatePicker.setDate(lastDayNextMonthWK ?? startDate.advanced(by: 2.628e+6), animated: true)
             endsBtn.setTitle(formatter.string(from: EndDatePicker.date), for: .normal)
             
         case 2:
             EndDatePicker.setDate(EndDatePicker.minimumDate ?? Date().advanced(by: 604800), animated: true)
             endsBtn.setTitle(formatter.string(from: EndDatePicker.date), for: .normal)
-        
+            
         default:
             print("something")
-          
+            
         }
     }
     
     @IBAction func StartDatePickerAction(_ sender: Any) {
         //Set Start Date
-
+        
         startsBtn.setTitle(formatter.string(from: StartDatePicker.date), for: .normal)
         
         if let tempCounter = tempCounter {
@@ -526,22 +486,22 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             if(tempCounter.dateEnds != nil && (Calendar.current.isDate(tempCounter.dateCreated, equalTo: tempCounter.dateEnds! , toGranularity: .weekOfYear)) && EndDateOptions.selectedSegmentIndex == 1){
                 
                 let lastDayNextWK = customDate.getLastDayOfNextWeek(customDate: tempCounter.dateCreated)
-                            
+                
                 EndDatePicker.minimumDate = lastDayNextWK
                 endsBtn.setTitle(formatter.string(from: EndDatePicker.date), for: .normal)
                 endsBtn.setTitleColor(.label, for: .normal)
                 
                 tempCounter.dateEnds = EndDatePicker.date
-
+                
             }else if(tempCounter.dateEnds != nil && tempCounter.dateCreated >= tempCounter.dateEnds!){
-
+                
                 tempCounter.dateEnds = nil
                 endsBtn.setTitle("(optional)", for: .normal)
                 endsBtn.setTitleColor(.placeholderText, for: .normal)
             }
-          
+            
         }
-    
+        
     }
     
     @IBAction func EndDatePickerAction(_ sender: Any) {
@@ -554,14 +514,14 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             //Update the segment
             guard let endDate = tempCounter.dateEnds else {
                 os_log("no end date", log: OSLog.default, type: .debug)
-                 return
+                return
             }
             
             let nextMonth = Calendar.current.date(byAdding: .month, value: 1, to: tempCounter.dateCreated) ?? tempCounter.dateCreated.advanced(by: 2.628e+6)
             let lastDayNextMonthWK = customDate.getLastDayOfWeek(customDate: nextMonth)
             
             if(Calendar.current.isDate(endDate, inSameDayAs: EndDatePicker.minimumDate ?? Date())){
-           
+                
                 EndDateOptions.selectedSegmentIndex = 0
             }else if(Calendar.current.isDate(endDate, inSameDayAs: lastDayNextMonthWK ?? tempCounter.dateCreated.advanced(by: 2.628e+6))) {
                 EndDateOptions.selectedSegmentIndex = 1
@@ -578,7 +538,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         
         if let tempCounter = tempCounter {
             tempCounter.dateCreated = counter?.dateCreated ?? Date()
- 
+            
             startsBtn.setTitle(Calendar.current.isDateInToday(tempCounter.dateCreated) ? "today" : formatter.string(from: tempCounter.dateCreated), for: .normal)
             
         }else{
@@ -598,30 +558,12 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         endsBtn.setTitleColor(.placeholderText, for: .normal)
     }
     
-  
+    
     @IBAction func segmentOverEditAction(_ sender: UISegmentedControl) {
         
         setSegmentValues(segmentIndex: sender.selectedSegmentIndex)
     }
     
-
-    
-    @IBAction func deleteAction(_ sender: Any) {
-        let alert = UIAlertController(title: "Delete this tally", message: nil, preferredStyle: .actionSheet)
-
-
-        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (UIAlertAction) in
-            self.counter?.unit = "delete"
-            self.performSegue(withIdentifier: "unwindIdentifier", sender: self)
-        }))
-             
-        
-        present(alert, animated: true)
-    }
-    
-    @IBAction func shareBtnAction(_ sender: Any) {
-    }
     
     
     @objc func dailyPickerTapped(_ sender: UITapGestureRecognizer) {
@@ -635,14 +577,84 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     
     @objc func addNewTallyQR() {
         
-//        do {
-//            try scanQRCodeCamera()
-//
-//            editSegmentStack.isHidden = true
-//            LargeTitle.isHidden = true
-//        }catch {
-//            print("error scanning")
-//        }
+        //        do {
+        //            try scanQRCodeCamera()
+        //
+        //            editSegmentStack.isHidden = true
+        //            LargeTitle.isHidden = true
+        //        }catch {
+        //            print("error scanning")
+        //        }
+    }
+    
+    @objc func shareTapped(){
+        performSegue(withIdentifier: "ShareItem", sender: self)
+    }
+    
+    @objc func archiveTapped(){
+        
+        if let counter = counter {
+            
+            if let isPaused = counter.paused, isPaused == true {
+                
+                //Check if counter has ended
+                if (counter.dateEnds == nil || Date() < counter.dateEnds!) {
+                    
+                    let alert = UIAlertController(title: "Unarchive this tally?", message: nil, preferredStyle: .actionSheet)
+                    
+                    
+                    alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+                    alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (UIAlertAction) in
+                        
+                        counter.paused = false
+                        counter.pausedPeriod = Int(Date().timeIntervalSince1970 - counter.dateUpdated.timeIntervalSince1970) + (counter.pausedPeriod ?? 0)
+                        counter.dateUpdated = Date()
+                        
+                        self.performSegue(withIdentifier: "unwindIdentifier", sender: self)
+                    }))
+                    
+                    present(alert, animated: true)
+                }else {
+                    //Counter has ended
+                    
+                    let alert = UIAlertController(title: "Change the end date", message: "This tally has already ended, please change or remove the end date", preferredStyle: .alert)
+                    
+                    alert.addAction(UIAlertAction(title: "Okay", style: .cancel, handler: nil))
+                    
+                    present(alert, animated: true)
+                }
+                
+            }else{
+                
+                let alert = UIAlertController(title: "Send this tally to archive list", message: nil, preferredStyle: .actionSheet)
+                
+                
+                alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+                alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (UIAlertAction) in
+                    
+                    counter.paused = true
+                    counter.dateUpdated = Date()
+                    self.performSegue(withIdentifier: "unwindIdentifier", sender: self)
+                }))
+                
+                present(alert, animated: true)
+            }
+            
+        }
+        
+    }
+    
+    @objc func deleteTapped(){
+        let alert = UIAlertController(title: "Delete this tally", message: nil, preferredStyle: .actionSheet)
+        
+        
+        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { (UIAlertAction) in
+            self.counter?.unit = "delete"
+            self.performSegue(withIdentifier: "unwindIdentifier", sender: self)
+        }))
+        
+        present(alert, animated: true)
     }
     
     
@@ -681,16 +693,16 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         }
         
         if(!(counterTitle.text?.isEmpty ?? false) && !(counterWeeklyGoal.text?.isEmpty ?? false)){
-           saveButton.isEnabled = true
+            saveButton.isEnabled = true
         }
-    
+        
     }
     
     
     // MARK: Private functions
     private func setSegmentValues(segmentIndex: Int){
         over_edit_segmentControl.selectedSegmentIndex = segmentIndex
-
+        
         // Scroll to top
         scrollView.setContentOffset(CGPoint(x: 0,y: 0), animated: false)
         
@@ -698,12 +710,11 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             overviewSegmentStack.isHidden = false
             editSegmentStack.isHidden = true
             extraDataStack.isHidden = true
-        
+            
         }else{
             overviewSegmentStack.isHidden = true
             editSegmentStack.isHidden = false
             extraDataStack.isHidden = false
-            counterPause.isHidden = counter == nil || FutureState == true ? true : false
             
             updateDailyGoal()
         }
@@ -723,8 +734,9 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             let percentage = String(Int(fractionDone * 100)) + "%"
             
             let labelTitle = "CURRENT WEEK"
-            let labelSubtitle = "\(tempCounter.weeklyGoal) \(tempCounter.unit ?? "unit") per week"
-
+            //            let labelSubtitle = "\(tempCounter.weeklyGoal) \(tempCounter.unit ?? "unit") per week"
+            let labelSubtitle = "Tally of this week"
+            
             let labelLeftTitle = "Tally"
             let labelLeftScore = String(tempCounter.weeklySum)
             let labelLeftScoreUnit = tempCounter.unit ?? ""
@@ -732,33 +744,33 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             let labelRightTitle = "Progress"
             let labelRightScore = percentage
             let labelRightScoreUnit = "completed"
-
+            
             let aOverview = overview(title: labelTitle, subtitle: labelSubtitle, leftTitle: labelLeftTitle, leftSub: labelLeftScore, leftUnit: labelLeftScoreUnit, rightTitle: labelRightTitle, rightSub: labelRightScore, rightUnit: labelRightScoreUnit)
             
             customOverview.overview_data = aOverview
-//            customOverview.setupData()
+            //            customOverview.setupData()
             
             // SETUP TOTAL PROGRESS
-             let allWeeks = CustomTallyCounter().getTotalWeeks(counter: tempCounter, DateCreated: tempCounter.dateCreated, pausedPeriod: 0, activeWeeksSelected: false)
-
-
-             let labelTitleTOT = "TOTAL WEEKS"
-             let labelSubtitleTOT = "Tally of \(Int(allWeeks)) week(s)"
-
-             let labelLeftTitleTOT = "Tally"
-             let labelLeftScoreTOT = String(tempCounter.totalSum)
-             let labelLeftScoreUnitTOT = tempCounter.unit ?? ""
-
-             let labelRightTitleTOT = "Average"
-             let labelRightScoreTOT = (allWeeks >= 1) ? String(Int(Float(tempCounter.totalSum)/allWeeks)) :  String(Int(Float(tempCounter.totalSum)))
-             let labelRightScoreUnitTOT = "\(tempCounter.unit ?? "")/week"
-
-
-             let aOverviewTOT = overview(title: labelTitleTOT, subtitle: labelSubtitleTOT, leftTitle: labelLeftTitleTOT, leftSub: labelLeftScoreTOT, leftUnit: labelLeftScoreUnitTOT, rightTitle: labelRightTitleTOT, rightSub: labelRightScoreTOT, rightUnit: labelRightScoreUnitTOT)
-
-             customOverviewTotal.overview_data = aOverviewTOT
-             customOverviewTotal.history_data = CustomTallyCounter().getListOfWeekTallies(counter: tempCounter, activeWeeksSelected: activeWeeks)
-//             customOverviewTotal.setupData()
+            let allWeeks = CustomTallyCounter().getTotalWeeks(counter: tempCounter, DateCreated: tempCounter.dateCreated, pausedPeriod: 0, activeWeeksSelected: false)
+            
+            
+            let labelTitleTOT = "TOTAL WEEKS"
+            let labelSubtitleTOT = "Tally of \(Int(allWeeks)) week(s)"
+            
+            let labelLeftTitleTOT = "Tally"
+            let labelLeftScoreTOT = String(tempCounter.totalSum)
+            let labelLeftScoreUnitTOT = tempCounter.unit ?? ""
+            
+            let labelRightTitleTOT = "Average"
+            let labelRightScoreTOT = (allWeeks >= 1) ? String(Int(Float(tempCounter.totalSum)/allWeeks)) :  String(Int(Float(tempCounter.totalSum)))
+            let labelRightScoreUnitTOT = "\(tempCounter.unit ?? "")/week"
+            
+            
+            let aOverviewTOT = overview(title: labelTitleTOT, subtitle: labelSubtitleTOT, leftTitle: labelLeftTitleTOT, leftSub: labelLeftScoreTOT, leftUnit: labelLeftScoreUnitTOT, rightTitle: labelRightTitleTOT, rightSub: labelRightScoreTOT, rightUnit: labelRightScoreUnitTOT)
+            
+            customOverviewTotal.overview_data = aOverviewTOT
+            customOverviewTotal.history_data = CustomTallyCounter().getListOfWeekTallies(counter: tempCounter, activeWeeksSelected: activeWeeks)
+            //             customOverviewTotal.setupData()
             
         }
     }
@@ -771,7 +783,8 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             // Update This Week values
             let fractionDone = Float(tempCounter.weeklySum)/Float(tempCounter.weeklyGoal)
             let percentage = String(Int(fractionDone * 100)) + "%"
-            let labelRightScoreTOT = (allWeeks > 0) ? String(Int(Float(tempCounter.totalSum)/allWeeks)) :  "-"
+            
+            let labelRightScoreTOT = (allWeeks >= 1) ? String(Int(Float(tempCounter.totalSum)/allWeeks)) :  String(Int(Float(tempCounter.totalSum)))
             
             customOverview.overview_data?.leftSub = String(tempCounter.weeklySum)
             customOverview.overview_data?.rightSub = percentage
@@ -781,8 +794,8 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             customOverviewTotal.overview_data?.rightSub = labelRightScoreTOT
         }
     }
-
-
+    
+    
     private func setUpEditSegmentValues(){
         if let counter = counter {
             
@@ -805,15 +818,11 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 endsBtn.setTitleColor(.label, for: .normal)
             }
             
-            if(counter.paused == true){
-                counterPause.setTitle("UNARCHIVE", for: .normal)
-                counterPause.backgroundColor = self.view.tintColor
-            }
         }
     }
     
     private func updateDailyGoal(){
-            
+        
         let weeklyGoal = counterWeeklyGoal.text ?? ""
         if(!weeklyGoal.isEmpty){
             let weeklyValue = Int(counterWeeklyGoal.text ?? "0") ?? 0
@@ -832,7 +841,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
             divider.isHidden = false
             counterDailyGoal.isHidden = false
             perDayLabel.isHidden = false
-
+            
         }else{
             divider.isHidden = true
             counterDailyGoal.isHidden = true
@@ -843,21 +852,21 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     private func setupDailyPickerValues(){
         if let tempCounter = tempCounter {
             let weeklyGoal = tempCounter.weeklyGoal
-            if weeklyGoal < 10 {
-                for i in 0...15{
+            if weeklyGoal <= 20 {
+                for i in 0...20{
                     pickerChoices.append(String(i))
                 }
             }else {
-                for i in 0...15{
+                for i in 0...20{
                     if i==0 {
                         pickerChoices.append("0")
                     }else{
-                        let newValue: String = String(Int(weeklyGoal/10)*i)
+                        let newValue: String = String(Int(weeklyGoal/20)*i)
                         pickerChoices.append(newValue)
                     }
                 }
             }
-
+            
         }
         
         //Setup Method for tapp
@@ -867,16 +876,16 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func alertUIPickerBox(title: String){
-    
+        
         let vc = UIViewController()
         vc.preferredContentSize = CGSize(width: 250,height: 85)
         let pickerView = UIPickerView(frame: CGRect(x: 0, y: 0, width: 250, height: 85))
-//        pickerView.selectRow(2, inComponent: 0, animated: true)
+        //        pickerView.selectRow(2, inComponent: 0, animated: true)
         pickerView.delegate = self
         pickerView.dataSource = self
         vc.view.addSubview(pickerView)
-
-       
+        
+        
         let alertController = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         
         
@@ -888,9 +897,9 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 
                 self.pickerTypeValue = self.pickerTypeValue.isEmpty ? "0" : self.pickerTypeValue
                 self.counterDaySum.text = self.pickerTypeValue
-
+                
                 let difference = (Int(self.pickerTypeValue) ?? 0) - tempCounter.dailySum
-                       
+                
                 tempCounter.dailySum = Int(self.pickerTypeValue) ?? tempCounter.dailySum
                 tempCounter.weeklySum = tempCounter.weeklySum + difference
                 tempCounter.totalSum = tempCounter.totalSum + difference
@@ -898,38 +907,84 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 self.updateOverviewSegmentValues()
             }
             
-   
-            
         }))
         
         present(alertController, animated: true)
     }
     
-    private func setToolBarButtons(){
-        // Set toolbar scan to add a Tally through QR code
-        let addScanBtn = UIButton(type: .custom)
-
-        addScanBtn.setTitle("  hold to scan", for: .normal)
-        addScanBtn.setTitleColor(view.tintColor, for: .normal)
-        addScanBtn.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-        addScanBtn.setImage(UIImage(systemName: "qrcode.viewfinder"), for: .normal)
-//        addScanBtn.addTarget(self, action: #selector(addNewTallyQR), for: .touchUpInside)
-        addScanBtn.sizeToFit()
+    private func setupToolBarButtons(){
         
-        addScanBtn.addInteraction(interaction)
-        
-        centerBarButton = UIBarButtonItem(customView: addScanBtn)
-
-
-        if (centerBarButton == nil) {
-            centerBarButton = UIBarButtonItem(image: UIImage(systemName: "qrcode.viewfinder"), style: .plain, target: self, action: #selector(addNewTallyQR))
+        if let counter = counter {
+            let customShareBtn = UIButton(type: .custom)
+            let customArchiveBtn = UIButton(type: .custom)
+            let customDeleteBtn = UIButton(type: .custom)
+            
+            let archiveString = counter.paused ?? false ? " unarchive" : " archive"
+            
+            customShareBtn.setTitle(" share", for: .normal)
+            customArchiveBtn.setTitle(archiveString, for: .normal)
+            customDeleteBtn.setTitle(" delete", for: .normal)
+            
+            customShareBtn.setTitleColor(view.tintColor, for: .normal)
+            customArchiveBtn.setTitleColor(.lightGray, for: .normal)
+            customDeleteBtn.setTitleColor(.red, for: .normal)
+            
+            customShareBtn.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+            customArchiveBtn.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+            customDeleteBtn.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+            
+            customShareBtn.tintColor = view.tintColor
+            customArchiveBtn.tintColor = .lightGray
+            customDeleteBtn.tintColor = .red
+            
+            customShareBtn.setImage(UIImage(systemName: "paperplane"), for: .normal)
+            customArchiveBtn.setImage(UIImage(systemName: "archivebox"), for: .normal)
+            customDeleteBtn.setImage(UIImage(systemName: "trash"), for: .normal)
+            
+            customShareBtn.addTarget(self, action: #selector(shareTapped), for: .touchUpInside)
+            customArchiveBtn.addTarget(self, action: #selector(archiveTapped), for: .touchUpInside)
+            customDeleteBtn.addTarget(self, action: #selector(deleteTapped), for: .touchUpInside)
+            
+            shareBtn = UIBarButtonItem(customView: customShareBtn)
+            archiveBtn = UIBarButtonItem(customView: customArchiveBtn)
+            deleteBtn = UIBarButtonItem(customView: customDeleteBtn)
+            
+            let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            
+            if (FutureState == true ){
+                toolbarItems = [spacer, shareBtn, spacer, deleteBtn, spacer]
+                
+            }else {
+                toolbarItems = [spacer, shareBtn, spacer, archiveBtn, spacer, deleteBtn, spacer]
+            }
+            
+            
+        }else{
+            
+            // Set toolbar scan to add a Tally through QR code
+            let addScanBtn = UIButton(type: .custom)
+            
+            addScanBtn.setTitle("  hold to scan", for: .normal)
+            addScanBtn.setTitleColor(view.tintColor, for: .normal)
+            addScanBtn.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+            addScanBtn.setImage(UIImage(systemName: "qrcode.viewfinder"), for: .normal)
+            //        addScanBtn.addTarget(self, action: #selector(addNewTallyQR), for: .touchUpInside)
+            addScanBtn.sizeToFit()
+            
+            addScanBtn.addInteraction(interaction)
+            
+            centerBarButton = UIBarButtonItem(customView: addScanBtn)
+            
+            
+//            if (centerBarButton == nil) {
+//                centerBarButton = UIBarButtonItem(image: UIImage(systemName: "qrcode.viewfinder"), style: .plain, target: self, action: #selector(addNewTallyQR))
+//            }
+            
+            let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            toolbarItems = [spacer, centerBarButton, spacer]
         }
-
-        let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        toolbarItems = [spacer, centerBarButton, spacer]
+        
     }
-    
-    
     
     
     func setupTallyByQRCode(counterString: String){
@@ -939,8 +994,8 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         editSegmentStack.isHidden = false
         scannerView.isHidden = true
         centerBarButton.isEnabled = true
-    
-
+        
+        
         // Decode it
         if let jsonData = counterString.data(using: .utf8)
         {
@@ -961,7 +1016,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                     includeWeekends = false
                 }
                 
- 
+                
                 // Set the start date if it is greater or equal to today else set it to today
                 if newcounter.dateCreated > Date() || Calendar.current.isDateInToday(newcounter.dateCreated){
                     tempCounter?.dateCreated = newcounter.dateCreated
@@ -974,8 +1029,9 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
                 }else{
                     tempCounter?.dateCreated = Date()
                     startsBtn.setTitle(formatter.string(from: Date()), for: .normal)
-                  
                 }
+                
+                updateDailyGoal()
                 
             } catch {
                 print(error.localizedDescription)
@@ -984,7 +1040,7 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         }
         
     }
-
+    
 }
 
 extension DetailViewController: UIPickerViewDelegate, UIPickerViewDataSource{
@@ -1014,20 +1070,20 @@ extension DetailViewController: UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         
         return UIContextMenuConfiguration(
-          identifier: nil,
-          previewProvider: nil,
-          actionProvider: { _ in
-            let cameraAction = self.makeCameraAction()
-            let folderAction = self.makeFolderAction()
-            
-            let children = [cameraAction, folderAction]
-            return UIMenu(title: "", children: children)
+            identifier: nil,
+            previewProvider: nil,
+            actionProvider: { _ in
+                let cameraAction = self.makeCameraAction()
+                let folderAction = self.makeFolderAction()
+                
+                let children = [cameraAction, folderAction]
+                return UIMenu(title: "", children: children)
         })
         
     }
     
     func makeCameraAction() -> UIAction {
-       // Set attribtes
+        // Set attribtes
         let actionAttr = UIMenuElement.Attributes.init()
         
         // Set images
@@ -1051,7 +1107,7 @@ extension DetailViewController: UIContextMenuInteractionDelegate {
     }
     
     func makeFolderAction() -> UIAction {
-       // Set attribtes
+        // Set attribtes
         let actionAttr = UIMenuElement.Attributes.init()
         
         // Set images
@@ -1063,7 +1119,7 @@ extension DetailViewController: UIContextMenuInteractionDelegate {
             image: image,
             identifier: nil,
             attributes: actionAttr) {_ in
-                   // UIImagePickerController is a view controller that lets a user pick media from their photo library.
+                // UIImagePickerController is a view controller that lets a user pick media from their photo library.
                 let imagePickerController = UIImagePickerController()
                 
                 // Only allow photos to be picked, not taken.
@@ -1118,46 +1174,30 @@ extension DetailViewController: UIImagePickerControllerDelegate, UINavigationCon
         self.avCaptureSession.startRunning()
     }
     
-
-//    func scanQRCodeLibrary(_ picker: UIImagePickerController,
-//                           didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-//
-//        guard let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage,
-//            let detector = CIDetector(ofType: CIDetectorTypeQRCode,
-//                                      context: nil,
-//                                      options: [CIDetectorAccuracy: CIDetectorAccuracyHigh]),
-//            let ciImage = CIImage(image: pickedImage),
-//            let features = detector.features(in: ciImage) as? [CIQRCodeFeature] else { return }
-//
-//        let qrCodeLink = features.reduce("") { $0 + ($1.messageString ?? "") }
-//
-//        print(qrCodeLink)//Your result from QR Code
-//    }
-    
-     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-          
-          // Check if the metadataObjects array is contains at least one object.
-          if metadataObjects.count == 0 {
-              return
-          }
-          
-          if avCaptureSession.isRunning {
-              DispatchQueue.global().async {
-                  self.avCaptureSession.stopRunning()
-              }
-          }
-          
-          // Get the metadata object.
-          let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
-          
-          if metadataObj.type == AVMetadataObject.ObjectType.qr {
-              if let outputString = metadataObj.stringValue {
-                  DispatchQueue.main.async {
-                      self.setupTallyByQRCode(counterString: outputString)
-                  }
-              }
-          }
-      }
+    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+        
+        // Check if the metadataObjects array is contains at least one object.
+        if metadataObjects.count == 0 {
+            return
+        }
+        
+        if avCaptureSession.isRunning {
+            DispatchQueue.global().async {
+                self.avCaptureSession.stopRunning()
+            }
+        }
+        
+        // Get the metadata object.
+        let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
+        
+        if metadataObj.type == AVMetadataObject.ObjectType.qr {
+            if let outputString = metadataObj.stringValue {
+                DispatchQueue.main.async {
+                    self.setupTallyByQRCode(counterString: outputString)
+                }
+            }
+        }
+    }
     
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -1182,7 +1222,7 @@ extension DetailViewController: UIImagePickerControllerDelegate, UINavigationCon
         }
         self.dismiss(animated: true, completion: nil)
     }
-
+    
 }
 
 
@@ -1193,11 +1233,11 @@ extension UIViewController
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(
             target: self,
             action: #selector(UIViewController.dismissKeyboard))
-
+        
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }
-
+    
     @objc func dismissKeyboard()
     {
         view.endEditing(true)

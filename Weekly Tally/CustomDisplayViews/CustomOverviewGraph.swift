@@ -378,7 +378,7 @@ import UIKit
         labelLeftScoreUnit.topAnchor.constraint(equalTo: labelLeftScore.bottomAnchor, constant: 0).isActive = true
         labelLeftScoreUnit.leadingAnchor.constraint(equalTo: viewLeft.leadingAnchor, constant: 8).isActive = true
         labelLeftScoreUnit.trailingAnchor.constraint(equalTo: viewLeft.trailingAnchor, constant: -8).isActive = true
-        
+    
         
         labelRightTitle.topAnchor.constraint(equalTo: viewRight.topAnchor, constant: 8).isActive = true
         labelRightTitle.leadingAnchor.constraint(equalTo: viewRight.leadingAnchor, constant: 8).isActive = true
