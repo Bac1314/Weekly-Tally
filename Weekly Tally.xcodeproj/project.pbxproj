@@ -32,6 +32,7 @@
 		09AEDABD242760C000E98368 /* CustomShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AEDABC242760C000E98368 /* CustomShareView.swift */; };
 		09AEDAC2242782F700E98368 /* CustomShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AEDAC1242782F700E98368 /* CustomShare.swift */; };
 		09BF02ED24644FB5007CBE99 /* InstructViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BF02EC24644FB5007CBE99 /* InstructViewController.swift */; };
+		09E0CEEF2470E42B00899AD4 /* SetttingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E0CEEE2470E42B00899AD4 /* SetttingsTableViewController.swift */; };
 		09E6B81E23ED3BBB0090E898 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E6B81D23ED3BBB0090E898 /* DetailViewController.swift */; };
 		09E6B82223EDC4E20090E898 /* Counter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E6B82123EDC4E20090E898 /* Counter.swift */; };
 		09E7DBA9241B8CE600F29E0B /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E7DBA8241B8CE600F29E0B /* CustomView.swift */; };
@@ -93,6 +94,7 @@
 		09AEDABC242760C000E98368 /* CustomShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomShareView.swift; sourceTree = "<group>"; };
 		09AEDAC1242782F700E98368 /* CustomShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomShare.swift; sourceTree = "<group>"; };
 		09BF02EC24644FB5007CBE99 /* InstructViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructViewController.swift; sourceTree = "<group>"; };
+		09E0CEEE2470E42B00899AD4 /* SetttingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetttingsTableViewController.swift; sourceTree = "<group>"; };
 		09E6B81D23ED3BBB0090E898 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		09E6B82123EDC4E20090E898 /* Counter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Counter.swift; sourceTree = "<group>"; };
 		09E7DBA8241B8CE600F29E0B /* CustomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 				09E6B81D23ED3BBB0090E898 /* DetailViewController.swift */,
 				0926BDE02429031000EF3F85 /* ShareViewController.swift */,
 				09BF02EC24644FB5007CBE99 /* InstructViewController.swift */,
+				09E0CEEE2470E42B00899AD4 /* SetttingsTableViewController.swift */,
 				09ADE0A6241FAC9C00AEFAB5 /* CustomFunctions */,
 				09977A87241925D400E9FB98 /* CustomClasses */,
 				09EA5C6723F16351003141A3 /* CustomViews */,
@@ -580,6 +583,7 @@
 				090AAF8A241C521500F587FB /* CustomOverviewView.swift in Sources */,
 				09AEDAC2242782F700E98368 /* CustomShare.swift in Sources */,
 				09ADE0A5241F9CFF00AEFAB5 /* CustomDate.swift in Sources */,
+				09E0CEEF2470E42B00899AD4 /* SetttingsTableViewController.swift in Sources */,
 				09EA5C6623F111A1003141A3 /* CustomLabel.swift in Sources */,
 				097AB40023F84CB3001F546E /* records.swift in Sources */,
 				09E7DBA9241B8CE600F29E0B /* CustomView.swift in Sources */,

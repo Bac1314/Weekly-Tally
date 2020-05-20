@@ -53,9 +53,9 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        if let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.path {
-//            print("Documents Directory: \(documentsPath)")
-//        }
+        // Show slides if first-time
+        showSlides()
+
         // Set up the search bar
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -64,6 +64,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         navigationItem.searchController = searchController
         definesPresentationContext = true
         //        navigationItem.rightBarButtonItem = editButtonIte
+        
         
         /***** Configure Google Sign In *****/
         setupGoogleSignIn()
@@ -427,6 +428,10 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         case "ShowSlides":
             os_log("Showing slides.", log: OSLog.default, type: .debug)
             
+        case "ShowPreferences":
+            os_log("Showing slides.", log: OSLog.default, type: .debug)
+                
+            
         default:
             fatalError("Unexpected Segue Identifier: \(segue.identifier ?? "error")")
         }
@@ -434,6 +439,16 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
     
     
     // MARK: Private Methods
+    
+    private func showSlides(){
+        
+        if (defaults.object(forKey: "firstTime") as? Bool) == nil {
+            defaults.set(false, forKey: "firstTime")
+            self.performSegue(withIdentifier: "ShowSlides", sender: self)
+        }
+
+    }
+    
     private func loadSampleCounters(){
         guard let counter1 = Counter(title: "Learn Java development", unit: "hours", weeklyGoal: 8, weekendsIncluded: true) else {
             fatalError("Unable to instantiate counter 1")
@@ -586,16 +601,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         //Tapped the add button
         
         //Play sound effect
-        let path = Bundle.main.path(forResource: "clickSound.m4a", ofType:nil)!
-        let url = URL(fileURLWithPath: path)
-        
-        do {
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
-            audioPlayer?.play()
-        } catch {
-            os_log("Couldn't play sound", log: OSLog.default, type: .debug)
-            
-        }
+        playSound()
         
         //TableView Cell Button Tapped
         if let selectedIndex = counters.firstIndex(of: cellCounter){
@@ -632,6 +638,20 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         else {
             self.dismiss(animated: false, completion: nil)
             self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    public func playSound(){
+        //Play sound effect
+        let path = Bundle.main.path(forResource: "clickSound.m4a", ofType:nil)!
+        let url = URL(fileURLWithPath: path)
+        
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.play()
+        } catch {
+            os_log("Couldn't play sound", log: OSLog.default, type: .debug)
+            
         }
     }
     
@@ -891,29 +911,28 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
 //            }
 //        }
         
-          self.performSegue(withIdentifier: "ShowSlides", sender: self)
         
-//        let encoder = JSONEncoder()
-//        if let encoded = try? encoder.encode(counters + countersArchived + countersFuture) {
-//            defaults.set(encoded, forKey: "savedCounters")
-//            
-//            
-//            let fileName = Bundle.main.bundleIdentifier!
-//            let library = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
-//            let preferences = library.appendingPathComponent("Preferences")
-//            let userDefaultsPlistURL = preferences.appendingPathComponent(fileName).appendingPathExtension("plist")
-////            print("Library directory:", userDefaultsPlistURL.path)
-////            print("Preferences directory:", userDefaultsPlistURL.path)
-////            print("UserDefaults plist file:", userDefaultsPlistURL.path)
-//            if FileManager.default.fileExists(atPath: userDefaultsPlistURL.path) {
-//                print("file found")
-//   
-//                drive?.uploadFile("weekly_tally_data", filePath: userDefaultsPlistURL.path, MIMEType: "application/octet-stream") { (fileID, error) in
-//                    print("Upload file ID: \(fileID); Error: \(error?.localizedDescription)")
-//                }
-//                
-//            }
-//        }
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(counters + countersArchived + countersFuture) {
+            defaults.set(encoded, forKey: "savedCounters")
+            
+            
+            let fileName = Bundle.main.bundleIdentifier!
+            let library = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
+            let preferences = library.appendingPathComponent("Preferences")
+            let userDefaultsPlistURL = preferences.appendingPathComponent(fileName).appendingPathExtension("plist")
+//            print("Library directory:", userDefaultsPlistURL.path)
+//            print("Preferences directory:", userDefaultsPlistURL.path)
+//            print("UserDefaults plist file:", userDefaultsPlistURL.path)
+            if FileManager.default.fileExists(atPath: userDefaultsPlistURL.path) {
+                print("file found")
+   
+                drive?.uploadFile("weekly_tally_data", filePath: userDefaultsPlistURL.path, MIMEType: "application/octet-stream") { (fileID, error) in
+                    print("Drive Error: \(error?.localizedDescription ?? "unknown")")
+                }
+                
+            }
+        }
         
     }
     

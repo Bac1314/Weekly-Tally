@@ -53,26 +53,6 @@ class InstructViewController: UIViewController, UIScrollViewDelegate {
      // MARK: Private Methods
     private func setupScreens() {
         
-//        scrollView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
-////        scrollView.contentSize = CGSize(width: view.frame.width * CGFloat(instructions.count), height: view.frame.height)
-//
-//        for index in 0..<instructions.count {
-//            // 1.
-//            frame.origin.x = scrollView.frame.size.width * CGFloat(index)
-//            frame.origin.y = 0
-//            frame.size = scrollView.frame.size
-//
-//            // 2.
-//            let imgView = UIImageView(frame: frame)
-//            imgView.image = UIImage(named: instructions[index])
-//
-//            self.scrollView.addSubview(imgView)
-//        }
-//
-//        // 3.
-//        scrollView.contentSize = CGSize(width: (scrollView.frame.size.width * CGFloat(instructions.count)), height: scrollView.frame.size.height)
-//        scrollView.delegate = self
-        
         scrollView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         scrollView.contentSize = CGSize(width: view.frame.width * CGFloat(instructions.count), height: view.frame.height)
         scrollView.isPagingEnabled = true
@@ -114,7 +94,7 @@ class InstructViewController: UIViewController, UIScrollViewDelegate {
           navigationController?.navigationBar.isHidden = false
         
         let isPresentingInAddCounterMode = presentingViewController is UINavigationController
-             
+            
              if isPresentingInAddCounterMode {
                  dismiss(animated: true, completion: nil)
              }else if let owningNavigationController = navigationController {

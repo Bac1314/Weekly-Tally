@@ -575,18 +575,6 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    @objc func addNewTallyQR() {
-        
-        //        do {
-        //            try scanQRCodeCamera()
-        //
-        //            editSegmentStack.isHidden = true
-        //            LargeTitle.isHidden = true
-        //        }catch {
-        //            print("error scanning")
-        //        }
-    }
-    
     @objc func shareTapped(){
         performSegue(withIdentifier: "ShareItem", sender: self)
     }
@@ -988,6 +976,9 @@ class DetailViewController: UIViewController, UITextFieldDelegate {
     
     
     func setupTallyByQRCode(counterString: String){
+        
+        // Play sound
+        CounterTableViewController().playSound()
         
         // Show and hide views 
         LargeTitle.isHidden = false
