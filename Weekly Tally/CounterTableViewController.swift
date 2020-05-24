@@ -63,35 +63,17 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         //        searchController.searchBar.scopeButtonTitles = ["All", "Chocolate"]
         navigationItem.searchController = searchController
         definesPresentationContext = true
-        //        navigationItem.rightBarButtonItem = editButtonIte
-        
         
         /***** Configure Google Sign In *****/
         setupGoogleSignIn()
         drive = CustomGoogleDrive(googleDriveService)
-        
-        //        /* ~~~~~~~~~~ TESTING ~~~~~~~~~~ */
-        //        var components = DateComponents()
-        //
-        //        components.day = 10
-        //        components.month = 4
-        //        components.year = 2020
-        //
-        //        let date2 = Calendar.current.date(from: components)!
-        //        defaults.set(date2, forKey: "LastRun")
-        //        defaults.set(date2, forKey: "LastUpdate")
-        //
-        //        print("date2 \(date2)")
-        //        /* ~~~~~~~~~~ TESTING ~~~~~~~~~~ */
+
         
         // Load any saved meals, otherwise load sample data
         if let savedCounters = loadCounters(){
             newCountersEnded = ""
             
-            
             for counter in savedCounters {
-                
-                
                 if(counter.paused != nil && counter.paused == true){
                     countersArchived += [counter]
                 }else if let endDate = counter.dateEnds, endDate < Date(){
@@ -124,6 +106,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        
         
         if(!newCountersEnded.isEmpty){
             //            newCountersEnded = "These following tallies have ended and sent to the archived list\n\n" + newCountersEnded
@@ -191,19 +174,6 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
             counter = counters[indexPath.row]
         }
         
-        //TESTING
-        //                if(counter.title == "Get a nice and firm a$$"){
-        //                    counter.history = "250,400,250,300,250,300,160,251,"
-        //                }else
-        //                    if(counter.title == "250 pushups per week"){
-        //                    counter.history = "100,25,0,25,109,150,150,200,201,120,210,"
-        //                }
-        //                    else if(counter.title == "5 apps per week"){
-        //                    counter.history = "9,"
-        //                }
-        //                print("counter title \(counter.title) - History \(counter.history) - Date \(counter.dateCreated)")
-        //
-        
         cell.cellCounter = counter
         cell.cellDelegate = self
         
@@ -214,10 +184,6 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         cell.cellUnit.text = counter.unit?.uppercased()
         cell.cellWeeklySum?.text = "\(counter.weeklySum)|\(counter.weeklyGoal)"
         cell.cellProgress.progress = Float(counter.weeklySum)/Float(counter.weeklyGoal)
-        
-        //        if (cell.cellProgress.progress >= 1) {
-        //            cell.cellProgress.progressTintColor = .green
-        //        }
         
         if ArchivedState {
             
@@ -428,9 +394,8 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         case "ShowSlides":
             os_log("Showing slides.", log: OSLog.default, type: .debug)
             
-        case "ShowPreferences":
-            os_log("Showing slides.", log: OSLog.default, type: .debug)
-                
+        case "ShowSettings":
+            os_log("Showing Settings.", log: OSLog.default, type: .debug)
             
         default:
             fatalError("Unexpected Segue Identifier: \(segue.identifier ?? "error")")
@@ -665,7 +630,6 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
     // MARK: Actions
     @IBAction func unwindToCounterList(sender: UIStoryboardSegue){
         
-        
         if let sourceViewController = sender.source as? DetailViewController, let counter = sourceViewController.counter {
             
             if let selectedIndexPath = tableView.indexPathForSelectedRow{
@@ -799,7 +763,18 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
             //Save counters
             saveCounters()
             
+        } else if let sourceViewController = sender.source as? SetttingsTableViewController, let reset = sourceViewController.reset {
+            // Coming back from resetting the entire app
+            
+            if reset == true{
+                counters.removeAll()
+                loadSampleCounters()
+                updateCounters()
+                tableView.reloadData()
+            }
         }
+        
+    
         
     }
     
@@ -912,27 +887,24 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
 //        }
         
         
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(counters + countersArchived + countersFuture) {
-            defaults.set(encoded, forKey: "savedCounters")
-            
-            
-            let fileName = Bundle.main.bundleIdentifier!
-            let library = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
-            let preferences = library.appendingPathComponent("Preferences")
-            let userDefaultsPlistURL = preferences.appendingPathComponent(fileName).appendingPathExtension("plist")
-//            print("Library directory:", userDefaultsPlistURL.path)
-//            print("Preferences directory:", userDefaultsPlistURL.path)
-//            print("UserDefaults plist file:", userDefaultsPlistURL.path)
-            if FileManager.default.fileExists(atPath: userDefaultsPlistURL.path) {
-                print("file found")
-   
-                drive?.uploadFile("weekly_tally_data", filePath: userDefaultsPlistURL.path, MIMEType: "application/octet-stream") { (fileID, error) in
-                    print("Drive Error: \(error?.localizedDescription ?? "unknown")")
-                }
-                
-            }
-        }
+//        let encoder = JSONEncoder()
+//        if let encoded = try? encoder.encode(counters + countersArchived + countersFuture) {
+//            defaults.set(encoded, forKey: "savedCounters")
+//
+//
+//            let fileName = Bundle.main.bundleIdentifier!
+//            let library = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
+//            let preferences = library.appendingPathComponent("Preferences")
+//            let userDefaultsPlistURL = preferences.appendingPathComponent(fileName).appendingPathExtension("plist")
+//            if FileManager.default.fileExists(atPath: userDefaultsPlistURL.path) {
+//                print("file found")
+//
+//                drive?.uploadFile("weekly_tally_data", filePath: userDefaultsPlistURL.path, MIMEType: "application/octet-stream") { (fileID, error) in
+//                    print("Drive Error: \(error?.localizedDescription ?? "unknown")")
+//                }
+//
+//            }
+//        }
         
     }
     
@@ -940,14 +912,17 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
     // MARK: Protocol functions/ Overwritten functions
     @objc func willEnterForeground() {
         //when app comes to foreground, get updated data
-        
         updateTitle()
         updateCounters()
         tableView.reloadData()
     }
     
     @objc func addNewTally() {
-        self.performSegue(withIdentifier: "AddItem", sender: self)
+//        if counters.count > 7 {
+//            popUpAlert(title: "Limit of 7 reached", message: "Weekly Tally limits the number of goals to 7 to help you better focus on them. If you wish to add another goal, delete or archive one of your goals.", buttonTitle: "Got it!")
+//        }else {
+            self.performSegue(withIdentifier: "AddItem", sender: self)
+//        }
     }
     
     @objc func goBackToMain(){

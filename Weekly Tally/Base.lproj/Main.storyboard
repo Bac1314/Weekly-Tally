@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Fuj-Uz-WkA">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Fuj-Uz-WkA">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -234,7 +234,7 @@
                             <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <action selector="profileAction:" destination="XzB-Ke-95H" id="6zk-1E-BO4"/>
-                                <segue destination="q2x-1g-E4V" kind="show" identifier="ShowPreferences" id="Tcl-Xh-aiv"/>
+                                <segue destination="q2x-1g-E4V" kind="show" identifier="ShowSettings" id="Tcl-Xh-aiv"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -255,13 +255,13 @@
         <!--Settings-->
         <scene sceneID="HqB-le-kWc">
             <objects>
-                <tableViewController id="q2x-1g-E4V" sceneMemberID="viewController">
+                <tableViewController id="q2x-1g-E4V" customClass="SetttingsTableViewController" customModule="Weekly_Tally" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="oxr-q5-pzg">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <sections>
-                            <tableViewSection headerTitle="ACCOUNT" id="AdL-w6-v6s">
+                            <tableViewSection headerTitle="Account" id="AdL-w6-v6s">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="TjD-am-1sd">
                                         <rect key="frame" x="0.0" y="28" width="414" height="50"/>
@@ -290,31 +290,31 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="Vt3-vt-My3">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="cZU-mA-axb">
                                         <rect key="frame" x="0.0" y="78" width="414" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Vt3-vt-My3" id="Kiz-6M-Elg">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cZU-mA-axb" id="r3K-Kt-6yH">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Premium" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nnU-oi-qpg">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Premium" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pwW-UW-zIu">
                                                     <rect key="frame" x="20" y="11" width="350" height="28"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rOf-kL-ylA">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d1C-Yh-Dqx">
                                                     <rect key="frame" x="381.5" y="14" width="12.5" height="22"/>
                                                     <state key="normal" image="chevron.right" catalog="system"/>
                                                 </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailingMargin" secondItem="rOf-kL-ylA" secondAttribute="trailing" id="80v-Zl-3qK"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="nnU-oi-qpg" secondAttribute="bottom" id="dm0-85-WSw"/>
-                                                <constraint firstItem="rOf-kL-ylA" firstAttribute="centerY" secondItem="Kiz-6M-Elg" secondAttribute="centerY" id="e6E-Xh-bnP"/>
-                                                <constraint firstItem="nnU-oi-qpg" firstAttribute="top" secondItem="Kiz-6M-Elg" secondAttribute="topMargin" id="eoB-Kd-at5"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="nnU-oi-qpg" secondAttribute="trailing" constant="24" id="epp-Kc-JJJ"/>
-                                                <constraint firstItem="nnU-oi-qpg" firstAttribute="leading" secondItem="Kiz-6M-Elg" secondAttribute="leadingMargin" id="wzR-Pb-Gfy"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="pwW-UW-zIu" secondAttribute="trailing" constant="24" id="84X-9s-QAf"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="pwW-UW-zIu" secondAttribute="bottom" id="Dg4-OP-SjC"/>
+                                                <constraint firstItem="pwW-UW-zIu" firstAttribute="leading" secondItem="r3K-Kt-6yH" secondAttribute="leadingMargin" id="Kde-3c-a2i"/>
+                                                <constraint firstItem="pwW-UW-zIu" firstAttribute="top" secondItem="r3K-Kt-6yH" secondAttribute="topMargin" id="QoE-8L-jNA"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="d1C-Yh-Dqx" secondAttribute="trailing" id="fMo-XZ-kBd"/>
+                                                <constraint firstItem="d1C-Yh-Dqx" firstAttribute="centerY" secondItem="r3K-Kt-6yH" secondAttribute="centerY" id="mwl-Nv-vEX"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -342,7 +342,7 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="WEEKLY TALLY" id="1Zn-Zd-aG8">
+                            <tableViewSection headerTitle="Weekly Tally" id="1Zn-Zd-aG8">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="q5T-nc-TJ3">
                                         <rect key="frame" x="0.0" y="234" width="414" height="50"/>
@@ -433,6 +433,9 @@
                                                 <constraint firstItem="lOf-SS-39D" firstAttribute="leading" secondItem="46X-zJ-lzc" secondAttribute="leadingMargin" id="viw-hl-uMs"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="JsN-oY-UHD" kind="show" id="3iB-XU-kdb"/>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -443,8 +446,12 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Settings" id="3sK-9z-0uz"/>
+                    <connections>
+                        <segue destination="Y7i-v2-cgc" kind="unwind" identifier="unwindSettings" unwindAction="unwindToCounterListWithSender:" id="4FI-NY-YU1"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qyw-bF-u1v" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="Y7i-v2-cgc" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-749" y="-648"/>
         </scene>
@@ -453,11 +460,11 @@
             <objects>
                 <viewController id="MWQ-m2-8Dt" customClass="DetailViewController" customModule="Weekly_Tally" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleAspectFit" id="U8n-bo-ueD">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="556"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="610"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IcR-Nr-Ekl">
-                                <rect key="frame" x="0.0" y="56" width="320" height="451"/>
+                                <rect key="frame" x="0.0" y="88" width="320" height="473"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xpw-Fk-dZC" userLabel="ContentView">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="671"/>
@@ -1043,7 +1050,7 @@
                             </connections>
                         </barButtonItem>
                         <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="jdM-5m-7Ec">
-                            <rect key="frame" x="83.5" y="11.5" width="153" height="33"/>
+                            <rect key="frame" x="83.5" y="5.5" width="153" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <segments>
                                 <segment title="Overview"/>
@@ -1102,7 +1109,7 @@
             <objects>
                 <viewController title="Share View Controller" id="qwP-Lr-5PV" customClass="ShareViewController" customModule="Weekly_Tally" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HgE-bV-8Rb">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="1000"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="890"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qAE-4I-o2c">
@@ -1502,7 +1509,98 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dQx-hf-Md4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="96" y="-629"/>
+            <point key="canvasLocation" x="146" y="-648"/>
+        </scene>
+        <!--About-->
+        <scene sceneID="g6n-o3-Gpz">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DuO-xr-gR6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <viewController title="About" hidesBottomBarWhenPushed="YES" id="JsN-oY-UHD" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="i3b-ck-sA0">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cpg-o4-TvI">
+                                <rect key="frame" x="0.0" y="140" width="414" height="722"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ncD-Hg-ZWa" userLabel="ContentView">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="722"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WHY?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m5C-aW-eCu">
+                                                <rect key="frame" x="16" y="8" width="382" height="21.5"/>
+                                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="18"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="12" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lwM-3N-aHk">
+                                                <rect key="frame" x="16" y="37.5" width="382" height="223.5"/>
+                                                <string key="text">The developer of 'Weekly Tally' wanted to have an app to keep track of his goals. Starting a goal or a habit is easy, but sticking to it requires an immense amount of determination. With the WT app, the developer wanted to achieve 3 things. 
+
+1. Start small. Focus on his goals on a week-by-week basis. 
+2. Quantify his goals and keep track of his progress
+3. Share with his friends and work with them</string>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mmz-TQ-6V3">
+                                                <rect key="frame" x="16" y="314.5" width="382" height="61"/>
+                                                <string key="text">Yearly is too long. 
+Daily is too much. 
+Weekly is just right. </string>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WHY WEEKLY?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ePZ-Dr-0bf">
+                                                <rect key="frame" x="16" y="285" width="382" height="21.5"/>
+                                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="18"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="m5C-aW-eCu" secondAttribute="trailing" constant="16" id="0eJ-Sh-3mi"/>
+                                            <constraint firstItem="lwM-3N-aHk" firstAttribute="top" secondItem="m5C-aW-eCu" secondAttribute="bottom" constant="8" id="L0L-hv-HjO"/>
+                                            <constraint firstItem="ePZ-Dr-0bf" firstAttribute="top" secondItem="lwM-3N-aHk" secondAttribute="bottom" constant="24" id="LC8-QH-wCJ"/>
+                                            <constraint firstAttribute="trailing" secondItem="ePZ-Dr-0bf" secondAttribute="trailing" constant="16" id="WA9-DW-38I"/>
+                                            <constraint firstItem="ePZ-Dr-0bf" firstAttribute="leading" secondItem="ncD-Hg-ZWa" secondAttribute="leading" constant="16" id="XeQ-yk-yZo"/>
+                                            <constraint firstAttribute="trailing" secondItem="lwM-3N-aHk" secondAttribute="trailing" constant="16" id="YMj-9k-AJF"/>
+                                            <constraint firstAttribute="trailing" secondItem="mmz-TQ-6V3" secondAttribute="trailing" constant="16" id="fp9-0M-h5E"/>
+                                            <constraint firstItem="m5C-aW-eCu" firstAttribute="top" secondItem="ncD-Hg-ZWa" secondAttribute="top" constant="8" id="g4k-S5-Klz"/>
+                                            <constraint firstItem="m5C-aW-eCu" firstAttribute="leading" secondItem="ncD-Hg-ZWa" secondAttribute="leading" constant="16" id="h8a-uT-Jym"/>
+                                            <constraint firstItem="lwM-3N-aHk" firstAttribute="leading" secondItem="ncD-Hg-ZWa" secondAttribute="leading" constant="16" id="lFr-eU-gMU"/>
+                                            <constraint firstItem="mmz-TQ-6V3" firstAttribute="leading" secondItem="ncD-Hg-ZWa" secondAttribute="leading" constant="16" id="ni3-4s-wP1"/>
+                                            <constraint firstItem="mmz-TQ-6V3" firstAttribute="top" secondItem="ePZ-Dr-0bf" secondAttribute="bottom" constant="8" id="xHg-89-ZKb"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="ncD-Hg-ZWa" secondAttribute="bottom" id="3Xr-Ph-Mu3"/>
+                                    <constraint firstItem="ncD-Hg-ZWa" firstAttribute="top" secondItem="cpg-o4-TvI" secondAttribute="top" id="BuG-x3-ff6"/>
+                                    <constraint firstItem="ncD-Hg-ZWa" firstAttribute="width" secondItem="cpg-o4-TvI" secondAttribute="width" id="USM-dU-F9q"/>
+                                    <constraint firstItem="ncD-Hg-ZWa" firstAttribute="leading" secondItem="cpg-o4-TvI" secondAttribute="leading" id="foU-tr-Q9m"/>
+                                    <constraint firstItem="ncD-Hg-ZWa" firstAttribute="height" secondItem="cpg-o4-TvI" secondAttribute="height" priority="250" id="u6Z-aJ-jAk"/>
+                                    <constraint firstAttribute="trailing" secondItem="ncD-Hg-ZWa" secondAttribute="trailing" id="zec-Mt-co1"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="cpg-o4-TvI" firstAttribute="leading" secondItem="YtW-4A-HaL" secondAttribute="leading" id="2S2-5u-aaZ"/>
+                            <constraint firstItem="cpg-o4-TvI" firstAttribute="top" secondItem="YtW-4A-HaL" secondAttribute="top" id="UU1-FC-TYU"/>
+                            <constraint firstItem="YtW-4A-HaL" firstAttribute="bottom" secondItem="cpg-o4-TvI" secondAttribute="bottom" id="WXR-fT-WdW"/>
+                            <constraint firstItem="YtW-4A-HaL" firstAttribute="trailing" secondItem="cpg-o4-TvI" secondAttribute="trailing" id="fhE-dw-iyc"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="YtW-4A-HaL"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="About" largeTitleDisplayMode="always" id="v3E-aB-iTs"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <splitViewMasterSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="12" y="-1343"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="9xT-tH-0ep">
@@ -1558,7 +1656,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="nAA-0R-Jrj"/>
-        <segue reference="NSc-x9-k25"/>
+        <segue reference="rVw-vX-TAc"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="archivebox" catalog="system" width="128" height="106"/>
