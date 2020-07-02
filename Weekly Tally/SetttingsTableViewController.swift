@@ -8,19 +8,23 @@
 
 import UIKit
 import MessageUI
+import GoogleSignIn
+import GoogleAPIClientForREST
+import GTMSessionFetcher
 
 class SetttingsTableViewController: UITableViewController, UITextFieldDelegate {
     
     var reset: Bool?
-
+    @IBOutlet weak var switchGoogleBackup: UISwitch!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+//        /***** Configure Google Sign In *****/
+//        setupGoogleSignIn()
+//        drive = CustomGoogleDrive(googleDriveService)
+//        switchGoogleBackup.isOn = defaults.object(forKey: "googleBackupEnabled") as? Bool ?? false
+        
     }
 
     // MARK: - Table view data source
@@ -118,7 +122,17 @@ class SetttingsTableViewController: UITableViewController, UITextFieldDelegate {
     }
     
     
-
+    @IBAction func switchGoogleBackup(_ sender: UISwitch) {
+//        defaults.set(sender.isOn, forKey: "googleBackupEnabled")
+        if(sender.isOn){
+            // Start Google's OAuth authentication flow
+            GIDSignIn.sharedInstance()?.signIn()
+        
+        }else{
+            
+        }
+    }
+    
 }
 
 extension SetttingsTableViewController: MFMailComposeViewControllerDelegate {
@@ -202,3 +216,45 @@ extension UserDefaults {
     }
 
 }
+
+//extension SetttingsTableViewController: GIDSignInDelegate {
+//    // ALL GOOGLE API CALLS
+//
+//    // MARK: - GIDSignInDelegate
+//    public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
+//                     withError error: Error!) {
+//        if let error = error {
+//            googleDriveService.authorizer = nil
+//            googleUser = nil
+//
+//            if (error as NSError).code == GIDSignInErrorCode.hasNoAuthInKeychain.rawValue {
+//                print("The user has not signed in before or they have since signed out.")
+//            } else {
+//                print("\(error.localizedDescription)")
+//            }
+//            return
+//        }else{
+//            // Include authorization headers/values with each Drive API request.
+//            googleDriveService.authorizer = user.authentication.fetcherAuthorizer()
+//            googleUser = user
+//        }
+//
+//    }
+//
+//
+//    public func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
+//        print("Did disconnect to user")
+//    }
+//
+//    public func setupGoogleSignIn() {
+//
+//        /***** Configure Google Sign In *****/
+//        GIDSignIn.sharedInstance()?.delegate = self
+//        GIDSignIn.sharedInstance()?.presentingViewController = self
+//        GIDSignIn.sharedInstance().scopes = [kGTLRAuthScopeDrive]
+//        // Automatically sign in the user.
+//        GIDSignIn.sharedInstance()?.restorePreviousSignIn()
+//    }
+//
+//
+//}

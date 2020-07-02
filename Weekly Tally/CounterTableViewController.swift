@@ -21,11 +21,11 @@ var ArchivedState: Bool = false
 var FutureState: Bool = false
 let defaults = UserDefaults.standard
 
-// Google Drive instances
-let googleDriveService = GTLRDriveService() // for making Google Drive calls
-var googleUser: GIDGoogleUser? // for listing user's files only
-var uploadFolderID: String?
-private var drive: CustomGoogleDrive?
+//// Google Drive instances
+//let googleDriveService = GTLRDriveService() // for making Google Drive calls
+//var googleUser: GIDGoogleUser? // for listing user's files only
+//var uploadFolderID: String?
+//var drive: CustomGoogleDrive?
 
 class CounterTableViewController: UITableViewController, UISearchResultsUpdating, customCellDelegate{
     
@@ -39,6 +39,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
     var countersArchived : [Counter] = []
     var countersFuture : [Counter] = []
     var newCountersEnded : String = ""
+    var googleBackupEnabled: Bool = false
     
     let searchController = UISearchController(searchResultsController: nil)
     var AddBtn = UIButton(type: .custom)
@@ -64,9 +65,15 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
         navigationItem.searchController = searchController
         definesPresentationContext = true
         
-        /***** Configure Google Sign In *****/
-        setupGoogleSignIn()
-        drive = CustomGoogleDrive(googleDriveService)
+        if (defaults.object(forKey: "googleBackupEnabled") as? Bool) == nil {
+            defaults.set(false, forKey: "googleBackupEnabled")
+        }else{
+            googleBackupEnabled = defaults.object(forKey: "googleBackupEnabled") as! Bool
+        }
+        
+//        /***** Configure Google Sign In *****/
+//        setupGoogleSignIn()
+//        drive = CustomGoogleDrive(googleDriveService)
 
         
         // Load any saved meals, otherwise load sample data
@@ -871,10 +878,7 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
     }
     
     @IBAction func profileAction(_ sender: UIBarButtonItem) {
-        //        let ac = UIAlertController(title: "Not available yet", message: "This feature is currently unavailable", preferredStyle: .alert)
-        //        ac.addAction(UIAlertAction(title: "OK", style: .default))
-        //        present(ac, animated: true)
-        
+
         
 //        // Start Google's OAuth authentication flow
 //        GIDSignIn.sharedInstance()?.signIn()
@@ -918,11 +922,11 @@ class CounterTableViewController: UITableViewController, UISearchResultsUpdating
     }
     
     @objc func addNewTally() {
-//        if counters.count > 7 {
-//            popUpAlert(title: "Limit of 7 reached", message: "Weekly Tally limits the number of goals to 7 to help you better focus on them. If you wish to add another goal, delete or archive one of your goals.", buttonTitle: "Got it!")
-//        }else {
-            self.performSegue(withIdentifier: "AddItem", sender: self)
-//        }
+
+         self.performSegue(withIdentifier: "AddItem", sender: self)
+//        GIDSignIn.sharedInstance()?.signIn()
+//        downloadDriveAndSet()
+
     }
     
     @objc func goBackToMain(){
@@ -968,7 +972,6 @@ class customCell: UITableViewCell{
     
     @IBOutlet weak var ContainerView: CustomView!
     
-    
     @IBAction func buttonPress(_ sender: UIButton) {
         if let cellCounter = cellCounter{
             cellDelegate?.didTapButton(cellCounter)
@@ -977,75 +980,92 @@ class customCell: UITableViewCell{
     
 }
 
-extension CounterTableViewController: GIDSignInDelegate {
-    // ALL GOOGLE API CALLS
-    
-    // MARK: - GIDSignInDelegate
-    public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
-                     withError error: Error!) {
-        if let error = error {
-            googleDriveService.authorizer = nil
-            googleUser = nil
-            
-            if (error as NSError).code == GIDSignInErrorCode.hasNoAuthInKeychain.rawValue {
-                print("The user has not signed in before or they have since signed out.")
-            } else {
-                print("\(error.localizedDescription)")
-            }
-            return
-        }else{
-            // Include authorization headers/values with each Drive API request.
-            googleDriveService.authorizer = user.authentication.fetcherAuthorizer()
-            googleUser = user
-        }
-        
-        //        // Perform any operations on signed in user here.
-        //        let userId = user.userID                  // For client-side use only!
-        //        let idToken = user.authentication.idToken // Safe to send to the server
-        //        let fullName = user.profile.name
-        //        let givenName = user.profile.givenName
-        //        let familyName = user.profile.familyName
-        //        let email = user.profile.email
-        //        // ...
-        //        let photo = user.profile.imageURL(withDimension: <#T##UInt#>)
-        
-        
-        //        let dimension = round(ProfileBtn.width * UIScreen.main.scale)
-        //        let pic = user.profile.imageURL(withDimension: dimension)
-        
-//        // Authenticate with Firebase
-//        guard let authentication = user.authentication else { return }
-//        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
-//                                                       accessToken: authentication.accessToken)
+//extension CounterTableViewController: GIDSignInDelegate {
+//    // ALL GOOGLE API CALLS
 //
-//        Auth.auth().signIn(with: credential) { (authResult, error) in
-//            if let error = error {
-//                print("sign in error")
-//                return
+//    // MARK: - GIDSignInDelegate
+//    public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
+//                     withError error: Error!) {
+//        if let error = error {
+//            googleDriveService.authorizer = nil
+//            googleUser = nil
+//
+//            if (error as NSError).code == GIDSignInErrorCode.hasNoAuthInKeychain.rawValue {
+//                print("The user has not signed in before or they have since signed out.")
+//            } else {
+//                print("\(error.localizedDescription)")
 //            }
+//            return
+//        }else{
+//            print("\(user.profile.givenName) user is signed in")
+//            // Include authorization headers/values with each Drive API request.
+//            googleDriveService.authorizer = user.authentication.fetcherAuthorizer()
+//            googleUser = user
 //        }
 //
-//        print("Firebase sign in okay")
-        
-    }
-    
-    
-    public func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
-        print("Did disconnect to user")
-    }
-    
-    public func setupGoogleSignIn() {
-        
-        /***** Configure Google Sign In *****/
-        GIDSignIn.sharedInstance()?.delegate = self
-        GIDSignIn.sharedInstance()?.presentingViewController = self
-        GIDSignIn.sharedInstance().scopes = [kGTLRAuthScopeDrive]
-        // Automatically sign in the user.
-        GIDSignIn.sharedInstance()?.restorePreviousSignIn()
-    }
-    
-
-}
+//        //        // Perform any operations on signed in user here.
+//        //        let userId = user.userID                  // For client-side use only!
+//        //        let idToken = user.authentication.idToken // Safe to send to the server
+//        //        let fullName = user.profile.name
+//        //        let givenName = user.profile.givenName
+//        //        let familyName = user.profile.familyName
+//        //        let email = user.profile.email
+//        //        // ...
+//        //        let photo = user.profile.imageURL(withDimension: <#T##UInt#>)
+//
+//
+//        //        let dimension = round(ProfileBtn.width * UIScreen.main.scale)
+//        //        let pic = user.profile.imageURL(withDimension: dimension)
+//
+////        // Authenticate with Firebase
+////        guard let authentication = user.authentication else { return }
+////        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
+////                                                       accessToken: authentication.accessToken)
+////
+////        Auth.auth().signIn(with: credential) { (authResult, error) in
+////            if let error = error {
+////                print("sign in error")
+////                return
+////            }
+////        }
+////
+////        print("Firebase sign in okay")
+//
+//    }
+//
+//
+//    public func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
+//        print("Did disconnect to user")
+//    }
+//
+//    public func setupGoogleSignIn() {
+//
+//        /***** Configure Google Sign In *****/
+//        GIDSignIn.sharedInstance()?.delegate = self
+//        GIDSignIn.sharedInstance()?.presentingViewController = self
+//        GIDSignIn.sharedInstance().scopes = [kGTLRAuthScopeDrive]
+//        // Automatically sign in the user.
+//        GIDSignIn.sharedInstance()?.restorePreviousSignIn()
+//    }
+//
+//    public func downloadDriveAndSet(){
+//        drive?.search("weekly_tally_data") { (folderID, error) in
+//
+//            if let ID = folderID {
+//                drive?.download(ID) { (database, error) in
+//                    if let data = database {
+//                        print("Downloaded database")
+//                    }else{
+//                        print("Drive Error: \(error?.localizedDescription ?? "unknown")")
+//                    }
+//                }
+//            } else {
+//                print("Drive Error: \(error?.localizedDescription ?? "unknown")")
+//            }
+//        }
+//    }
+//
+//}
 
 //extension UITableViewController: GIDSignInUIDelegate {}
 

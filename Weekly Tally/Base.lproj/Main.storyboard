@@ -278,6 +278,9 @@
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="8Pc-XP-Y6D">
                                                     <rect key="frame" x="345" y="9.5" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="switchGoogleBackup:" destination="q2x-1g-E4V" eventType="valueChanged" id="rWh-YD-gkf"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                             <constraints>
@@ -297,13 +300,13 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Premium" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pwW-UW-zIu">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Premium (unavailable)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pwW-UW-zIu">
                                                     <rect key="frame" x="20" y="11" width="350" height="28"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d1C-Yh-Dqx">
+                                                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d1C-Yh-Dqx">
                                                     <rect key="frame" x="381.5" y="14" width="12.5" height="22"/>
                                                     <state key="normal" image="chevron.right" catalog="system"/>
                                                 </button>
@@ -447,6 +450,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Settings" id="3sK-9z-0uz"/>
                     <connections>
+                        <outlet property="switchGoogleBackup" destination="8Pc-XP-Y6D" id="WhA-gK-N1g"/>
                         <segue destination="Y7i-v2-cgc" kind="unwind" identifier="unwindSettings" unwindAction="unwindToCounterListWithSender:" id="4FI-NY-YU1"/>
                     </connections>
                 </tableViewController>
@@ -463,22 +467,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="610"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IcR-Nr-Ekl">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IcR-Nr-Ekl">
                                 <rect key="frame" x="0.0" y="88" width="320" height="473"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xpw-Fk-dZC" userLabel="ContentView">
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xpw-Fk-dZC" userLabel="ContentView">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="671"/>
                                         <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n52-I0-dP0" userLabel="ScannerView">
+                                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n52-I0-dP0" userLabel="ScannerView">
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="671"/>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="New Weekly Goal" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="uMg-qe-aGb" userLabel="Large Title">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" ambiguous="YES" text="New Weekly Goal" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="uMg-qe-aGb" userLabel="Large Title">
                                                 <rect key="frame" x="24" y="16" width="272" height="41"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="34"/>
                                                 <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <stackView opaque="NO" contentMode="scaleAspectFill" axis="vertical" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="1aa-ub-jfu">
+                                            <stackView opaque="NO" contentMode="scaleAspectFill" ambiguous="YES" axis="vertical" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="1aa-ub-jfu">
                                                 <rect key="frame" x="24" y="65" width="272" height="574"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleAspectFit" axis="vertical" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="ena-p9-58w" userLabel="Overview Segment Stack">
@@ -572,7 +576,7 @@
                                                                     </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
                                                             </view>
-                                                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zt6-Lk-Slr" userLabel="Custom Overview" customClass="CustomOverviewView" customModule="Weekly_Tally" customModuleProvider="target">
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zt6-Lk-Slr" userLabel="Custom Overview" customClass="CustomOverviewView" customModule="Weekly_Tally" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="68" width="272" height="188.5"/>
                                                                 <color key="backgroundColor" name="TallyCard"/>
                                                                 <userDefinedRuntimeAttributes>
@@ -581,7 +585,7 @@
                                                                     </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
                                                             </view>
-                                                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iK0-Ky-ZhR" customClass="CustomOverviewGraph" customModule="Weekly_Tally" customModuleProvider="target">
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iK0-Ky-ZhR" customClass="CustomOverviewGraph" customModule="Weekly_Tally" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="274.5" width="272" height="238.5"/>
                                                                 <color key="backgroundColor" name="TallyCard"/>
                                                                 <userDefinedRuntimeAttributes>
@@ -1109,7 +1113,7 @@
             <objects>
                 <viewController title="Share View Controller" id="qwP-Lr-5PV" customClass="ShareViewController" customModule="Weekly_Tally" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HgE-bV-8Rb">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="890"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="1000"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qAE-4I-o2c">
@@ -1127,7 +1131,7 @@
                                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uGv-pS-R4B" customClass="CustomShareView" customModule="Weekly_Tally" customModuleProvider="target">
+                                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uGv-pS-R4B" customClass="CustomShareView" customModule="Weekly_Tally" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="35.5" width="330" height="290"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                         <userDefinedRuntimeAttributes>
@@ -1148,7 +1152,7 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cWd-jU-DvG" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
+                                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cWd-jU-DvG" customClass="CustomView" customModule="Weekly_Tally" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="333.5" width="330" height="50"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Pds-Q6-1wT">
@@ -1239,19 +1243,19 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Szx-3h-LfT" userLabel="Extra Space">
+                                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Szx-3h-LfT" userLabel="Extra Space">
                                                         <rect key="frame" x="0.0" y="391.5" width="330" height="18"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="18" id="wH7-JV-48H"/>
                                                         </constraints>
                                                     </view>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share your record" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J8p-mx-ILm">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Share your record" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J8p-mx-ILm">
                                                         <rect key="frame" x="0.0" y="417.5" width="330" height="27.5"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="23"/>
                                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5hu-It-g2o" customClass="CustomOverviewGraph" customModule="Weekly_Tally" customModuleProvider="target">
+                                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5hu-It-g2o" customClass="CustomOverviewGraph" customModule="Weekly_Tally" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="453" width="330" height="295.5"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                         <userDefinedRuntimeAttributes>
@@ -1514,7 +1518,6 @@
         <!--About-->
         <scene sceneID="g6n-o3-Gpz">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="DuO-xr-gR6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController title="About" hidesBottomBarWhenPushed="YES" id="JsN-oY-UHD" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="i3b-ck-sA0">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -1599,6 +1602,7 @@ Weekly is just right. </string>
                     <nil key="simulatedBottomBarMetrics"/>
                     <splitViewMasterSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DuO-xr-gR6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="12" y="-1343"/>
         </scene>
@@ -1655,7 +1659,7 @@ Weekly is just right. </string>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="nAA-0R-Jrj"/>
+        <segue reference="bAe-DX-CH0"/>
         <segue reference="rVw-vX-TAc"/>
     </inferredMetricsTieBreakers>
     <resources>
